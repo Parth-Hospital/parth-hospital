@@ -22,19 +22,17 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterStatus, setFilterStatus] = useState<string | undefined>(undefined)
   const [filterType, setFilterType] = useState<string | undefined>(undefined)
   const { toast } = useToast()
 
   useEffect(() => {
     loadBookings()
-  }, [filterStatus, filterType])
+  }, [filterType])
 
   const loadBookings = async () => {
     try {
       setLoading(true)
-      const filters: { status?: string; appointmentType?: string } = {}
-      if (filterStatus) filters.status = filterStatus
+      const filters: { appointmentType?: string } = {}
       if (filterType) filters.appointmentType = filterType
 
       const data = await appointmentApi.getAppointments(filters)
@@ -50,22 +48,6 @@ export default function BookingsPage() {
     }
   }
 
-  const getStatusBadge = (status: Appointment["status"]) => {
-    switch (status) {
-      case "PENDING":
-        return <Badge variant="outline">Pending</Badge>
-      case "ARRIVED":
-        return <Badge variant="secondary">Arrived</Badge>
-      case "CONSULTING":
-        return <Badge>Consulting</Badge>
-      case "COMPLETED":
-        return <Badge variant="secondary">Completed</Badge>
-      case "CANCELLED":
-        return <Badge variant="destructive">Cancelled</Badge>
-      default:
-        return <Badge variant="outline">{status}</Badge>
-    }
-  }
 
   const filteredBookings = bookings.filter(
     (booking) =>
@@ -93,22 +75,6 @@ export default function BookingsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Select
-            onValueChange={(value) => setFilterStatus(value === "ALL" ? undefined : value)}
-            value={filterStatus || "ALL"}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Statuses</SelectItem>
-              <SelectItem value="PENDING">Pending</SelectItem>
-              <SelectItem value="ARRIVED">Arrived</SelectItem>
-              <SelectItem value="CONSULTING">Consulting</SelectItem>
-              <SelectItem value="COMPLETED">Completed</SelectItem>
-              <SelectItem value="CANCELLED">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
           <Select
             onValueChange={(value) => setFilterType(value === "ALL" ? undefined : value)}
             value={filterType || "ALL"}
@@ -144,7 +110,6 @@ export default function BookingsPage() {
                       <th className="p-4 text-left font-semibold">Patient Name</th>
                       <th className="p-4 text-left font-semibold">Date</th>
                       <th className="p-4 text-left font-semibold">Time</th>
-                      <th className="p-4 text-left font-semibold">Status</th>
                       <th className="p-4 text-left font-semibold">Type</th>
                       <th className="p-4 text-left font-semibold">Booking</th>
                     </tr>
@@ -160,7 +125,6 @@ export default function BookingsPage() {
                         </td>
                         <td className="p-4">{format(new Date(booking.date), "PPP")}</td>
                         <td className="p-4">{booking.arrivalTime || booking.preferredTime || "N/A"}</td>
-                        <td className="p-4">{getStatusBadge(booking.status)}</td>
                         <td className="p-4">
                           <Badge
                             variant={booking.appointmentType === "PRIORITY" ? "default" : "secondary"}

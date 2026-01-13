@@ -91,7 +91,7 @@ export default function OwnerDashboard() {
             {/* KPI Cards */}
             <section>
               <h3 className="text-lg font-semibold mb-4">Today's Overview</h3>
-              <div className="grid md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -178,17 +178,19 @@ export default function OwnerDashboard() {
                 </CardHeader>
                 <CardContent>
                   {appointmentData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={appointmentData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="general" fill="#0ea5e9" name="General" />
-                        <Bar dataKey="priority" fill="#ef4444" name="Priority" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <div className="w-full overflow-x-auto">
+                      <ResponsiveContainer width="100%" minHeight={250} height={300}>
+                        <BarChart data={appointmentData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                          <YAxis tick={{ fontSize: 12 }} />
+                          <Tooltip />
+                          <Legend wrapperStyle={{ fontSize: '12px' }} />
+                          <Bar dataKey="general" fill="#0ea5e9" name="General" />
+                          <Bar dataKey="priority" fill="#ef4444" name="Priority" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   ) : (
                     <div className="flex items-center justify-center py-8 text-muted-foreground">
                       No appointment data available

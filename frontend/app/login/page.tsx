@@ -14,11 +14,6 @@ export default function LoginPage() {
         </Link>
       </div>
 
-      <div className="absolute top-8 right-8 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/30 backdrop-blur-md">
-        <Info className="w-3.5 h-3.5 text-accent" />
-        <span className="text-xs font-bold text-accent uppercase tracking-wider">Demo Mode</span>
-      </div>
-
       <div className="flex-1 grid lg:grid-cols-2">
         {/* Visual Side */}
         <div className="hidden lg:block relative bg-primary overflow-hidden">

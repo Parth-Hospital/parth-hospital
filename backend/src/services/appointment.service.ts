@@ -29,7 +29,9 @@ function calculateSerialNumberAndTime(totalBookings: number): {
 
 export class AppointmentService {
   async createAppointment(data: CreateAppointmentInput, userId?: string) {
+    // Normalize appointment date to start of day (midnight) to match how availability is stored
     const appointmentDate = new Date(data.date)
+    appointmentDate.setHours(0, 0, 0, 0)
 
     // Check if booking window is open
     const now = new Date()
@@ -46,14 +48,17 @@ export class AppointmentService {
       throw new Error("Booking window is not open yet. It opens at 5 PM.")
     }
 
-    // Check doctor availability for the date
+    // Check doctor availability for the date (normalized to start of day)
     const availability = await prisma.doctorAvailability.findUnique({
       where: {
         date: appointmentDate,
       },
     })
 
-    if (!availability || !availability.available) {
+    // Default to available if no record exists (doctor is available by default)
+    const isAvailable = !availability || availability.available
+
+    if (!isAvailable) {
       throw new Error("Doctor is not available on this date")
     }
 
@@ -82,8 +87,8 @@ export class AppointmentService {
       data: {
         patientName: data.patientName,
         patientAge: data.patientAge,
-        patientEmail: data.patientEmail,
         patientPhone: data.patientPhone,
+        patientCity: data.patientCity,
         date: appointmentDate,
         appointmentType: data.appointmentType,
         preferredTime: data.preferredTime,

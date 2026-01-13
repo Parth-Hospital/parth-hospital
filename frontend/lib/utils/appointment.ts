@@ -20,7 +20,7 @@ export interface AppointmentFormData {
   patientName: string
   patientAge: string
   phoneNumber: string
-  email?: string
+  patientCity: string
   date: string // Auto-set to next available date
   preferredTime?: string // Only for priority appointments
   paymentMethod: PaymentMethod
@@ -324,6 +324,10 @@ export function validateAppointmentForm(data: Partial<AppointmentFormData>): {
 
   if (!data.phoneNumber || !/^[6-9]\d{9}$/.test(data.phoneNumber.replace(/\D/g, ""))) {
     errors.phoneNumber = "Please enter a valid 10-digit mobile number"
+  }
+
+  if (!data.patientCity || data.patientCity.trim().length < 2) {
+    errors.patientCity = "Please enter a valid city (at least 2 characters)"
   }
 
   if (!data.date) {

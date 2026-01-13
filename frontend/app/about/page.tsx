@@ -71,9 +71,9 @@ export default function AboutPage() {
       {/* Image Grid Section */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-12 gap-6 h-[600px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
             <motion.div
-              className="col-span-8 relative rounded-3xl overflow-hidden soft-depth"
+              className="md:col-span-8 relative h-[300px] md:h-full rounded-3xl overflow-hidden soft-depth"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -81,9 +81,9 @@ export default function AboutPage() {
             >
               <Image src="/modern-hospital-interior-lobby.jpg" alt="Hospital Interior" fill className="object-cover" />
             </motion.div>
-            <div className="col-span-4 grid grid-rows-2 gap-6">
+            <div className="md:col-span-4 grid grid-cols-1 md:grid-rows-2 gap-6 h-auto md:h-full">
               <motion.div
-                className="relative rounded-3xl overflow-hidden soft-depth"
+                className="relative h-[250px] md:h-full rounded-3xl overflow-hidden soft-depth"
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
@@ -92,14 +92,14 @@ export default function AboutPage() {
                 <Image src="/hospital-corridor-modern.jpg" alt="Operating Theater" fill className="object-cover" />
               </motion.div>
               <motion.div
-                className="relative rounded-3xl overflow-hidden soft-depth bg-primary flex flex-col justify-center p-8 text-white"
+                className="relative rounded-3xl overflow-hidden soft-depth bg-primary flex flex-col justify-center p-6 md:p-8 text-white min-h-[200px] md:min-h-0"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
               >
-                <Award className="w-12 h-12 text-accent mb-6" />
-                <h3 className="text-2xl font-bold mb-2">20+ Years</h3>
+                <Award className="w-10 h-10 md:w-12 md:h-12 text-accent mb-4 md:mb-6" />
+                <h3 className="text-xl md:text-2xl font-bold mb-2">20+ Years</h3>
                 <p className="text-white/60 text-sm">Of continuous medical excellence and community service.</p>
               </motion.div>
             </div>

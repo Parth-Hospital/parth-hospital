@@ -75,6 +75,7 @@ model Appointment {
   patientAge      Int               @map("patient_age")
   patientEmail    String?           @map("patient_email")
   patientPhone    String            @map("patient_phone")
+  patientCity     String            @map("patient_city")
   date            DateTime
   appointmentType AppointmentType   @map("appointment_type")
   timeSlot        String?           @map("time_slot")

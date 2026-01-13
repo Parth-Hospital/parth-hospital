@@ -208,27 +208,6 @@ export function LoginForm() {
 
         {step === "credentials" && (
           <form onSubmit={handleLogin} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-accent/10 border border-accent/20">
-              <AlertCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-              <div className="flex-1 space-y-1">
-                <p className="text-xs font-bold uppercase tracking-wider text-accent">Test Credentials</p>
-                <p className="text-xs text-muted-foreground">
-                  Owner: <span className="font-mono text-primary">owner@parthhospital.co.in</span> /{" "}
-                  <span className="font-mono text-primary">owner123</span>
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Manager: <span className="font-mono text-primary">manager@parthhospital.co.in</span> /{" "}
-                  <span className="font-mono text-primary">manager123</span>
-                </p>
-                <button
-                  type="button"
-                  onClick={fillDemoCredentials}
-                  className="mt-2 text-xs font-bold text-accent hover:underline"
-                >
-                  Fill Owner Credentials
-                </button>
-              </div>
-            </div>
 
             {error && (
               <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">

@@ -26,17 +26,17 @@ export function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white">
       <div className="bg-primary text-white">
-        <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between text-sm">
-          <div className="flex items-center gap-4">
-            <span>Emergency: +91 1234 567 890</span>
-            <span className="text-white/60">|</span>
-            <span>Available 24/7</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between text-xs sm:text-sm">
+          <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+            <span className="truncate">Emergency: +91 78601 15757</span>
+            <span className="text-white/60 hidden sm:inline">|</span>
+            <span className="hidden sm:inline">Available 24/7</span>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="hover:text-white/80 transition-colors flex items-center gap-1">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <a href="tel:+917860115757" className="hover:text-white/80 transition-colors flex items-center gap-1">
               <Phone className="w-3.5 h-3.5" />
-              Call Us
-            </button>
+              <span className="hidden sm:inline">Call Us</span>
+            </a>
           </div>
         </div>
       </div>
@@ -47,16 +47,16 @@ export function Navbar() {
           isScrolled ? "bg-white/95 backdrop-blur-md shadow-md" : "bg-white",
         )}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 sm:gap-8">
           {/* Hospital branding */}
           <Link
             href="/"
-            className="flex-shrink-0 flex items-baseline gap-2 group transition-transform hover:scale-105"
+            className="flex-shrink-0 flex items-baseline gap-1 sm:gap-2 group transition-transform hover:scale-105"
           >
-            <span className="text-2xl font-bold text-primary transition-colors group-hover:text-secondary">
+            <span className="text-xl sm:text-2xl font-bold text-primary transition-colors group-hover:text-secondary">
               Parth
             </span>
-            <span className="text-sm font-semibold text-primary/60 group-hover:text-secondary/60 transition-colors">
+            <span className="text-xs sm:text-sm font-semibold text-primary/60 group-hover:text-secondary/60 transition-colors">
               Hospital
             </span>
           </Link>

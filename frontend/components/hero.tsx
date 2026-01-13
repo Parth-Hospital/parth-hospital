@@ -76,11 +76,11 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
                 Orthopedic Care
                 <span className="block text-secondary">You Can Trust</span>
               </h1>
-              <p className="text-xl text-muted-foreground font-light leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground font-light leading-relaxed">
                 Advanced bone and joint care by Dr. Subash Singh with 20+ years of specialized experience. Fracture
                 management, joint replacement, and orthopedic surgery all in one place.
               </p>

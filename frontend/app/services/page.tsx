@@ -97,51 +97,51 @@ export default function ServicesPage() {
             {services.map((service) => (
               <div
                 key={service.id}
-                className="group bg-background grid lg:grid-cols-12 gap-12 p-12 lg:p-20 hover:bg-primary transition-all duration-700 overflow-hidden relative border-b border-border/50 last:border-b-0"
+                className="group bg-background grid lg:grid-cols-12 gap-6 sm:gap-12 p-6 sm:p-12 lg:p-20 hover:bg-primary transition-all duration-700 overflow-hidden relative border-b border-border/50 last:border-b-0"
               >
                 {/* Visual Accent */}
-                <span className="absolute -left-10 top-1/2 -translate-y-1/2 text-[15rem] font-bold text-primary/5 group-hover:text-white/5 transition-colors leading-none italic pointer-events-none">
+                <span className="absolute -left-4 sm:-left-10 top-1/2 -translate-y-1/2 text-[8rem] sm:text-[12rem] lg:text-[15rem] font-bold text-primary/5 group-hover:text-white/5 transition-colors leading-none italic pointer-events-none">
                   {service.id}
                 </span>
 
-                <div className="lg:col-span-5 space-y-8 relative z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center text-primary group-hover:bg-secondary group-hover:text-white transition-all duration-500">
+                <div className="lg:col-span-5 space-y-6 sm:space-y-8 relative z-10">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-secondary/20 flex items-center justify-center text-primary group-hover:bg-secondary group-hover:text-white transition-all duration-500">
                     {service.icon}
                   </div>
-                  <div className="space-y-4">
-                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight group-hover:text-white transition-colors">
+                  <div className="space-y-3 sm:space-y-4">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight group-hover:text-white transition-colors">
                       {service.title}
                     </h2>
-                    <p className="text-xl font-light text-muted-foreground leading-relaxed group-hover:text-white/70 transition-colors">
+                    <p className="text-base sm:text-lg lg:text-xl font-light text-muted-foreground leading-relaxed group-hover:text-white/70 transition-colors">
                       {service.desc}
                     </p>
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 space-y-8 lg:pt-24 relative z-10">
+                <div className="lg:col-span-4 space-y-6 sm:space-y-8 lg:pt-24 relative z-10">
                   <h4 className="text-xs uppercase tracking-widest font-bold text-secondary group-hover:text-accent transition-colors">
                     Key Features
                   </h4>
-                  <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+                  <ul className="grid sm:grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-3 sm:gap-y-4">
                     {service.details.map((detail, idx) => (
                       <li
                         key={idx}
-                        className="text-muted-foreground group-hover:text-white/80 transition-colors flex items-center gap-3 text-sm font-medium"
+                        className="text-muted-foreground group-hover:text-white/80 transition-colors flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-medium"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary group-hover:bg-accent transition-colors" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-secondary group-hover:bg-accent transition-colors flex-shrink-0" />
                         {detail}
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="lg:col-span-3 flex items-end justify-end relative z-10">
+                <div className="lg:col-span-3 flex items-end justify-end relative z-10 pt-4 lg:pt-0">
                   <Button
                     variant="link"
-                    className="text-primary group-hover:text-white font-bold text-lg p-0 h-auto gap-3 items-center group/btn"
+                    className="text-primary group-hover:text-white font-bold text-base sm:text-lg p-0 h-auto gap-2 sm:gap-3 items-center group/btn"
                   >
                     Learn More
-                    <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-2 transition-transform" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover/btn:translate-x-2 transition-transform" />
                   </Button>
                 </div>
               </div>

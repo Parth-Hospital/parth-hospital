@@ -3,9 +3,15 @@ import { z } from "zod"
 export const createAppointmentSchema = z.object({
   patientName: z.string().min(2, "Patient name must be at least 2 characters"),
   patientAge: z.number().int().min(1).max(120),
-  patientEmail: z.string().email("Invalid email address").optional(),
   patientPhone: z.string().min(10, "Phone number must be at least 10 digits"),
-  date: z.string().datetime(),
+  patientCity: z.string().min(2, "City must be at least 2 characters"),
+  date: z.string().refine(
+    (val) => {
+      const date = new Date(val)
+      return !isNaN(date.getTime())
+    },
+    { message: "Invalid date format" }
+  ),
   appointmentType: z.enum(["GENERAL", "PRIORITY"]),
   preferredTime: z.string().optional(),
   paymentMethod: z.enum(["ONLINE", "PAY_AT_COUNTER"]),

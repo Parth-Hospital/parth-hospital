@@ -3,8 +3,8 @@ import { apiClient } from "./client"
 export interface CreateAppointmentData {
   patientName: string
   patientAge: number
-  patientEmail?: string
   patientPhone: string
+  patientCity: string
   date: string
   appointmentType: "GENERAL" | "PRIORITY"
   preferredTime?: string
@@ -19,6 +19,7 @@ export interface Appointment {
   patientAge: number
   patientEmail?: string
   patientPhone: string
+  patientCity: string
   date: string
   appointmentType: "GENERAL" | "PRIORITY"
   timeSlot?: string

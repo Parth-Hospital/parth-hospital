@@ -38,11 +38,11 @@ export default function DoctorPage() {
                     Chief Orthopedic Surgeon
                   </span>
                 </div>
-                <h1 className="text-6xl font-medium tracking-tighter text-primary">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter text-primary">
                   Dr. Subash Singh <br />
                   <span className="text-foreground italic font-light opacity-60">MBBS, MS</span>
                 </h1>
-                <p className="text-xl font-light leading-relaxed text-muted-foreground">
+                <p className="text-base sm:text-lg lg:text-xl font-light leading-relaxed text-muted-foreground">
                   Chief Medical Director and Senior Orthopedic Surgeon at Parth Hospital, specializing in bone and joint
                   care, fracture management, and trauma surgery with over 20 years of clinical excellence.
                 </p>
@@ -60,20 +60,20 @@ export default function DoctorPage() {
             {/* Right Column: Experience Timeline & Stats */}
             <div className="lg:col-span-7 space-y-20">
               {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                 {[
                   { label: "Orthopedic Experience", value: "20+ Years", icon: <Award className="text-secondary" /> },
                   { label: "Successful Surgeries", value: "10,000+", icon: <Bone className="text-secondary" /> },
                   { label: "Patient Satisfaction", value: "99%", icon: <CheckCircle2 className="text-secondary" /> },
                   { label: "Medical Lectures", value: "100+", icon: <GraduationCap className="text-secondary" /> },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-secondary/10 p-8 rounded-2xl border border-border/50 space-y-4">
-                    <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center border border-border">
+                  <div key={i} className="bg-secondary/10 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-border/50 space-y-3 sm:space-y-4">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-background flex items-center justify-center border border-border">
                       {stat.icon}
                     </div>
                     <div className="space-y-1">
-                      <p className="text-3xl font-bold text-primary">{stat.value}</p>
-                      <p className="text-xs uppercase tracking-widest font-bold text-muted-foreground">{stat.label}</p>
+                      <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">{stat.value}</p>
+                      <p className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-muted-foreground">{stat.label}</p>
                     </div>
                   </div>
                 ))}
@@ -117,18 +117,18 @@ export default function DoctorPage() {
                       desc: "Surpassed 10,000 successful surgical procedures, establishing Parth Hospital as a trusted orthopedic institution.",
                     },
                   ].map((item, i) => (
-                    <div key={i} className="flex gap-8 group">
-                      <div className="w-24 shrink-0">
-                        <span className="text-xl font-bold text-secondary italic">{item.year}</span>
+                    <div key={i} className="flex flex-col sm:flex-row gap-4 sm:gap-8 group">
+                      <div className="w-full sm:w-24 shrink-0">
+                        <span className="text-lg sm:text-xl font-bold text-secondary italic">{item.year}</span>
                       </div>
-                      <div className="space-y-2">
-                        <h4 className="text-2xl font-bold text-primary group-hover:text-secondary transition-colors">
+                      <div className="space-y-2 flex-1">
+                        <h4 className="text-xl sm:text-2xl font-bold text-primary group-hover:text-secondary transition-colors">
                           {item.title}
                         </h4>
-                        <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+                        <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted-foreground">
                           {item.institution}
                         </p>
-                        <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}

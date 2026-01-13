@@ -146,14 +146,14 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <motion.div
-            className="bg-white p-10 lg:p-16 rounded-[40px] soft-depth border border-border/50 space-y-10 max-w-4xl mx-auto"
+            className="bg-white p-6 sm:p-10 lg:p-16 rounded-2xl sm:rounded-[40px] soft-depth border border-border/50 space-y-6 sm:space-y-10 max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="space-y-2">
-              <h2 className="text-3xl font-medium tracking-tight">Send a Message</h2>
-              <p className="text-muted-foreground">We typically respond within 2-4 hours.</p>
+              <h2 className="text-2xl sm:text-3xl font-medium tracking-tight">Send a Message</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">We typically respond within 2-4 hours.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">

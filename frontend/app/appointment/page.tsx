@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, User, Phone, Mail, CreditCard, CheckCircle2, AlertCircle, CalendarCheck } from "lucide-react"
+import { Calendar, Clock, User, Phone, MapPin, CreditCard, CheckCircle2, AlertCircle, CalendarCheck } from "lucide-react"
 import { AppointmentTicket } from "@/components/appointment-ticket"
 import {
   calculateSerialNumberAndTime,
@@ -101,16 +101,21 @@ export default function AppointmentPage() {
     setIsSubmitting(true)
 
     try {
+      // Format date as datetime string at start of day (00:00:00)
+      const appointmentDate = new Date(bookingWindow.nextDate)
+      appointmentDate.setHours(0, 0, 0, 0)
+      const dateString = appointmentDate.toISOString()
+
       // Call real API
       const appointment = await appointmentApi.createAppointment({
         patientName: completeFormData.patientName!,
         patientAge: parseInt(completeFormData.patientAge!),
-        patientEmail: completeFormData.email,
         patientPhone: completeFormData.phoneNumber!,
-        date: bookingWindow.nextDate.toISOString(),
+        patientCity: completeFormData.patientCity!,
+        date: dateString,
         appointmentType: completeFormData.appointmentType.toUpperCase() as "GENERAL" | "PRIORITY",
         preferredTime: completeFormData.preferredTime,
-        paymentMethod: completeFormData.paymentMethod.toUpperCase().replace("-", "_") as "ONLINE" | "PAY_AT_COUNTER",
+        paymentMethod: completeFormData.paymentMethod.toUpperCase().replace(/-/g, "_") as "ONLINE" | "PAY_AT_COUNTER",
         reason: completeFormData.reason,
       })
 
@@ -123,7 +128,23 @@ export default function AppointmentPage() {
       setIsSubmitted(true)
     } catch (error: any) {
       console.error("Appointment booking error:", error)
-      setErrors({ submit: error.message || "Failed to book appointment. Please try again." })
+      // Handle validation errors from backend
+      if (error.details && Array.isArray(error.details)) {
+        const validationErrors: Record<string, string> = {}
+        error.details.forEach((err: any) => {
+          if (err.path && err.path.length > 0) {
+            const field = err.path[0]
+            validationErrors[field] = err.message || "Invalid value"
+          }
+        })
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors)
+        } else {
+          setErrors({ submit: error.message || "Failed to book appointment. Please try again." })
+        }
+      } else {
+        setErrors({ submit: error.message || "Failed to book appointment. Please try again." })
+      }
       setIsSubmitting(false)
     }
   }
@@ -381,7 +402,7 @@ export default function AppointmentPage() {
               </>
             )}
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* General Appointment Card */}
               <Card
                 className={`transition-all duration-300 ${
@@ -531,7 +552,7 @@ export default function AppointmentPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="patientName">Full Name *</Label>
                     <Input
@@ -560,7 +581,7 @@ export default function AppointmentPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="phoneNumber">Phone Number *</Label>
                     <div className="relative">
@@ -579,18 +600,19 @@ export default function AppointmentPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email (Optional)</Label>
+                    <Label htmlFor="patientCity">City *</Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
-                        id="email"
-                        type="email"
-                        value={formData.email || ""}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        placeholder="your.email@example.com"
-                        className="pl-10"
+                        id="patientCity"
+                        type="text"
+                        value={formData.patientCity || ""}
+                        onChange={(e) => handleInputChange("patientCity", e.target.value)}
+                        placeholder="Enter your city"
+                        className={`pl-10 ${errors.patientCity ? "border-red-500" : ""}`}
                       />
                     </div>
+                    {errors.patientCity && <p className="text-sm text-red-500">{errors.patientCity}</p>}
                   </div>
                 </div>
 

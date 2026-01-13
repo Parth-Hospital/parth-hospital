@@ -36,7 +36,9 @@
     "cloudinary": "^1.41.0",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.0",
+    "html2canvas": "^1.4.1",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "xlsx": "^0.18.5",
     "zod": "^3.23.8"

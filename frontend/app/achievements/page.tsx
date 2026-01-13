@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Award, Users, Zap, Heart, Loader2 } from "lucide-react"
+import Link from "next/link"
 import { achievementApi, Achievement } from "@/lib/api/achievement"
 
 export default function AchievementsPage() {
@@ -82,15 +83,15 @@ export default function AchievementsPage() {
       {/* Key Metrics */}
       <section className="py-24 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {metrics.map((metric, idx) => (
               <div key={idx} className="text-center space-y-4">
                 <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto text-accent">
                   {metric.icon}
                 </div>
                 <div>
-                  <p className="text-5xl md:text-6xl font-bold">{metric.value}</p>
-                  <p className="text-white/70 text-lg font-medium mt-2">{metric.label}</p>
+                  <p className="text-4xl sm:text-5xl md:text-6xl font-bold">{metric.value}</p>
+                  <p className="text-white/70 text-base sm:text-lg font-medium mt-2">{metric.label}</p>
                 </div>
               </div>
             ))}
@@ -209,16 +210,20 @@ export default function AchievementsPage() {
             patient care. Your health journey matters to us.
           </p>
           <div className="pt-8 flex flex-wrap justify-center gap-4">
+            <Link href="/appointment">
             <Button size="lg" className="rounded-full px-12 h-16 text-lg bg-primary hover:bg-primary/90">
               Schedule Consultation
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full px-12 h-16 text-lg border-primary/20 hover:bg-primary/5 bg-transparent"
-            >
-              Contact Hospital
-            </Button>
+            </Link>
+            <Link href="/contact">
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full px-12 h-16 text-lg border-primary/20 hover:bg-primary/5 bg-transparent"
+              >
+                Contact Hospital
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
