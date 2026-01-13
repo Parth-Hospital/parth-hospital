@@ -116,7 +116,7 @@ export function Hero() {
                   className="bg-primary hover:bg-primary/90 text-white rounded-lg px-8 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group"
                 >
                   Book Appointment
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Button
@@ -128,7 +128,7 @@ export function Hero() {
                   window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, "_blank")
                 }}
               >
-                <MapPin className="w-4 h-4 mr-2" />
+                <MapPin className="w-4 h-4" />
                 Get Directions
               </Button>
             </motion.div>

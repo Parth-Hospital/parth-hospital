@@ -3,6 +3,7 @@ import { Footer } from "@/components/footer"
 import { FloatingActions } from "@/components/floating-actions"
 import { Button } from "@/components/ui/button"
 import { Stethoscope, Scale as Scalpel, Zap, Droplets, Activity, AlertCircle, ArrowRight, Scan, Microscope } from "lucide-react"
+import Link from "next/link"
 
 export default function ServicesPage() {
   const services = [
@@ -158,9 +159,11 @@ export default function ServicesPage() {
             his team are ready to assist you.
           </p>
           <div className="pt-8">
+            <Link href="/contact">
             <Button size="lg" className="rounded-full px-12 h-18 text-lg bg-primary hover:bg-primary/90 transition-all">
               Schedule a Service
             </Button>
+            </Link>
           </div>
         </div>
       </section>

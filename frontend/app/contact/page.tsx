@@ -7,7 +7,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { FloatingActions } from "@/components/floating-actions"
 import { Button } from "@/components/ui/button"
-import { MapPin, Phone, Mail, Clock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, ArrowRight, Loader2, CheckCircle2, ArrowDown } from "lucide-react"
 import { motion } from "framer-motion"
 import { inquiryApi } from "@/lib/api/inquiry"
 import { useToast } from "@/hooks/use-toast"
@@ -215,20 +215,23 @@ export default function ContactPage() {
                 >
                   Subject <span aria-label="required">*</span>
                 </label>
-                <select
-                  id="subject"
-                  required
-                  aria-required="true"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full h-14 bg-secondary/20 border-none rounded-xl px-6 focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none"
-                >
-                  <option value="">Select a subject</option>
-                  <option value="general">General Inquiry</option>
-                  <option value="appointment">Appointment Booking</option>
-                  <option value="report">Report Related</option>
-                  <option value="feedback">Feedback</option>
-                </select>
+                <div className="relative">
+                  <select
+                    id="subject"
+                    required
+                    aria-required="true"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full h-14 bg-secondary/20 border-none rounded-xl px-6 pr-12 focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none cursor-pointer"
+                  >
+                    <option value="">Select a subject</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="appointment">Appointment Booking</option>
+                    <option value="report">Report Related</option>
+                    <option value="feedback">Feedback</option>
+                  </select>
+                  <ArrowDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                </div>
               </div>
               <div className="space-y-2">
                 <label
@@ -256,17 +259,17 @@ export default function ContactPage() {
               >
                 {submitting ? (
                   <>
-                    <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                     Submitting...
                   </>
                 ) : submitted ? (
                   <>
-                    <CheckCircle2 className="mr-2 w-5 h-5" />
+                    <CheckCircle2 className="w-5 h-5" />
                     Submitted!
                   </>
                 ) : (
                   <>
-                    Submit Message <ArrowRight className="ml-2 w-5 h-5" />
+                    Submit Message <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </Button>
@@ -344,7 +347,7 @@ export default function ContactPage() {
                 className="rounded-full px-8 h-12 border-primary/20 hover:bg-primary/5 bg-transparent"
                 asChild
               >
-                <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://maps.app.goo.gl/xFDXQcP3EpSSo6io8" target="_blank" rel="noopener noreferrer">
                   Open in Google Maps
                 </a>
               </Button>

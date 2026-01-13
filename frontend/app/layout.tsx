@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SmoothScrollProvider } from "@/components/smooth-scroll-provider"
+import { Preloader } from "@/components/preloader"
 import "./globals.css"
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" })
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} font-sans antialiased`}>
+        <Preloader />
         <SmoothScrollProvider>
           {children}
         </SmoothScrollProvider>

@@ -4,6 +4,7 @@ import { FloatingActions } from "@/components/floating-actions"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { GraduationCap, Award, Bone, Clock, CheckCircle2, Star } from "lucide-react"
+import Link from "next/link"
 
 export default function DoctorPage() {
   return (
@@ -48,9 +49,11 @@ export default function DoctorPage() {
               </div>
 
               <div className="pt-6">
-                <Button size="lg" className="rounded-full px-12 h-16 text-lg bg-primary w-full sm:w-auto soft-depth">
-                  Book OPD Appointment
-                </Button>
+                <Link href="/appointment">
+                  <Button size="lg" className="rounded-full px-12 h-16 text-lg bg-primary w-full sm:w-auto soft-depth">
+                    Book OPD Appointment
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -143,15 +146,15 @@ export default function DoctorPage() {
                     <div className="space-y-4">
                       <div className="flex justify-between border-b border-white/10 pb-3">
                         <span className="text-white/70 font-medium">Monday - Friday</span>
-                        <span className="font-bold">10:00 AM - 04:00 PM</span>
+                        <span className="font-bold">11:00 AM - 05:00 PM</span>
                       </div>
                       <div className="flex justify-between border-b border-white/10 pb-3">
                         <span className="text-white/70 font-medium">Saturday</span>
-                        <span className="font-bold">10:00 AM - 02:00 PM</span>
+                        <span className="font-bold">11:00 AM - 05:00 PM</span>
                       </div>
                       <div className="flex justify-between border-b border-white/10 pb-3">
                         <span className="text-white/70 font-medium">Sunday</span>
-                        <span className="text-secondary font-bold">Emergencies Only</span>
+                        <span className="text-secondary font-bold">Closed</span>
                       </div>
                     </div>
                     <div className="bg-white/10 p-6 rounded-2xl border border-white/20">

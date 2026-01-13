@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export function DoctorHighlight() {
   return (
@@ -50,10 +51,12 @@ export function DoctorHighlight() {
             </div>
 
             <div className="flex items-center gap-8">
+              <Link href="/doctor">
               <Button size="lg" className="rounded-full px-10 h-16 bg-primary group text-lg">
                 View Full Profile{" "}
-                <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </Button>
+              </Link>
               <div className="hidden sm:flex flex-col">
                 <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
                   Chief Director

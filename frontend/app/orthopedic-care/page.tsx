@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Bone, Zap, BarChart3, Heart } from "lucide-react"
+import Link from "next/link"
 import Image from "next/image"
 
 export default function OrthopedicCarePage() {
@@ -107,7 +108,7 @@ export default function OrthopedicCarePage() {
                   <p className="text-lg font-light text-muted-foreground leading-relaxed">{treatment.desc}</p>
                   <Button variant="link" className="text-primary p-0 h-auto font-semibold group/btn">
                     Learn more
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
                 </div>
               </div>
@@ -184,12 +185,14 @@ export default function OrthopedicCarePage() {
             to restoring your mobility and quality of life.
           </p>
           <div className="pt-8">
+            <Link href="/appointment">
             <Button
               size="lg"
               className="rounded-full px-12 h-16 text-lg bg-white text-primary hover:bg-gray-100 hover:text-primary font-semibold"
             >
               Book Consultation
             </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -46,8 +46,9 @@ export default function DoctorAvailabilityPage() {
 
   const currentHour = currentTime.getHours()
   const currentMinute = currentTime.getMinutes()
-  const isBefore5PM = currentHour < 17 || (currentHour === 17 && currentMinute === 0)
-  const canUpdateTomorrow = isBefore5PM
+  const currentTimeInMinutes = currentHour * 60 + currentMinute
+  const windowOpenTime = 17 * 60 // 5 PM = 1020 minutes
+  const canUpdateTomorrow = currentTimeInMinutes < windowOpenTime
 
   const handleToggleAvailability = async (checked: boolean) => {
     if (!canUpdateTomorrow) {
@@ -143,7 +144,10 @@ export default function DoctorAvailabilityPage() {
 
                   <div className="flex items-center justify-between p-6 bg-background rounded-lg border-2 border-border">
                     <div className="flex-1">
-                      <Label htmlFor="availability-toggle" className="text-lg font-semibold cursor-pointer">
+                      <Label 
+                        htmlFor="availability-toggle" 
+                        className={`text-lg font-semibold ${canUpdateTomorrow ? "cursor-pointer" : "cursor-not-allowed opacity-70"}`}
+                      >
                         Mark as Available
                       </Label>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -163,12 +167,17 @@ export default function DoctorAvailabilityPage() {
                       ) : (
                         <XCircle className="w-6 h-6 text-red-600" />
                       )}
-                      <Switch
-                        id="availability-toggle"
-                        checked={tomorrowAvailable}
-                        onCheckedChange={handleToggleAvailability}
-                        disabled={!canUpdateTomorrow || saving}
-                      />
+                      <div className="relative">
+                        <Switch
+                          id="availability-toggle"
+                          checked={tomorrowAvailable}
+                          onCheckedChange={handleToggleAvailability}
+                          disabled={!canUpdateTomorrow || saving}
+                        />
+                        {!canUpdateTomorrow && (
+                          <div className="absolute inset-0 cursor-not-allowed rounded-full" title="Cannot update after 5 PM" />
+                        )}
+                      </div>
                     </div>
                   </div>
 
