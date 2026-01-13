@@ -1,0 +1,137 @@
+{
+  "mainMenu": [
+    {
+      "id": "appointments",
+      "label": "Book Appointment",
+      "icon": "calendar",
+      "submenu": [
+        {
+          "id": "general",
+          "label": "General Appointment",
+          "action": "navigate",
+          "href": "/appointment?type=general"
+        },
+        {
+          "id": "priority",
+          "label": "Priority Appointment",
+          "action": "navigate",
+          "href": "/appointment?type=priority"
+        },
+        {
+          "id": "emergency",
+          "label": "Emergency Care",
+          "action": "navigate",
+          "href": "/contact"
+        }
+      ]
+    },
+    {
+      "id": "services",
+      "label": "Our Services",
+      "icon": "stethoscope",
+      "submenu": [
+        {
+          "id": "opd",
+          "label": "OPD Consultation",
+          "action": "navigate",
+          "href": "/services#opd"
+        },
+        {
+          "id": "surgery",
+          "label": "Operation Theatre",
+          "action": "navigate",
+          "href": "/services#surgery"
+        },
+        {
+          "id": "xray",
+          "label": "X-Ray Services",
+          "action": "navigate",
+          "href": "/services#xray"
+        },
+        {
+          "id": "imaging",
+          "label": "Imaging & Diagnostics",
+          "action": "navigate",
+          "href": "/services#imaging"
+        },
+        {
+          "id": "blood-tests",
+          "label": "Blood Tests",
+          "action": "navigate",
+          "href": "/services#blood-tests"
+        },
+        {
+          "id": "pathology",
+          "label": "Pathology Services",
+          "action": "navigate",
+          "href": "/services#pathology"
+        },
+        {
+          "id": "physio",
+          "label": "Physiotherapy",
+          "action": "navigate",
+          "href": "/services#physio"
+        },
+        {
+          "id": "emergency",
+          "label": "Emergency & First Aid",
+          "action": "navigate",
+          "href": "/services#emergency"
+        }
+      ]
+    },
+    {
+      "id": "doctor",
+      "label": "About Dr. Subash Singh",
+      "icon": "user-md",
+      "action": "navigate",
+      "href": "/doctor"
+    },
+    {
+      "id": "contact",
+      "label": "Contact Information",
+      "icon": "phone",
+      "submenu": [
+        {
+          "id": "call",
+          "label": "Call Hospital",
+          "action": "call",
+          "phone": "+917860115757"
+        },
+        {
+          "id": "emergency",
+          "label": "Emergency Number",
+          "action": "call",
+          "phone": "+917860115757"
+        },
+        {
+          "id": "location",
+          "label": "Get Directions",
+          "action": "navigate",
+          "href": "/contact"
+        },
+        {
+          "id": "email",
+          "label": "Send Email",
+          "action": "email",
+          "email": "contact@parthhospital.com"
+        }
+      ]
+    },
+    {
+      "id": "hours",
+      "label": "Hospital Timings",
+      "icon": "clock",
+      "action": "info",
+      "message": "OPD Hours: Monday to Friday (10 AM - 4 PM), Saturday (10 AM - 2 PM), Sunday (Emergencies Only). Emergency services available 24/7."
+    },
+    {
+      "id": "location",
+      "label": "Hospital Location",
+      "icon": "map-pin",
+      "action": "info",
+      "message": "Parth Hospital is located at Opposite Railway Station, Civil Lines, Jaunpur, Uttar Pradesh 222001"
+    }
+  ]
+}
+

@@ -1,0 +1,363 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  role          UserRole @default(EMPLOYEE)
+  name          String
+  phone         String?
+  department    String?
+  position      String?
+  status        UserStatus @default(ACTIVE)
+  adminEmail    String?  @unique @map("admin_email")
+  hasAdminCreds Boolean  @default(false) @map("has_admin_creds")
+  employeePasswordHash String? @map("employee_password_hash")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  employee      Employee?
+  appointments  Appointment[]
+  inquiries     Inquiry[]
+  leaves        LeaveRequest[]
+  approvedLeaves LeaveRequest[] @relation("ApprovedLeaves")
+  attendance    Attendance[]
+  notifications Notification[]
+  todos         Todo[]
+  notes         Note[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  ACCOUNTANT
+  RECEPTIONIST
+  EMPLOYEE
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// Employee model (linked to User)
+model Employee {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  employeeId String  @unique @map("employee_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("employees")
+}
+
+// Appointment model
+model Appointment {
+  id              String            @id @default(cuid())
+  serialNumber    Int?              @map("serial_number")
+  patientName     String            @map("patient_name")
+  patientAge      Int               @map("patient_age")
+  patientEmail    String?           @map("patient_email")
+  patientPhone    String            @map("patient_phone")
+  date            DateTime
+  appointmentType AppointmentType   @map("appointment_type")
+  timeSlot        String?           @map("time_slot")
+  preferredTime  String?           @map("preferred_time")
+  arrivalTime    String?             @map("arrival_time")
+  slotTime        String?           @map("slot_time")
+  paymentMethod   PaymentMethod     @map("payment_method")
+  bookingType     BookingType       @default(ONLINE) @map("booking_type")
+  status          AppointmentStatus @default(PENDING)
+  reason          String?
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  payment         Payment?
+  createdBy       String?           @map("created_by")
+  user            User?             @relation(fields: [createdBy], references: [id])
+
+  @@index([date])
+  @@index([status])
+  @@map("appointments")
+}
+
+enum AppointmentType {
+  GENERAL
+  PRIORITY
+}
+
+enum PaymentMethod {
+  ONLINE
+  PAY_AT_COUNTER
+}
+
+enum BookingType {
+  ONLINE
+  OFFLINE
+}
+
+enum AppointmentStatus {
+  PENDING
+  ARRIVED
+  CONSULTING
+  COMPLETED
+  CANCELLED
+}
+
+// Payment model
+model Payment {
+  id                String        @id @default(cuid())
+  appointmentId     String        @unique @map("appointment_id")
+  amount            Float
+  method            PaymentMethod
+  status            PaymentStatus @default(PENDING)
+  razorpayOrderId   String?       @map("razorpay_order_id")
+  razorpayPaymentId String?       @map("razorpay_payment_id")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+// Doctor Availability model
+model DoctorAvailability {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  available Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([date])
+  @@map("doctor_availability")
+}
+
+// Leave Request model
+model LeaveRequest {
+  id          String          @id @default(cuid())
+  userId      String          @map("user_id")
+  startDate   DateTime        @map("start_date")
+  endDate     DateTime        @map("end_date")
+  days        Int
+  reason      String
+  status      LeaveStatus     @default(PENDING)
+  approvedBy  String?          @map("approved_by")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approver  User?  @relation("ApprovedLeaves", fields: [approvedBy], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@map("leave_requests")
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Attendance model
+model Attendance {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  weekStartDate DateTime @map("week_start_date")
+  monday        AttendanceStatus
+  tuesday       AttendanceStatus
+  wednesday     AttendanceStatus
+  thursday      AttendanceStatus
+  friday        AttendanceStatus
+  saturday      AttendanceStatus
+  sunday        AttendanceStatus
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStartDate])
+  @@index([userId])
+  @@index([weekStartDate])
+  @@map("attendance")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  ON_LEAVE
+  OFF
+}
+
+// Inquiry model
+model Inquiry {
+  id          String        @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  subject     String
+  message     String
+  type        InquiryType   @default(GENERAL)
+  status      InquiryStatus @default(PENDING)
+  respondedBy String?       @map("responded_by")
+  response    String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [respondedBy], references: [id])
+
+  @@index([status])
+  @@map("inquiries")
+}
+
+enum InquiryType {
+  GENERAL
+  APPOINTMENT
+  EMERGENCY
+}
+
+enum InquiryStatus {
+  PENDING
+  RESPONDED
+}
+
+// Gallery Album model
+model GalleryAlbum {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  coverImageUrl String? @map("cover_image_url")
+  uploadedBy  String?  @map("uploaded_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  images      Gallery[]
+
+  @@map("gallery_albums")
+}
+
+// Gallery model (for individual images)
+model Gallery {
+  id          String   @id @default(cuid())
+  imageUrl    String   @map("image_url")
+  title       String?
+  description String?
+  albumId     String?  @map("album_id")
+  uploadedBy  String?  @map("uploaded_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  album       GalleryAlbum? @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@index([albumId])
+  @@map("gallery")
+}
+
+// Achievement model
+model Achievement {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  type        AchievementType  @default(HOSPITAL)
+  createdBy   String?          @map("created_by")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  @@map("achievements")
+}
+
+enum AchievementType {
+  OWNER
+  HOSPITAL
+}
+
+// Notification model
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+// Todo model for NexRoutine
+model Todo {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  title       String
+  completed   Boolean  @default(false)
+  dueDate     DateTime? @map("due_date")
+  priority    TodoPriority @default(MEDIUM)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([completed])
+  @@map("todos")
+}
+
+enum TodoPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// Note model for NexRoutine
+model Note {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  title       String?
+  content     String
+  color       String?  @default("#fff9c4")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("notes")
+}

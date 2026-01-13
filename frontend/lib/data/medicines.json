@@ -1,0 +1,219 @@
+[
+  {
+    "id": "1",
+    "saltName": "Paracetamol",
+    "shortForm": "par",
+    "commonName": "Paracetamol"
+  },
+  {
+    "id": "2",
+    "saltName": "Ibuprofen",
+    "shortForm": "ibu",
+    "commonName": "Ibuprofen"
+  },
+  {
+    "id": "3",
+    "saltName": "Diclofenac",
+    "shortForm": "dic",
+    "commonName": "Diclofenac"
+  },
+  {
+    "id": "4",
+    "saltName": "Naproxen",
+    "shortForm": "nap",
+    "commonName": "Naproxen"
+  },
+  {
+    "id": "5",
+    "saltName": "Aceclofenac",
+    "shortForm": "ace",
+    "commonName": "Aceclofenac"
+  },
+  {
+    "id": "6",
+    "saltName": "Etoricoxib",
+    "shortForm": "eto",
+    "commonName": "Etoricoxib"
+  },
+  {
+    "id": "7",
+    "saltName": "Celecoxib",
+    "shortForm": "cel",
+    "commonName": "Celecoxib"
+  },
+  {
+    "id": "8",
+    "saltName": "Amoxicillin",
+    "shortForm": "amx",
+    "commonName": "Amoxicillin"
+  },
+  {
+    "id": "9",
+    "saltName": "Azithromycin",
+    "shortForm": "azi",
+    "commonName": "Azithromycin"
+  },
+  {
+    "id": "10",
+    "saltName": "Ciprofloxacin",
+    "shortForm": "cip",
+    "commonName": "Ciprofloxacin"
+  },
+  {
+    "id": "11",
+    "saltName": "Doxycycline",
+    "shortForm": "dox",
+    "commonName": "Doxycycline"
+  },
+  {
+    "id": "12",
+    "saltName": "Cefixime",
+    "shortForm": "cef",
+    "commonName": "Cefixime"
+  },
+  {
+    "id": "13",
+    "saltName": "Ceftriaxone",
+    "shortForm": "ctr",
+    "commonName": "Ceftriaxone"
+  },
+  {
+    "id": "14",
+    "saltName": "Levofloxacin",
+    "shortForm": "lev",
+    "commonName": "Levofloxacin"
+  },
+  {
+    "id": "15",
+    "saltName": "Thiocolchicoside",
+    "shortForm": "thi",
+    "commonName": "Thiocolchicoside"
+  },
+  {
+    "id": "16",
+    "saltName": "Tizanidine",
+    "shortForm": "tiz",
+    "commonName": "Tizanidine"
+  },
+  {
+    "id": "17",
+    "saltName": "Baclofen",
+    "shortForm": "bac",
+    "commonName": "Baclofen"
+  },
+  {
+    "id": "18",
+    "saltName": "Cyclobenzaprine",
+    "shortForm": "cyc",
+    "commonName": "Cyclobenzaprine"
+  },
+  {
+    "id": "19",
+    "saltName": "Omeprazole",
+    "shortForm": "ome",
+    "commonName": "Omeprazole"
+  },
+  {
+    "id": "20",
+    "saltName": "Pantoprazole",
+    "shortForm": "pan",
+    "commonName": "Pantoprazole"
+  },
+  {
+    "id": "21",
+    "saltName": "Ranitidine",
+    "shortForm": "ran",
+    "commonName": "Ranitidine"
+  },
+  {
+    "id": "22",
+    "saltName": "Domperidone",
+    "shortForm": "dom",
+    "commonName": "Domperidone"
+  },
+  {
+    "id": "23",
+    "saltName": "Ondansetron",
+    "shortForm": "ond",
+    "commonName": "Ondansetron"
+  },
+  {
+    "id": "24",
+    "saltName": "Calcium Carbonate",
+    "shortForm": "cal",
+    "commonName": "Calcium Carbonate"
+  },
+  {
+    "id": "25",
+    "saltName": "Cholecalciferol",
+    "shortForm": "cho",
+    "commonName": "Vitamin D3"
+  },
+  {
+    "id": "26",
+    "saltName": "Methylcobalamin",
+    "shortForm": "met",
+    "commonName": "Vitamin B12"
+  },
+  {
+    "id": "27",
+    "saltName": "Folic Acid",
+    "shortForm": "fol",
+    "commonName": "Folic Acid"
+  },
+  {
+    "id": "28",
+    "saltName": "Glucosamine",
+    "shortForm": "glu",
+    "commonName": "Glucosamine"
+  },
+  {
+    "id": "29",
+    "saltName": "Chondroitin",
+    "shortForm": "cho",
+    "commonName": "Chondroitin"
+  },
+  {
+    "id": "30",
+    "saltName": "Methylsulfonylmethane",
+    "shortForm": "msm",
+    "commonName": "MSM"
+  },
+  {
+    "id": "31",
+    "saltName": "Calcium Citrate",
+    "shortForm": "cac",
+    "commonName": "Calcium Citrate"
+  },
+  {
+    "id": "32",
+    "saltName": "Diclofenac Gel",
+    "shortForm": "dgl",
+    "commonName": "Diclofenac Gel"
+  },
+  {
+    "id": "33",
+    "saltName": "Methyl Salicylate",
+    "shortForm": "msa",
+    "commonName": "Methyl Salicylate"
+  },
+  {
+    "id": "34",
+    "saltName": "Capsaicin",
+    "shortForm": "cap",
+    "commonName": "Capsaicin"
+  },
+  {
+    "id": "35",
+    "saltName": "Drotaverine",
+    "shortForm": "dro",
+    "commonName": "Drotaverine"
+  },
+  {
+    "id": "36",
+    "saltName": "Mefenamic Acid",
+    "shortForm": "mef",
+    "commonName": "Mefenamic Acid"
+  }
+]
+
