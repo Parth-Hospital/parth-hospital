@@ -6,10 +6,10 @@ import { PrescriptionManager } from "@/components/prescription/prescription-mana
 export default function PrescriptionPage() {
   return (
     <AdminLayout role="owner">
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Prescription Management</h2>
-          <p className="text-muted-foreground">Create and print prescriptions with medicine salt names</p>
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">Prescription Management</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">Create and print prescriptions with medicine salt names</p>
         </div>
         <PrescriptionManager />
       </div>

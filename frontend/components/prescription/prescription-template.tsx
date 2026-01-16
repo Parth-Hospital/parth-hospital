@@ -31,7 +31,7 @@ export function PrescriptionTemplate({
   return (
     <div
       id="prescription-print-area"
-      className="bg-white border-2 border-gray-300 relative"
+      className="bg-white border-2 border-gray-300 relative w-full max-w-full sm:w-[210mm] sm:min-h-[297mm] mx-auto"
       style={{
         width: "210mm",
         minHeight: "297mm",

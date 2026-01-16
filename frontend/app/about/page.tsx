@@ -25,41 +25,41 @@ export default function AboutPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
               Our Story
             </div>
-            <h1 className="text-huge text-primary leading-[0.85] mb-8">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85] mb-6 sm:mb-8">
               HEALING
               <br />
               <span className="text-foreground italic font-light opacity-80">LEGACY.</span>
             </h1>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
             <motion.div
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <p className="text-3xl font-light leading-relaxed text-muted-foreground">
+              <p className="text-xl sm:text-2xl md:text-3xl font-light leading-relaxed text-muted-foreground">
                 Parth Hospital was founded with a singular vision: to bring world-class healthcare to the doorstep of
                 Jaunpur.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                 For over two decades, we have been more than just a medical facility. We have been a pillar of trust,
                 combining advanced surgical expertise with the empathy that every patient deserves.
               </p>
             </motion.div>
             <motion.div
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                 Our commitment to excellence extends beyond medical procedures. We believe in building lasting
                 relationships with our patients, understanding their unique needs, and providing personalized care that
                 makes a difference.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                 With state-of-the-art facilities and a team of dedicated professionals, we continue to set new
                 standards in orthopedic care and patient satisfaction.
               </p>

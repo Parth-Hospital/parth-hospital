@@ -71,18 +71,18 @@ export default function ServicesPage() {
       <FloatingActions />
 
       {/* Hero Section */}
-      <section className="pt-48 pb-24 bg-background">
+      <section className="pt-36 md:pt-48 pb-16 md:pb-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="space-y-8 max-w-4xl">
+          <div className="space-y-6 md:space-y-8 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-bold uppercase tracking-widest">
               Comprehensive Care
             </div>
-            <h1 className="text-huge text-primary leading-[0.85]">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85]">
               OUR
               <br />
               <span className="text-foreground italic font-light opacity-80">SERVICES.</span>
             </h1>
-            <p className="text-2xl font-light text-muted-foreground leading-relaxed max-w-2xl pt-8">
+            <p className="text-lg sm:text-xl md:text-2xl font-light text-muted-foreground leading-relaxed max-w-2xl pt-4 md:pt-8">
               Parth Hospital provides complete healthcare services focused on orthopedic excellence, emergency care, and
               patient recovery.
             </p>
@@ -91,13 +91,13 @@ export default function ServicesPage() {
       </section>
 
       {/* Services Grid - Editorial List Pattern */}
-      <section className="py-24 bg-secondary/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-secondary/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid gap-1">
             {services.map((service) => (
               <div
                 key={service.id}
-                className="group bg-background grid lg:grid-cols-12 gap-6 sm:gap-12 p-6 sm:p-12 lg:p-20 hover:bg-primary transition-all duration-700 overflow-hidden relative border-b border-border/50 last:border-b-0"
+                className="group bg-background grid lg:grid-cols-12 gap-4 sm:gap-6 md:gap-12 p-4 sm:p-6 md:p-12 lg:p-20 hover:bg-primary transition-all duration-700 overflow-hidden relative border-b border-border/50 last:border-b-0"
               >
                 {/* Visual Accent */}
                 <span className="absolute -left-4 sm:-left-10 top-1/2 -translate-y-1/2 text-[8rem] sm:text-[12rem] lg:text-[15rem] font-bold text-primary/5 group-hover:text-white/5 transition-colors leading-none italic pointer-events-none">
@@ -151,16 +151,16 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 bg-background text-center">
-        <div className="max-w-3xl mx-auto px-6 space-y-8">
-          <h3 className="text-4xl md:text-6xl font-medium tracking-tight">Ready for expert care?</h3>
-          <p className="text-xl font-light text-muted-foreground leading-relaxed">
+      <section className="py-16 sm:py-24 md:py-32 bg-background text-center">
+        <div className="max-w-3xl mx-auto px-6 space-y-6 sm:space-y-8">
+          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight">Ready for expert care?</h3>
+          <p className="text-base sm:text-lg md:text-xl font-light text-muted-foreground leading-relaxed">
             Contact Parth Hospital today to access any of our comprehensive healthcare services. Dr. Subash Singh and
             his team are ready to assist you.
           </p>
-          <div className="pt-8">
+          <div className="pt-4 sm:pt-8">
             <Link href="/contact">
-            <Button size="lg" className="rounded-full px-12 h-18 text-lg bg-primary hover:bg-primary/90 transition-all">
+            <Button size="lg" className="rounded-full px-8 sm:px-12 h-14 sm:h-18 text-base sm:text-lg bg-primary hover:bg-primary/90 transition-all w-full sm:w-auto">
               Schedule a Service
             </Button>
             </Link>

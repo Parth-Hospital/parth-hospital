@@ -50,55 +50,77 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
     router.push("/login")
   }
 
-  const sidebarWidth = collapsed ? "w-16" : "w-64"
-
   return (
     <>
-      {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setOpen(!open)}
-          className="p-2 bg-white border border-border rounded-lg shadow-sm"
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
+      {/* Mobile menu button - only show when sidebar is closed */}
+      {!open && (
+        <div className="lg:hidden fixed top-4 left-4 z-50">
+          <button
+            onClick={() => setOpen(!open)}
+            className="p-2 bg-white border border-border rounded-lg shadow-sm"
+            aria-label="Toggle menu"
+          >
+            <Menu size={20} />
+          </button>
+        </div>
+      )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen ${sidebarWidth} bg-sidebar border-r border-sidebar-border z-40 transition-all duration-300 ${
+        className={`fixed left-0 top-0 h-screen ${
+          open ? "w-64" : "w-0"
+        } ${collapsed ? "lg:w-16" : "lg:w-64"} bg-sidebar border-r border-sidebar-border z-40 transition-all duration-300 ${
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
+        } flex flex-col`}
       >
-        <div className={`p-6 border-b border-sidebar-border ${collapsed ? "px-2" : ""}`}>
-          <div className="flex items-center justify-between">
-            {!collapsed && (
-              <div>
-                <h1 className="text-xl font-bold text-sidebar-primary">Parth Hospital</h1>
-                <p className="text-xs text-sidebar-foreground/60 mt-1 capitalize">{role} Portal</p>
+        {/* Header - Fixed at top */}
+        <div className={`p-4 lg:p-6 border-b border-sidebar-border flex-shrink-0 ${collapsed && !open ? "px-2" : ""}`}>
+          <div className="flex items-center justify-between gap-3">
+            {(!collapsed || open) && (
+              <div className="flex-1 min-w-0 pr-4 lg:pr-2">
+                <h1 className="text-lg lg:text-xl font-bold text-sidebar-primary truncate">Parth Hospital</h1>
+                <p className="text-xs text-sidebar-foreground/60 mt-1 capitalize truncate">{role} Portal</p>
               </div>
             )}
-            {collapsed && (
-              <div className="mx-auto">
+            {/* Only show PH when collapsed on desktop (hidden on mobile when closed) */}
+            {collapsed && !open && (
+              <div className="mx-auto hidden lg:block">
                 <h1 className="text-lg font-bold text-sidebar-primary">PH</h1>
               </div>
             )}
-            {/* Desktop collapse button */}
-            <button
-              onClick={toggleCollapse}
-              className="hidden lg:flex p-1.5 rounded-md hover:bg-sidebar-accent/10 text-sidebar-foreground transition-colors"
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-            </button>
+            {/* Mobile close button - only show on mobile when sidebar is open */}
+            {open && (
+              <button
+                onClick={() => setOpen(false)}
+                className="lg:hidden p-1.5 rounded-md hover:bg-sidebar-accent/10 text-sidebar-foreground transition-colors flex-shrink-0"
+                aria-label="Close menu"
+              >
+                <X size={18} />
+              </button>
+            )}
+            {/* Desktop collapse button - only show on desktop */}
+            {!open && (
+              <button
+                onClick={toggleCollapse}
+                className="hidden lg:flex p-1.5 rounded-md hover:bg-sidebar-accent/10 text-sidebar-foreground transition-colors flex-shrink-0"
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+              </button>
+            )}
           </div>
         </div>
 
-        <nav className={`p-4 space-y-2 ${collapsed ? "px-2" : ""}`}>
+        {/* Scrollable navigation area */}
+        <nav className={`flex-1 overflow-y-auto p-4 space-y-2 ${collapsed && !open ? "px-2" : ""}`}>
           <TooltipProvider>
             {navItems.map((item) => {
               const IconComponent = item.icon
+              // On mobile (lg breakpoint), when sidebar is open, always show full width with labels
+              // On desktop, respect collapsed state - show icons even when collapsed
+              const isMobileOpen = open
+              const showLabel = !collapsed || isMobileOpen
+              
               const content = (
                 <Link
                   key={item.href}
@@ -107,15 +129,20 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
                     item.active
                       ? "bg-sidebar-primary text-sidebar-primary-foreground"
                       : "text-sidebar-foreground hover:bg-sidebar-accent/10"
-                  } ${collapsed ? "justify-center px-2" : ""}`}
+                  } ${collapsed && !isMobileOpen ? "justify-center px-2" : ""} ${
+                    // On mobile, only show when sidebar is open. On desktop, always show.
+                    isMobileOpen ? "" : "hidden lg:flex"
+                  }`}
                   onClick={() => setOpen(false)}
                 >
                   <IconComponent size={20} className="flex-shrink-0" />
-                  {!collapsed && <span>{item.label}</span>}
+                  {showLabel && <span className="whitespace-nowrap">{item.label}</span>}
                 </Link>
               )
 
-              if (collapsed) {
+              // Show tooltip on desktop when collapsed (icons only)
+              // On mobile when open, show full content without tooltip
+              if (collapsed && !isMobileOpen) {
                 return (
                   <Tooltip key={item.href}>
                     <TooltipTrigger asChild>
@@ -133,15 +160,16 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
           </TooltipProvider>
         </nav>
 
-        <div className={`absolute bottom-6 ${collapsed ? "left-2 right-2" : "left-4 right-4"}`}>
+        {/* Logout button - Fixed at bottom */}
+        <div className={`p-4 border-t border-sidebar-border flex-shrink-0 ${collapsed && !open ? "px-2" : ""}`}>
           <Button
             variant="outline"
             size="sm"
-            className={`w-full flex items-center gap-2 bg-transparent ${collapsed ? "justify-center px-2" : ""}`}
+            className={`w-full flex items-center gap-2 bg-transparent ${collapsed && !open ? "justify-center px-2" : ""}`}
             onClick={handleLogout}
           >
             <LogOut size={16} />
-            {!collapsed && <span>Logout</span>}
+            {(!collapsed || open) && <span>Logout</span>}
           </Button>
         </div>
       </aside>

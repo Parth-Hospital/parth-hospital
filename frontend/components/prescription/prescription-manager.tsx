@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Search, Plus, X, Printer } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -26,6 +26,26 @@ export function PrescriptionManager() {
   const [patientAge, setPatientAge] = useState("")
   const [doctorName, setDoctorName] = useState("Dr. Subash Singh")
   const printAreaRef = useRef<HTMLDivElement>(null)
+
+  // Handle responsive scaling for prescription preview
+  useEffect(() => {
+    const updateScale = () => {
+      if (printAreaRef.current) {
+        const isMobile = window.innerWidth < 640
+        if (isMobile) {
+          printAreaRef.current.style.transform = "scale(0.5)"
+          printAreaRef.current.style.transformOrigin = "top left"
+        } else {
+          printAreaRef.current.style.transform = "scale(1)"
+          printAreaRef.current.style.transformOrigin = "center"
+        }
+      }
+    }
+
+    updateScale()
+    window.addEventListener("resize", updateScale)
+    return () => window.removeEventListener("resize", updateScale)
+  }, [])
 
   // Handle search
   const handleSearch = (query: string) => {
@@ -68,6 +88,12 @@ export function PrescriptionManager() {
   // Handle print directly without opening new tab
   const handlePrint = () => {
     if (!printAreaRef.current) return
+
+    // Reset transform for printing
+    const originalTransform = printAreaRef.current.style.transform
+    const originalTransformOrigin = printAreaRef.current.style.transformOrigin
+    printAreaRef.current.style.transform = "none"
+    printAreaRef.current.style.transformOrigin = "center"
 
     // Ensure images are loaded before printing
     const logoImg = printAreaRef.current.querySelector('img[alt="Parth Hospital Logo"]') as HTMLImageElement
@@ -186,8 +212,12 @@ export function PrescriptionManager() {
         // Trigger print
         window.print()
 
-        // Remove the style after printing
+        // Restore original transform and remove style after printing
         setTimeout(() => {
+          if (printAreaRef.current) {
+            printAreaRef.current.style.transform = originalTransform
+            printAreaRef.current.style.transformOrigin = originalTransformOrigin
+          }
           const styleToRemove = document.getElementById("prescription-print-style")
           if (styleToRemove) {
             document.head.removeChild(styleToRemove)
@@ -292,6 +322,11 @@ export function PrescriptionManager() {
       setTimeout(() => {
         window.print()
         setTimeout(() => {
+          // Restore original transform and remove style after printing
+          if (printAreaRef.current) {
+            printAreaRef.current.style.transform = originalTransform
+            printAreaRef.current.style.transformOrigin = originalTransformOrigin
+          }
           const styleToRemove = document.getElementById("prescription-print-style")
           if (styleToRemove) {
             document.head.removeChild(styleToRemove)
@@ -309,14 +344,14 @@ export function PrescriptionManager() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Patient Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Patient Information</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Patient Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Doctor Name</label>
               <Input
@@ -348,7 +383,7 @@ export function PrescriptionManager() {
       {/* Medicine Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Add Medicine (Salt Name)</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Add Medicine (Salt Name)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="relative">
@@ -400,15 +435,15 @@ export function PrescriptionManager() {
       {medicines.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Prescription Medicines ({medicines.length})</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Prescription Medicines ({medicines.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {medicines.map((medicine, index) => (
-                <div key={medicine.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className="font-semibold text-lg text-gray-900">
+                <div key={medicine.id} className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-start justify-between mb-3 gap-2">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-base sm:text-lg text-gray-900 wrap-break-word">
                         {index + 1}. {medicine.saltName}
                       </h4>
                     </div>
@@ -416,12 +451,12 @@ export function PrescriptionManager() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRemoveMedicine(medicine.id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 shrink-0"
                     >
                       <X size={16} />
                     </Button>
                   </div>
-                  <div className="grid md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs text-gray-600 mb-1 block">Dosage (Optional)</label>
                       <Input
@@ -469,22 +504,39 @@ export function PrescriptionManager() {
       {/* Prescription Preview & Print */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Prescription Preview</CardTitle>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={handleClear} disabled={medicines.length === 0}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <CardTitle className="text-lg sm:text-xl">Prescription Preview</CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Button 
+                variant="outline" 
+                onClick={handleClear} 
+                disabled={medicines.length === 0}
+                className="w-full sm:w-auto"
+              >
                 Clear
               </Button>
-              <Button onClick={handlePrint} disabled={medicines.length === 0}>
-                <Printer size={16} className="" />
+              <Button 
+                onClick={handlePrint} 
+                disabled={medicines.length === 0}
+                className="w-full sm:w-auto"
+              >
+                <Printer size={16} className="mr-2" />
                 Print Prescription
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-center">
-            <div ref={printAreaRef} className="bg-white">
+          <div className="flex justify-center overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <div 
+              ref={printAreaRef} 
+              className="bg-white w-full max-w-full sm:w-auto sm:max-w-none" 
+              id="prescription-print-area"
+              style={{
+                width: "210mm",
+                minHeight: "297mm",
+              }}
+            >
               <PrescriptionTemplate
                 medicines={medicines}
                 patientName={patientName}
@@ -493,6 +545,9 @@ export function PrescriptionManager() {
               />
             </div>
           </div>
+          <p className="text-xs text-muted-foreground mt-2 text-center sm:hidden">
+            💡 Scroll horizontally to view full prescription. Print will be full size.
+          </p>
         </CardContent>
       </Card>
     </div>

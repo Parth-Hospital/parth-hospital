@@ -77,12 +77,12 @@ export default function ContactPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
               Reach Out
             </div>
-            <h1 className="text-huge text-primary leading-[0.85] mb-8">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85] mb-6 sm:mb-8 break-words">
               ALWAYS
               <br />
               <span className="text-foreground italic font-light opacity-80">CONNECTED.</span>
             </h1>
-            <p className="text-2xl font-light text-muted-foreground leading-relaxed max-w-3xl">
+            <p className="text-lg sm:text-xl md:text-2xl font-light text-muted-foreground leading-relaxed max-w-3xl break-words">
               Whether it's an emergency, a consultation, or a simple inquiry, our team is here to assist you 24/7.
             </p>
           </motion.div>

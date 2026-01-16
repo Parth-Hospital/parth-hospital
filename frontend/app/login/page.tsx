@@ -16,22 +16,22 @@ export default function LoginPage() {
 
       <div className="flex-1 grid lg:grid-cols-2">
         {/* Visual Side */}
-        <div className="hidden lg:block relative bg-primary overflow-hidden">
+        <div className="relative bg-primary overflow-hidden min-h-[300px] lg:min-h-0">
           <div className="absolute inset-0 bg-[url('/modern-hospital-interior-lobby.jpg')] bg-cover opacity-20 grayscale" />
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-transparent" />
 
-          <div className="absolute inset-0 flex flex-col justify-between p-20 text-white">
+          <div className="absolute inset-0 flex flex-col justify-between p-8 lg:p-20 text-white">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter uppercase">Parth Hospital</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold tracking-tighter uppercase">Parth Hospital</h2>
               <p className="text-xs uppercase tracking-[0.4em] text-white/40">Secure Management Portal</p>
             </div>
 
-            <div className="space-y-8 max-w-md">
-              <h1 className="text-7xl font-medium leading-[0.9] tracking-tighter">
+            <div className="space-y-4 lg:space-y-8 max-w-md">
+              <h1 className="text-4xl lg:text-7xl font-medium leading-[0.9] tracking-tighter">
                 PRECISION <br />
                 <span className="italic text-accent">CONTROL.</span>
               </h1>
-              <p className="text-xl font-light text-white/60 leading-relaxed">
+              <p className="text-base lg:text-xl font-light text-white/60 leading-relaxed">
                 Empowering our medical and administrative staff with the tools they need to provide world-class
                 healthcare in Jaunpur.
               </p>

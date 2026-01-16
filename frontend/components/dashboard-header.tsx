@@ -44,16 +44,16 @@ export function DashboardHeader({ title, subtitle, role }: DashboardHeaderProps)
 
   return (
     <>
-      <div className="border-b border-border bg-white p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">{title}</h2>
-            {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
+      <div className="border-b border-border bg-white p-4 lg:p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0 flex-1 pl-16 lg:pl-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground truncate">{title}</h2>
+            {subtitle && <p className="text-xs sm:text-sm text-muted-foreground mt-1 truncate">{subtitle}</p>}
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="relative"
+            className="relative flex-shrink-0"
             onClick={() => setNotificationsOpen(true)}
           >
             <Bell className="h-5 w-5" />

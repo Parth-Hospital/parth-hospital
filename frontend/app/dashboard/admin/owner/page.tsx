@@ -76,10 +76,10 @@ export default function OwnerDashboard() {
 
   return (
     <AdminLayout role="owner">
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Dashboard Overview</h2>
-          <p className="text-muted-foreground">Monitor hospital operations and performance</p>
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">Dashboard Overview</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">Monitor hospital operations and performance</p>
         </div>
 
         {loading ? (
@@ -90,8 +90,8 @@ export default function OwnerDashboard() {
           <>
             {/* KPI Cards */}
             <section>
-              <h3 className="text-lg font-semibold mb-4">Today's Overview</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Today's Overview</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -152,10 +152,10 @@ export default function OwnerDashboard() {
 
           {/* Charts Section */}
           <Tabs defaultValue="revenue" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="revenue">Revenue Trends</TabsTrigger>
-              <TabsTrigger value="appointments">Monthly Appointments</TabsTrigger>
-              <TabsTrigger value="status">Daily Distribution</TabsTrigger>
+            <TabsList className="w-full sm:w-auto flex-wrap">
+              <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue Trends</TabsTrigger>
+              <TabsTrigger value="appointments" className="text-xs sm:text-sm">Monthly Appointments</TabsTrigger>
+              <TabsTrigger value="status" className="text-xs sm:text-sm">Daily Distribution</TabsTrigger>
             </TabsList>
 
             <TabsContent value="revenue">

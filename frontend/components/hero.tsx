@@ -110,10 +110,10 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <Link href="/appointment">
+              <Link href="/appointment" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-white rounded-lg px-8 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group"
+                  className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-lg px-8 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group"
                 >
                   Book Appointment
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -122,7 +122,7 @@ export function Hero() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-foreground/20 rounded-lg text-foreground hover:bg-foreground/5 hover:text-foreground bg-transparent hover:border-primary/40 transition-all"
+                className="w-full sm:w-auto border-2 border-foreground/20 rounded-lg text-foreground hover:bg-foreground/5 hover:text-foreground bg-transparent hover:border-primary/40 transition-all"
                 onClick={() => {
                   const address = encodeURIComponent("Parth Hospital, Polytechnic chauraha, Jaunpur, Uttar Pradesh 222002")
                   window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, "_blank")

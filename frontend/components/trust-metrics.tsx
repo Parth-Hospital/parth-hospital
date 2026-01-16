@@ -50,22 +50,22 @@ export function TrustMetrics() {
               transition={{ delay: index * 0.1 }}
             >
               <MagicCard gradientColor={metric.gradient} className="h-full text-center">
-                <div className="text-5xl md:text-6xl font-bold text-primary mb-2 group-hover:text-secondary transition-colors duration-300">
+                <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-2 group-hover:text-secondary transition-colors duration-300 break-words overflow-hidden">
                   {metric.value !== null ? (
-                    <span className="inline-flex items-baseline whitespace-nowrap">
+                    <span className="inline-flex items-baseline flex-wrap justify-center gap-0.5">
                       <NumberTicker
                         value={metric.value}
                         delay={index * 0.2}
-                        className="text-5xl md:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300"
+                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300"
                       />
-                      <span className="text-5xl md:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">{metric.suffix}</span>
+                      <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">{metric.suffix}</span>
                     </span>
                   ) : (
-                    <span>{metric.staticText}</span>
+                    <span className="break-words">{metric.staticText}</span>
                   )}
                 </div>
-                <MagicCardTitle className="text-base mb-1">{metric.label}</MagicCardTitle>
-                <MagicCardDescription className="text-xs">{metric.description}</MagicCardDescription>
+                <MagicCardTitle className="text-sm sm:text-base mb-1 break-words">{metric.label}</MagicCardTitle>
+                <MagicCardDescription className="text-xs break-words">{metric.description}</MagicCardDescription>
               </MagicCard>
             </motion.div>
           ))}

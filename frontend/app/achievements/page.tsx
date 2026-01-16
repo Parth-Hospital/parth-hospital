@@ -61,13 +61,13 @@ export default function AchievementsPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-48 pb-24 bg-background">
+      <section className="pt-36 md:pt-48 pb-16 md:pb-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="space-y-8 max-w-4xl">
+          <div className="space-y-6 md:space-y-8 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-bold uppercase tracking-widest">
               Our Legacy
             </div>
-            <h1 className="text-huge text-primary leading-[0.85]">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85] mb-6 sm:mb-8 break-words">
               BUILDING
               <br />
               <span className="text-foreground italic font-light opacity-80">TRUST THROUGH RESULTS</span>

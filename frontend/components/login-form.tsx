@@ -145,7 +145,7 @@ export function LoginForm() {
         <CardTitle className="text-4xl font-medium tracking-tight">
           {step === "selection" && "Welcome Back"}
           {step === "role" && "Select Admin Role"}
-          {step === "credentials" && `${loginType === "admin" ? adminRole : "Employee"} Login`}
+          {step === "credentials" && `${loginType === "admin" ? (adminRole ? adminRole.charAt(0).toUpperCase() + adminRole.slice(1) : "Admin") : "Employee"} Login`}
         </CardTitle>
         <CardDescription className="text-lg font-light text-muted-foreground">
           {step === "selection" && "Select your access level to continue to the portal."}
