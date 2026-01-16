@@ -38,9 +38,9 @@ export function TrustMetrics() {
   ]
 
   return (
-    <section className="py-20 bg-white border-b border-border/30">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <section className="py-12 sm:py-16 md:py-20 bg-white border-b border-border/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {metrics.map((metric, index) => (
             <motion.div
               key={index}
@@ -49,23 +49,23 @@ export function TrustMetrics() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <MagicCard gradientColor={metric.gradient} className="h-full text-center">
-                <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-2 group-hover:text-secondary transition-colors duration-300 break-words overflow-hidden">
+              <MagicCard gradientColor={metric.gradient} className="h-full text-center p-4 sm:p-6">
+                <div className="min-h-[60px] sm:min-h-[80px] md:min-h-[100px] flex items-center justify-center mb-2 sm:mb-3">
                   {metric.value !== null ? (
-                    <span className="inline-flex items-baseline flex-wrap justify-center gap-0.5">
+                    <span className="inline-flex items-baseline justify-center gap-0.5 sm:gap-1 whitespace-nowrap">
                       <NumberTicker
                         value={metric.value}
                         delay={index * 0.2}
-                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300"
                       />
-                      <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">{metric.suffix}</span>
+                      <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300 leading-none">{metric.suffix}</span>
                     </span>
                   ) : (
-                    <span className="break-words">{metric.staticText}</span>
+                    <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300 whitespace-nowrap leading-none">{metric.staticText}</span>
                   )}
                 </div>
-                <MagicCardTitle className="text-sm sm:text-base mb-1 break-words">{metric.label}</MagicCardTitle>
-                <MagicCardDescription className="text-xs break-words">{metric.description}</MagicCardDescription>
+                <MagicCardTitle className="text-xs sm:text-sm md:text-base mb-1 wrap-break-word">{metric.label}</MagicCardTitle>
+                <MagicCardDescription className="text-[10px] sm:text-xs wrap-break-word leading-tight">{metric.description}</MagicCardDescription>
               </MagicCard>
             </motion.div>
           ))}
