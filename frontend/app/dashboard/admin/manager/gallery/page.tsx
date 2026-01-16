@@ -485,7 +485,7 @@ export default function ManagerGalleryPage() {
                 <Button onClick={handleUpload} className="flex-1" disabled={uploading || selectedFiles.length === 0}>
                   {uploading ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       {uploadType === "album" ? "Creating Album..." : "Uploading..."}
                     </>
                   ) : uploadType === "album" ? (
@@ -521,7 +521,7 @@ export default function ManagerGalleryPage() {
               >
                 {deleting ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4  animate-spin" />
                     Deleting...
                   </>
                 ) : (

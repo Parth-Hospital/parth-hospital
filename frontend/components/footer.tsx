@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { MapPin, Mail, Instagram, Facebook, Twitter, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -118,6 +119,30 @@ export function Footer() {
               Terms of Service
             </Link>
           </div>
+        </motion.div>
+
+        <motion.div
+          className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-3 text-white/60"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <p className="text-xs sm:text-sm">Developed and maintained by</p>
+          <Link
+            href="https://nexerve.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+          >
+            <Image
+              src="/Logo/logo-nobg-dark.png"
+              alt="Nexerve"
+              width={100}
+              height={30}
+              className="h-10 w-auto"
+            />
+          </Link>
         </motion.div>
       </div>
     </footer>

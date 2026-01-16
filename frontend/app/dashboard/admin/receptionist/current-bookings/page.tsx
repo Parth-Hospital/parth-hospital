@@ -134,7 +134,7 @@ export default function CurrentBookingsPage() {
             </p>
           </div>
           <Button onClick={() => setShowOfflineModal(true)}>
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4 " />
             Add Offline Booking
           </Button>
         </div>
@@ -252,7 +252,13 @@ export default function CurrentBookingsPage() {
                             {booking.patientPhone || <span className="text-muted-foreground">-</span>}
                           </td>
                           <td className="p-4">
-                            <Badge variant="outline">
+                            <Badge
+                              className={
+                                booking.appointmentType === "PRIORITY"
+                                  ? "bg-red-500 text-white hover:bg-red-600"
+                                  : "bg-green-500 text-white hover:bg-green-600"
+                              }
+                            >
                               {booking.appointmentType === "PRIORITY" ? "Priority" : "General"}
                             </Badge>
                           </td>
@@ -365,7 +371,7 @@ export default function CurrentBookingsPage() {
                 >
                   {addingOffline ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       Adding...
                     </>
                   ) : (

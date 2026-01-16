@@ -110,17 +110,17 @@ export default function EmployeeProfile() {
           </div>
           {!isEditing ? (
             <Button onClick={() => setIsEditing(true)}>
-              <Edit2 className="w-4 h-4 mr-2" />
+              <Edit2 className="w-4 h-4 " />
               Edit Profile
             </Button>
           ) : (
             <div className="flex gap-2">
               <Button variant="outline" onClick={handleCancel}>
-                <X className="w-4 h-4 mr-2" />
+                <X className="w-4 h-4 " />
                 Cancel
               </Button>
               <Button onClick={handleSave}>
-                <Save className="w-4 h-4 mr-2" />
+                <Save className="w-4 h-4 " />
                 Save Changes
               </Button>
             </div>

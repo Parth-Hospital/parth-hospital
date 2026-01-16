@@ -149,7 +149,7 @@ export default function TokensPage() {
                 </div>
                 <Button onClick={handleNext} disabled={updatingStatus === nextAppointment.id}>
                   {updatingStatus === nextAppointment.id ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className=" h-4 w-4 animate-spin" />
                   ) : null}
                   {nextAppointment.status === "PENDING" ? "Mark Arrived" : "Start Consulting"}
                 </Button>

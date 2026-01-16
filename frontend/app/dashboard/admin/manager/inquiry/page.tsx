@@ -300,7 +300,7 @@ export default function InquiryPage() {
                           }}
                           className="flex-1"
                         >
-                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                          <CheckCircle2 className="w-4 h-4 " />
                           Mark as Responded
                         </Button>
                       ) : (
@@ -363,7 +363,7 @@ export default function InquiryPage() {
                 >
                   {updating ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       Updating...
                     </>
                   ) : (

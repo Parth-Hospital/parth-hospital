@@ -103,7 +103,7 @@ export default function EmployeeLeave() {
             <p className="text-muted-foreground">Manage your leave applications and view leave balance</p>
           </div>
           <Button onClick={() => setShowDialog(true)}>
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4 " />
             Apply for Leave
           </Button>
         </div>
@@ -256,7 +256,7 @@ export default function EmployeeLeave() {
                 <Button type="submit" className="flex-1" disabled={submitting}>
                   {submitting ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       Submitting...
                     </>
                   ) : (

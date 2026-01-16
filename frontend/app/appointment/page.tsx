@@ -10,8 +10,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Calendar, Clock, User, Phone, MapPin, CreditCard, CheckCircle2, AlertCircle, CalendarCheck } from "lucide-react"
 import { AppointmentTicket } from "@/components/appointment-ticket"
+import { PaymentModal } from "@/components/payment-modal"
 import {
   calculateSerialNumberAndTime,
   formatDate,
@@ -32,6 +40,8 @@ export default function AppointmentPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [serialNumber, setSerialNumber] = useState<number | null>(null)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [pendingAppointmentData, setPendingAppointmentData] = useState<AppointmentFormData | null>(null)
   const [bookingWindow, setBookingWindow] = useState<{
     isOpen: boolean
     message: string
@@ -98,11 +108,23 @@ export default function AppointmentPage() {
       return
     }
 
+    // If payment method is online, show payment modal first
+    if (completeFormData.paymentMethod === "online") {
+      setPendingAppointmentData(completeFormData)
+      setShowPaymentModal(true)
+      return
+    }
+
+    // For pay at counter, proceed directly
+    await submitAppointment(completeFormData)
+  }
+
+  const submitAppointment = async (completeFormData: AppointmentFormData) => {
     setIsSubmitting(true)
 
     try {
       // Format date as datetime string at start of day (00:00:00)
-      const appointmentDate = new Date(bookingWindow.nextDate)
+      const appointmentDate = new Date(bookingWindow.nextDate!)
       appointmentDate.setHours(0, 0, 0, 0)
       const dateString = appointmentDate.toISOString()
 
@@ -126,6 +148,8 @@ export default function AppointmentPage() {
 
       setIsSubmitting(false)
       setIsSubmitted(true)
+      setShowPaymentModal(false)
+      setPendingAppointmentData(null)
     } catch (error: any) {
       console.error("Appointment booking error:", error)
       // Handle validation errors from backend
@@ -146,7 +170,19 @@ export default function AppointmentPage() {
         setErrors({ submit: error.message || "Failed to book appointment. Please try again." })
       }
       setIsSubmitting(false)
+      setShowPaymentModal(false)
     }
+  }
+
+  const handlePaymentComplete = async () => {
+    if (pendingAppointmentData) {
+      await submitAppointment(pendingAppointmentData)
+    }
+  }
+
+  const getPaymentAmount = () => {
+    if (!appointmentType) return 0
+    return appointmentType === "general" ? 500 : 1000
   }
 
   if (isSubmitted) {
@@ -440,6 +476,10 @@ export default function AppointmentPage() {
                       <CheckCircle2 className="w-4 h-4 text-secondary" />
                       <span>Pay online or at counter</span>
                     </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <CreditCard className="w-4 h-4 text-secondary" />
+                      <span>Fee: ₹500</span>
+                    </div>
                   </div>
                   {(!bookingWindow.isOpen || !bookingWindow.doctorAvailable || bookingWindow.isBefore5PM) && (
                     <Badge variant="outline" className="w-full justify-center">
@@ -489,6 +529,10 @@ export default function AppointmentPage() {
                     <div className="flex items-center gap-2 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-secondary" />
                       <span>Online payment required (Razorpay)</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <CreditCard className="w-4 h-4 text-secondary" />
+                      <span>Fee: ₹1,000</span>
                     </div>
                   </div>
                   {(!bookingWindow.isOpen || !bookingWindow.doctorAvailable || bookingWindow.isBefore5PM) && (
@@ -638,19 +682,35 @@ export default function AppointmentPage() {
                     Preferred Time (Optional)
                   </CardTitle>
                   <p className="text-sm text-muted-foreground mt-2">
-                    You can come at any time. Specify a preferred time if you have one.
+                    You can come at any time. Specify a preferred time if you have one (11 AM - 5 PM).
                   </p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <Label htmlFor="preferredTime">Preferred Time</Label>
-                    <Input
-                      id="preferredTime"
-                      type="time"
+                    <Select
                       value={formData.preferredTime || ""}
-                      onChange={(e) => handleInputChange("preferredTime", e.target.value)}
-                      className="max-w-xs"
-                    />
+                      onValueChange={(value) => handleInputChange("preferredTime", value)}
+                    >
+                      <SelectTrigger className="max-w-xs">
+                        <SelectValue placeholder="Select preferred time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="11:00">11:00 AM</SelectItem>
+                        <SelectItem value="11:30">11:30 AM</SelectItem>
+                        <SelectItem value="12:00">12:00 PM</SelectItem>
+                        <SelectItem value="12:30">12:30 PM</SelectItem>
+                        <SelectItem value="13:00">1:00 PM</SelectItem>
+                        <SelectItem value="13:30">1:30 PM</SelectItem>
+                        <SelectItem value="14:00">2:00 PM</SelectItem>
+                        <SelectItem value="14:30">2:30 PM</SelectItem>
+                        <SelectItem value="15:00">3:00 PM</SelectItem>
+                        <SelectItem value="15:30">3:30 PM</SelectItem>
+                        <SelectItem value="16:00">4:00 PM</SelectItem>
+                        <SelectItem value="16:30">4:30 PM</SelectItem>
+                        <SelectItem value="17:00">5:00 PM</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <p className="text-xs text-muted-foreground">
                       This is optional. You can arrive at any time during consultation hours (11 AM - 5 PM).
                     </p>
@@ -677,12 +737,13 @@ export default function AppointmentPage() {
                   <div className="p-4 border rounded-lg bg-primary/5 border-primary/20">
                     <div className="flex items-center gap-3">
                       <CreditCard className="w-5 h-5 text-primary" />
-                      <div>
+                      <div className="flex-1">
                         <div className="font-semibold">Online Payment (Razorpay)</div>
                         <div className="text-sm text-muted-foreground">
-                          Required for priority appointments. You will be redirected to Razorpay for payment.
+                          Required for priority appointments. Fee: ₹1,000
                         </div>
                       </div>
+                      <div className="text-2xl font-bold text-primary">₹1,000</div>
                     </div>
                   </div>
                 ) : (
@@ -704,8 +765,9 @@ export default function AppointmentPage() {
                       />
                       <Label htmlFor="online" className="flex-1 cursor-pointer">
                         <div className="font-semibold">Online Payment (Razorpay)</div>
-                        <div className="text-sm text-muted-foreground">Pay securely online through Razorpay</div>
+                        <div className="text-sm text-muted-foreground">Pay securely online. Fee: ₹500</div>
                       </Label>
+                      <div className="text-xl font-bold text-primary">₹500</div>
                     </div>
                     <div
                       className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer ${
@@ -756,6 +818,20 @@ export default function AppointmentPage() {
         </div>
       </div>
       <Footer />
+      
+      {/* Payment Modal */}
+      {appointmentType && (
+        <PaymentModal
+          open={showPaymentModal}
+          onClose={() => {
+            setShowPaymentModal(false)
+            setPendingAppointmentData(null)
+          }}
+          onPaymentComplete={handlePaymentComplete}
+          appointmentType={appointmentType}
+          amount={getPaymentAmount()}
+        />
+      )}
     </main>
   )
 }

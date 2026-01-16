@@ -81,7 +81,7 @@ export default function PaymentsPage() {
                 />
               </div>
               <Button variant="outline">
-                <Download size={16} className="mr-2" />
+                <Download size={16} className="" />
                 Export
               </Button>
             </div>

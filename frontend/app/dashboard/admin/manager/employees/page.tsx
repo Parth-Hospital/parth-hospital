@@ -628,7 +628,7 @@ export default function EmployeesPage() {
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button>
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className=" h-4 w-4" />
                 Add Employee
               </Button>
             </DialogTrigger>
@@ -646,11 +646,11 @@ export default function EmployeesPage() {
               >
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="manual">
-                    <UserPlus className="mr-2 h-4 w-4" />
+                    <UserPlus className=" h-4 w-4" />
                     Manual Entry
                   </TabsTrigger>
                   <TabsTrigger value="upload">
-                    <Upload className="mr-2 h-4 w-4" />
+                    <Upload className=" h-4 w-4" />
                     CSV/Excel Upload
                   </TabsTrigger>
                 </TabsList>
@@ -747,7 +747,7 @@ export default function EmployeesPage() {
                       <Button type="submit" disabled={submitting}>
                         {submitting ? (
                           <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            <Loader2 className="w-4 h-4  animate-spin" />
                             Adding...
                           </>
                         ) : (
@@ -1165,7 +1165,7 @@ export default function EmployeesPage() {
                 <Button type="submit" disabled={submitting}>
                   {submitting ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       Updating...
                     </>
                   ) : (
@@ -1195,7 +1195,7 @@ export default function EmployeesPage() {
               >
                 {submitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4  animate-spin" />
                     Deleting...
                   </>
                 ) : (

@@ -348,7 +348,7 @@ export default function NexRoutinePage() {
                   Tasks ({pendingTodos.length})
                 </CardTitle>
                 <Button size="sm" onClick={openNewTodo}>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Add Task
                 </Button>
               </div>
@@ -468,7 +468,7 @@ export default function NexRoutinePage() {
                   Notes ({notes.length})
                 </CardTitle>
                 <Button size="sm" onClick={openNewNote}>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4" />
                   Add Note
                 </Button>
               </div>
@@ -586,7 +586,7 @@ export default function NexRoutinePage() {
                 >
                   {processing ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       {editingTodo ? "Updating..." : "Creating..."}
                     </>
                   ) : editingTodo ? (
@@ -670,7 +670,7 @@ export default function NexRoutinePage() {
                 >
                   {processing ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4  animate-spin" />
                       {editingNote ? "Updating..." : "Creating..."}
                     </>
                   ) : editingNote ? (

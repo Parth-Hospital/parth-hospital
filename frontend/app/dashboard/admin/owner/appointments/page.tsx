@@ -141,7 +141,13 @@ export default function AppointmentsPage() {
                               {new Date(apt.date).toLocaleDateString("en-IN")}
                             </td>
                             <td className="p-3 sm:p-4">
-                              <Badge variant="outline" className="text-xs">
+                              <Badge
+                                className={`text-xs ${
+                                  apt.appointmentType === "PRIORITY"
+                                    ? "bg-red-500 text-white hover:bg-red-600"
+                                    : "bg-green-500 text-white hover:bg-green-600"
+                                }`}
+                              >
                                 {apt.appointmentType === "PRIORITY" ? "Priority" : "General"}
                               </Badge>
                             </td>

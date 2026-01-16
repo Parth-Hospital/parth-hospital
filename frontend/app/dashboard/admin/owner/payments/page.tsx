@@ -68,7 +68,7 @@ export default function PaymentsPage() {
                 <Input placeholder="Search by patient name, transaction ID..." className="pl-10" />
               </div>
               <Button variant="outline">
-                <Download size={16} className="mr-2" />
+                <Download size={16} className="" />
                 Export
               </Button>
             </div>

@@ -379,7 +379,7 @@ export function PrescriptionManager() {
                           <p className="text-xs text-gray-500">{medicine.commonName}</p>
                         )}
                       </div>
-                      <Badge variant="outline" className="ml-2">
+                      <Badge variant="outline" >
                         {medicine.shortForm}
                       </Badge>
                     </div>
@@ -476,7 +476,7 @@ export function PrescriptionManager() {
                 Clear
               </Button>
               <Button onClick={handlePrint} disabled={medicines.length === 0}>
-                <Printer size={16} className="mr-2" />
+                <Printer size={16} className="" />
                 Print Prescription
               </Button>
             </div>

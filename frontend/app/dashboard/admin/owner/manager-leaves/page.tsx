@@ -178,15 +178,13 @@ export default function ManagerLeaveRequestsPage() {
                             <div className="flex gap-2">
                               <Button
                                 size="sm"
-                                variant="default"
                                 onClick={() => handleActionClick(request, "approve")}
-                                className="bg-green-600 hover:bg-green-700"
                               >
                                 Approve
                               </Button>
                               <Button
                                 size="sm"
-                                variant="destructive"
+                                variant="outline"
                                 onClick={() => handleActionClick(request, "reject")}
                               >
                                 Reject
@@ -315,7 +313,7 @@ export default function ManagerLeaveRequestsPage() {
                   >
                     {processing ? (
                       <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        <Loader2 className="w-4 h-4  animate-spin" />
                         Processing...
                       </>
                     ) : (

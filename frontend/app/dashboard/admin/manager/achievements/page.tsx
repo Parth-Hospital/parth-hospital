@@ -165,7 +165,7 @@ export default function ManagerAchievementsPage() {
                     }}
                     size="sm"
                   >
-                    <Plus size={16} className="mr-2" />
+                    <Plus size={16} className="" />
                     Add Achievement
                   </Button>
                 </div>
@@ -204,7 +204,7 @@ export default function ManagerAchievementsPage() {
                         <Button onClick={handleAdd} size="sm" disabled={submitting}>
                           {submitting ? (
                             <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              <Loader2 className="w-4 h-4  animate-spin" />
                               Saving...
                             </>
                           ) : (
@@ -302,7 +302,7 @@ export default function ManagerAchievementsPage() {
               >
                 {deleting ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4  animate-spin" />
                     Deleting...
                   </>
                 ) : (

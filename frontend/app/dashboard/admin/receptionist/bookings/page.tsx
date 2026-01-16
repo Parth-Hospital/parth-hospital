@@ -127,9 +127,13 @@ export default function BookingsPage() {
                         <td className="p-4">{booking.arrivalTime || booking.preferredTime || "N/A"}</td>
                         <td className="p-4">
                           <Badge
-                            variant={booking.appointmentType === "PRIORITY" ? "default" : "secondary"}
+                            className={
+                              booking.appointmentType === "PRIORITY"
+                                ? "bg-red-500 text-white hover:bg-red-600"
+                                : "bg-green-500 text-white hover:bg-green-600"
+                            }
                           >
-                            {booking.appointmentType}
+                            {booking.appointmentType === "PRIORITY" ? "Priority" : "General"}
                           </Badge>
                         </td>
                         <td className="p-4">

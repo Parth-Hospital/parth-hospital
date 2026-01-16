@@ -2,29 +2,35 @@
 
 import { motion } from "framer-motion"
 import { MagicCard, MagicCardTitle, MagicCardDescription } from "@/components/ui/magic-card"
+import { NumberTicker } from "@/components/ui/number-ticker"
 
 export function TrustMetrics() {
   const metrics = [
     {
-      number: "20+",
+      value: 20,
+      suffix: "+",
       label: "Years of Experience",
       description: "Dr. Subash Singh's orthopedic expertise",
       gradient: "from-primary/20 via-primary/10 to-secondary/20",
     },
     {
-      number: "10,000+",
+      value: 10000,
+      suffix: "+",
       label: "Successful Procedures",
       description: "Bone, joint, and trauma surgeries",
       gradient: "from-secondary/20 via-secondary/10 to-primary/20",
     },
     {
-      number: "5,000+",
+      value: 5000,
+      suffix: "+",
       label: "Happy Patients",
       description: "Lives improved and transformed",
       gradient: "from-primary/20 via-accent/20 to-secondary/20",
     },
     {
-      number: "24/7",
+      value: null,
+      suffix: "",
+      staticText: "24/7",
       label: "Emergency Care",
       description: "Always available for urgent cases",
       gradient: "from-accent/20 via-primary/20 to-secondary/20",
@@ -45,7 +51,18 @@ export function TrustMetrics() {
             >
               <MagicCard gradientColor={metric.gradient} className="h-full text-center">
                 <div className="text-5xl md:text-6xl font-bold text-primary mb-2 group-hover:text-secondary transition-colors duration-300">
-                  {metric.number}
+                  {metric.value !== null ? (
+                    <span className="inline-flex items-baseline whitespace-nowrap">
+                      <NumberTicker
+                        value={metric.value}
+                        delay={index * 0.2}
+                        className="text-5xl md:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300"
+                      />
+                      <span className="text-5xl md:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">{metric.suffix}</span>
+                    </span>
+                  ) : (
+                    <span>{metric.staticText}</span>
+                  )}
                 </div>
                 <MagicCardTitle className="text-base mb-1">{metric.label}</MagicCardTitle>
                 <MagicCardDescription className="text-xs">{metric.description}</MagicCardDescription>

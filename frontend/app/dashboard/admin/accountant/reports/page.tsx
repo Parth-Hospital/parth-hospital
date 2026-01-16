@@ -22,7 +22,7 @@ export default function ReportsPage() {
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">Generate monthly salary summary</p>
               <Button>
-                <Download size={16} className="mr-2" />
+                <Download size={16} className="" />
                 Download Report
               </Button>
             </CardContent>
@@ -35,7 +35,7 @@ export default function ReportsPage() {
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">Generate annual financial summary</p>
               <Button>
-                <Download size={16} className="mr-2" />
+                <Download size={16} className="" />
                 Download Report
               </Button>
             </CardContent>
