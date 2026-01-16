@@ -284,7 +284,7 @@ export default function LeaveRequestsPage() {
               <DialogDescription>
                 {selectedRequest && (
                   <>
-                    {selectedRequest.employee?.name} - {calculateDays(selectedRequest.startDate, selectedRequest.endDate)} days
+                    {selectedRequest.user?.name} - {calculateDays(selectedRequest.startDate, selectedRequest.endDate)} days
                   </>
                 )}
               </DialogDescription>

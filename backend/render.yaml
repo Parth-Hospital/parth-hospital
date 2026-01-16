@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: parth-hospital-backend
+    env: node
+    buildCommand: yarn build
+    startCommand: yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production

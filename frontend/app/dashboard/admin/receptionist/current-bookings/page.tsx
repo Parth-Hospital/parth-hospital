@@ -102,7 +102,7 @@ export default function CurrentBookingsPage() {
   })
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "outline"> = {
+    const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
       PENDING: "outline",
       ARRIVED: "secondary",
       CONSULTING: "default",

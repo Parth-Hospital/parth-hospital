@@ -83,7 +83,7 @@ export const attendanceApi = {
   bulkCreateOrUpdateAttendance: async (
     records: CreateWeeklyAttendanceData[]
   ): Promise<{ success: number; failed: number }> => {
-    const response = await apiClient.post<AttendanceRecord[]>(
+    const response = await apiClient.post<WeeklyAttendance[]>(
       "/attendance/bulk",
       { records }
     )

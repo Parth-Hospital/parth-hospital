@@ -5,8 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
@@ -41,6 +42,7 @@
     "jspdf": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "tsx": "^4.16.2",
+    "typescript": "^5.5.3",
     "xlsx": "^0.18.5",
     "zod": "^3.23.8"
   },
@@ -54,7 +56,6 @@
     "eslint": "^8.57.0",
     "pino-pretty": "^11.2.1",
     "prettier": "^3.3.2",
-    "prisma": "^5.19.0",
-    "typescript": "^5.5.3"
+    "prisma": "^5.19.0"
   }
 }

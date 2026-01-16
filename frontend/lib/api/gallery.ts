@@ -88,7 +88,7 @@ export const galleryApi = {
   createGallery: async (data: CreateGalleryData): Promise<Gallery> => {
     const formData = new FormData()
     formData.append("image", data.image)
-    formData.append("title", data.title)
+    if (data.title) formData.append("title", data.title)
     if (data.description) formData.append("description", data.description)
     if (data.albumId) formData.append("albumId", data.albumId)
 

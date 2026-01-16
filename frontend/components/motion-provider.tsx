@@ -15,7 +15,6 @@ export function MotionProvider({ children }: MotionProviderProps) {
         const lenis = new Lenis({
           lerp: 0.08,
           smoothWheel: true,
-          smoothTouch: false,
           infinite: false,
           orientation: "vertical",
           gestureOrientation: "vertical",
