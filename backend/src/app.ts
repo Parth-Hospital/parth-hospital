@@ -1,3 +1,5 @@
+console.log("📦 Loading app modules...")
+
 import Fastify from "fastify"
 import cors from "@fastify/cors"
 import helmet from "@fastify/helmet"
@@ -20,9 +22,14 @@ import analyticsRoutes from "@/routes/analytics"
 import todoRoutes from "@/routes/todo"
 import noteRoutes from "@/routes/note"
 
+console.log("✅ All modules loaded successfully")
+console.log("🏗️  Creating Fastify app instance...")
+
 const app = Fastify({
   logger: env.NODE_ENV === "development",
 })
+
+console.log("✅ Fastify app created")
 
 // Register plugins
 app.register(helmet, {
