@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client"
 
 export const errorHandler = (
   error: FastifyError,
-  request: FastifyRequest,
+  _request: FastifyRequest,
   reply: FastifyReply
 ) => {
   // Zod validation errors

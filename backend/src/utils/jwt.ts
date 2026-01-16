@@ -12,7 +12,7 @@ export const generateToken = (user: AuthUser): string => {
     env.JWT_SECRET,
     {
       expiresIn: env.JWT_EXPIRES_IN,
-    }
+    } as jwt.SignOptions
   )
 }
 

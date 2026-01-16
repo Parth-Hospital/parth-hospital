@@ -2,7 +2,6 @@ import prisma from "@/config/database"
 import { hashPassword, comparePassword } from "@/utils/bcrypt"
 import { generateToken } from "@/utils/jwt"
 import { LoginInput, RegisterInput } from "@/validators/auth"
-import { UserRole } from "@prisma/client"
 
 export class AuthService {
   async login(data: LoginInput) {

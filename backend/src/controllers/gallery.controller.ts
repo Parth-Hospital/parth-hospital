@@ -91,7 +91,7 @@ export class GalleryController {
   }
 
   // Get all galleries (images and albums)
-  async getGalleries(request: FastifyRequest, reply: FastifyReply) {
+  async getGalleries(_request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await galleryService.getGalleries()
 

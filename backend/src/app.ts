@@ -65,7 +65,7 @@ app.register(noteRoutes, { prefix: `${env.API_PREFIX}/notes` })
 app.setErrorHandler(errorHandler)
 
 // 404 handler
-app.setNotFoundHandler((request, reply) => {
+app.setNotFoundHandler((_request, reply) => {
   reply.status(404).send({
     success: false,
     message: "Route not found",

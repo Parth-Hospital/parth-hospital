@@ -1,6 +1,6 @@
 import prisma from "@/config/database"
 import { CreateAppointmentInput, CreateOfflineAppointmentInput } from "@/validators/appointment"
-import { AppointmentType, BookingType } from "@prisma/client"
+import { AppointmentStatus } from "@prisma/client"
 
 // Calculate serial number and time based on total bookings
 function calculateSerialNumberAndTime(totalBookings: number): {
@@ -127,6 +127,7 @@ export class AppointmentService {
         patientName: "Offline Booking",
         patientAge: 0,
         patientPhone: "0000000000",
+        patientCity: "N/A",
         date: appointmentDate,
         appointmentType: "GENERAL",
         paymentMethod: "PAY_AT_COUNTER",
@@ -217,7 +218,7 @@ export class AppointmentService {
     }
   }
 
-  async updateAppointmentStatus(id: string, status: string) {
+  async updateAppointmentStatus(id: string, status: AppointmentStatus) {
     return prisma.appointment.update({
       where: { id },
       data: { status },

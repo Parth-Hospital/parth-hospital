@@ -1,4 +1,5 @@
 import prisma from "@/config/database"
+import { PaymentStatus } from "@prisma/client"
 
 export class AnalyticsService {
   // Owner Dashboard Analytics
@@ -188,7 +189,7 @@ export class AnalyticsService {
         createdAt: {
           gte: sevenDaysAgo,
         },
-        status: "COMPLETED",
+        status: PaymentStatus.SUCCESS,
       },
       include: {
         appointment: {
@@ -203,12 +204,12 @@ export class AnalyticsService {
 
     // Payment method distribution
     const paymentMethods = await prisma.payment.groupBy({
-      by: ["paymentMethod"],
+      by: ["method"],
       where: {
         createdAt: {
           gte: sevenDaysAgo,
         },
-        status: "COMPLETED",
+        status: PaymentStatus.SUCCESS,
       },
       _count: true,
     })
@@ -217,7 +218,7 @@ export class AnalyticsService {
       patientFlow,
       collectionData,
       paymentMethods: paymentMethods.map((pm) => ({
-        method: pm.paymentMethod,
+        method: pm.method,
         count: pm._count,
       })),
     }
@@ -247,7 +248,7 @@ export class AnalyticsService {
       },
     })
 
-    const attendanceSummary = this.calculateAttendanceSummary(attendanceRecords, today)
+    const attendanceSummary = this.calculateAttendanceSummary(attendanceRecords)
 
     // Leave summary
     const leaveRequests = await prisma.leaveRequest.findMany({
@@ -313,7 +314,7 @@ export class AnalyticsService {
     }))
   }
 
-  private calculateAttendanceSummary(records: any[], today: Date) {
+  private calculateAttendanceSummary(records: any[]) {
     let presentDays = 0
     let absentDays = 0
     const dayMap: Record<number, keyof typeof records[0]> = {

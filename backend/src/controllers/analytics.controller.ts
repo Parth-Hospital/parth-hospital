@@ -4,7 +4,7 @@ import { AnalyticsService } from "@/services/analytics.service"
 const analyticsService = new AnalyticsService()
 
 export class AnalyticsController {
-  async getOwnerDashboardStats(request: FastifyRequest, reply: FastifyReply) {
+  async getOwnerDashboardStats(_request: FastifyRequest, reply: FastifyReply) {
     try {
       const stats = await analyticsService.getOwnerDashboardStats()
       return reply.send({
@@ -19,7 +19,7 @@ export class AnalyticsController {
     }
   }
 
-  async getManagerDashboardStats(request: FastifyRequest, reply: FastifyReply) {
+  async getManagerDashboardStats(_request: FastifyRequest, reply: FastifyReply) {
     try {
       const stats = await analyticsService.getManagerDashboardStats()
       return reply.send({
