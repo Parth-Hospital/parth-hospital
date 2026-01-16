@@ -58,5 +58,9 @@
     "eslint": "^8.57.0",
     "pino-pretty": "^11.2.1",
     "prettier": "^3.3.2"
+  },
+  "resolutions": {
+    "prisma": "5.19.0",
+    "@prisma/client": "5.19.0"
   }
 }
