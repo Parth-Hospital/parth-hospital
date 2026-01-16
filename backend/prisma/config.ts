@@ -1,12 +1,11 @@
-import { defineConfig } from "prisma"
-import dotenv from "dotenv"
+/// <reference types="node" />
+import "dotenv/config"
 
-dotenv.config()
+const DATABASE_URL = (process as NodeJS.Process).env.DATABASE_URL || ""
 
-export default defineConfig({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL || "",
-    },
+export default {
+  schema: "./prisma/schema.prisma",
+  datasource: {
+    url: DATABASE_URL,
   },
-})
+}

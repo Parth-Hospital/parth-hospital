@@ -5,9 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "npx prisma generate && tsc && npx tsc-alias",
+    "build": "yarn prisma generate && tsc && yarn tsc-alias",
     "start": "node dist/server.js",
-    "postinstall": "npx prisma generate",
+    "postinstall": "yarn prisma generate",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
