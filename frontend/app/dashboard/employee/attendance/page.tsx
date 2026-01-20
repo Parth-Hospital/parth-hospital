@@ -64,7 +64,10 @@ export default function EmployeeAttendance() {
       const stats = await analyticsApi.getEmployeeDashboardStats()
       setWeeklyTrends(stats.weeklyAttendance || [])
     } catch (error: any) {
-      console.error("Failed to load analytics:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load analytics:", error)
+      }
     }
   }
 

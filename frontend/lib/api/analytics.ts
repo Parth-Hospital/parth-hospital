@@ -1,6 +1,6 @@
 import { apiClient } from "./client"
 
-export interface OwnerDashboardStats {
+export interface DoctorDashboardStats {
   today: {
     generalAppointments: number
     priorityAppointments: number
@@ -66,12 +66,12 @@ export interface EmployeeDashboardStats {
 }
 
 export const analyticsApi = {
-  getOwnerDashboardStats: async (): Promise<OwnerDashboardStats> => {
-    const response = await apiClient.get<OwnerDashboardStats>("/analytics/owner")
+  getDoctorDashboardStats: async (): Promise<DoctorDashboardStats> => {
+    const response = await apiClient.get<DoctorDashboardStats>("/analytics/doctor")
     if (response.success && response.data) {
       return response.data
     }
-    throw new Error(response.message || "Failed to fetch owner dashboard stats")
+    throw new Error(response.message || "Failed to fetch doctor dashboard stats")
   },
 
   getManagerDashboardStats: async (): Promise<ManagerDashboardStats> => {

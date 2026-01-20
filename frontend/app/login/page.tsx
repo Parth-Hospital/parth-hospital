@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/login-form"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowLeft, Info } from "lucide-react"
 
 export default function LoginPage() {
@@ -21,9 +22,18 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-transparent" />
 
           <div className="absolute inset-0 flex flex-col justify-between p-8 lg:p-20 text-white">
-            <div className="space-y-2">
-              <h2 className="text-2xl lg:text-3xl font-bold tracking-tighter uppercase">Parth Hospital</h2>
-              <p className="text-xs uppercase tracking-[0.4em] text-white/40">Secure Management Portal</p>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/Logo/parth-logo-nobg.png"
+                alt="Parth Hospital"
+                width={48}
+                height={48}
+                className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
+              />
+              <div className="space-y-1">
+                <h2 className="text-2xl lg:text-3xl font-bold tracking-tighter uppercase">Parth Hospital</h2>
+                <p className="text-xs uppercase tracking-[0.4em] text-white/40">Secure Management Portal</p>
+              </div>
             </div>
 
             <div className="space-y-4 lg:space-y-8 max-w-md">

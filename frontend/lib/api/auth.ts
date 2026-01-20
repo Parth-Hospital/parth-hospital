@@ -10,7 +10,7 @@ export interface RegisterData {
   password: string
   name: string
   phone?: string
-  role: "OWNER" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE"
+  role: "DOCTOR" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE"
   department?: string
   position?: string
 }

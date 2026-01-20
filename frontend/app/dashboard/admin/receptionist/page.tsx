@@ -54,7 +54,10 @@ export default function ReceptionistDashboard() {
       const data = await appointmentApi.getCurrentBookings()
       setBookings(data)
     } catch (error: any) {
-      console.error("Failed to load bookings:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load bookings:", error)
+      }
     }
   }
 

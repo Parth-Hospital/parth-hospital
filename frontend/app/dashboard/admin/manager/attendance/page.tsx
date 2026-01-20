@@ -86,7 +86,10 @@ export default function AttendancePage() {
       const stats = await analyticsApi.getManagerDashboardStats()
       setWeeklyTrends(stats.weeklyTrends || [])
     } catch (error: any) {
-      console.error("Failed to load analytics:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load analytics:", error)
+      }
     }
   }
 
@@ -260,7 +263,10 @@ export default function AttendancePage() {
           description: `Found ${errors.length} error(s). Some records may not be uploaded. Check console for details.`,
           variant: "default",
         })
-        console.error("Upload errors:", errors)
+        // Only log in development
+        if (process.env.NODE_ENV === "development") {
+          console.error("Upload errors:", errors)
+        }
       }
 
       if (attendanceRecords.length === 0) {

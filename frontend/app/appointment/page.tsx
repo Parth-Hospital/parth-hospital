@@ -151,7 +151,13 @@ export default function AppointmentPage() {
       setShowPaymentModal(false)
       setPendingAppointmentData(null)
     } catch (error: any) {
-      console.error("Appointment booking error:", error)
+      // Log important booking errors for debugging (development only)
+      if (process.env.NODE_ENV === "development") {
+        console.error("Appointment booking error:", {
+          message: error.message,
+          details: error.details,
+        })
+      }
       // Handle validation errors from backend
       if (error.details && Array.isArray(error.details)) {
         const validationErrors: Record<string, string> = {}
@@ -559,7 +565,7 @@ export default function AppointmentPage() {
     <main className="min-h-screen bg-background">
       <Navbar />
       <FloatingActions />
-      <div className="pt-32 pb-20 px-6">
+      <div className="pt-32 pb-12 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-8">
             <Button variant="ghost" onClick={() => setAppointmentType(null)} className="mb-4">

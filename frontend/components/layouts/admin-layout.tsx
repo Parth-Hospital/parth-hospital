@@ -15,7 +15,7 @@ interface AdminLayoutProps {
 export function AdminLayout({ role, children }: AdminLayoutProps) {
   const pathname = usePathname()
   const navItems = getNavigationForRole(role).map((item) => {
-    // For base routes (like /dashboard/admin/owner), only match exactly
+    // For base routes (like /dashboard/admin/doctor), only match exactly
     // For sub-routes, match if pathname starts with href
     const baseRoute = `/${pathname.split("/").slice(1, 4).join("/")}`
     const isBaseRoute = item.href === baseRoute

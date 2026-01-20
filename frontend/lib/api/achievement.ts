@@ -5,7 +5,7 @@ export interface Achievement {
   title: string
   description?: string
   date: string
-  type: "OWNER" | "HOSPITAL"
+  type: "DOCTOR" | "HOSPITAL"
   createdBy?: string
   createdAt: string
   updatedAt: string
@@ -15,7 +15,7 @@ export interface CreateAchievementData {
   title: string
   description?: string
   date: string
-  type: "OWNER" | "HOSPITAL"
+  type: "DOCTOR" | "HOSPITAL"
 }
 
 export interface UpdateAchievementData {
@@ -25,7 +25,7 @@ export interface UpdateAchievementData {
 }
 
 export const achievementApi = {
-  getAchievements: async (type?: "OWNER" | "HOSPITAL"): Promise<Achievement[]> => {
+  getAchievements: async (type?: "DOCTOR" | "HOSPITAL"): Promise<Achievement[]> => {
     const params = type ? { type } : {}
     const response = await apiClient.get<Achievement[]>("/achievements", params)
     if (response.success && response.data) {

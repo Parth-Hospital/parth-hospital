@@ -2,8 +2,8 @@ import prisma from "@/config/database"
 import { PaymentStatus } from "@prisma/client"
 
 export class AnalyticsService {
-  // Owner Dashboard Analytics
-  async getOwnerDashboardStats() {
+  // Doctor Dashboard Analytics
+  async getDoctorDashboardStats() {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const tomorrow = new Date(today)

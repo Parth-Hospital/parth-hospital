@@ -12,7 +12,7 @@ async function main() {
     email: string,
     password: string,
     phone: string,
-    role: "OWNER" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE",
+    role: "DOCTOR" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE",
     department: string,
     position: string
   ) {
@@ -66,15 +66,15 @@ async function main() {
     return user
   }
 
-  // Create Owner
+  // Create Doctor
   await createUserWithEmployee(
     "Dr. Subash Singh",
-    "owner@parthhospital.co.in",
-    "owner123",
+    "doctor@parthhospital.co.in",
+    "doctor123",
     "9876543210",
-    "OWNER",
+    "DOCTOR",
     "Orthopedics",
-    "Owner & Chief Surgeon"
+    "Doctor & Chief Surgeon"
   )
 
   // Create Manager
@@ -112,11 +112,11 @@ async function main() {
 
   console.log("\n🎉 Seeding completed!")
   console.log("\n📝 Admin Credentials (for Admin Dashboard Login):")
-  console.log("   Owner: owner@parthhospital.co.in / owner123")
+  console.log("   Doctor: doctor@parthhospital.co.in / doctor123")
   console.log("   Manager: manager@parthhospital.co.in / manager123")
   console.log("   Accountant: accountant@parthhospital.co.in / accountant123")
   console.log("   Receptionist: receptionist@parthhospital.co.in / receptionist123")
-  console.log("\n💡 Note: Generate employee credentials from Manager/Owner dashboard to enable Employee Dashboard login.")
+  console.log("\n💡 Note: Generate employee credentials from Manager/Doctor dashboard to enable Employee Dashboard login.")
 }
 
 main()

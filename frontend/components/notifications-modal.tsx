@@ -46,7 +46,10 @@ export function NotificationsModal({
       const data = await notificationApi.getNotifications()
       setNotifications(data)
     } catch (error: any) {
-      console.error("Failed to load notifications:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load notifications:", error)
+      }
       // Don't show toast for notifications, just fail silently
     } finally {
       setLoading(false)
@@ -58,7 +61,10 @@ export function NotificationsModal({
       const count = await notificationApi.getUnreadCount()
       setUnreadCount(count)
     } catch (error: any) {
-      console.error("Failed to load unread count:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load unread count:", error)
+      }
     }
   }
 

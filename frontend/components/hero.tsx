@@ -5,12 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Check, MapPin, ArrowRight, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { doctorAvailabilityApi } from "@/lib/api/doctorAvailability"
 
 export function Hero() {
   const [availabilityMessage, setAvailabilityMessage] = useState<string>("Available Today - 11 AM to 5 PM")
   const [loadingAvailability, setLoadingAvailability] = useState(true)
+  const [isNavigating, setIsNavigating] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const checkTodayAvailability = async () => {
@@ -41,7 +44,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative pt-28 pb-12 overflow-hidden bg-white">
+    <section className="relative pt-28 pb-24 sm:pb-12 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left: Patient-focused content */}
@@ -110,15 +113,30 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <Link href="/appointment" className="w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-lg px-8 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group"
-                >
-                  Book Appointment
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-lg px-8 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group relative overflow-hidden"
+                onClick={() => {
+                  setIsNavigating(true)
+                  // Add a small delay to show loading state before navigation
+                  setTimeout(() => {
+                    router.push("/appointment")
+                  }, 150)
+                }}
+                disabled={isNavigating}
+              >
+                {isNavigating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Booking...
+                  </>
+                ) : (
+                  <>
+                    Book Appointment
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </Button>
               <Button
                 size="lg"
                 variant="outline"

@@ -1,6 +1,7 @@
 import prisma from "@/config/database"
 import { CreateAppointmentInput, CreateOfflineAppointmentInput } from "@/validators/appointment"
 import { AppointmentStatus } from "@prisma/client"
+import { sanitizeInput, sanitizeText, sanitizePhone } from "@/utils/sanitize"
 
 // Calculate serial number and time based on total bookings
 function calculateSerialNumberAndTime(totalBookings: number): {
@@ -28,12 +29,22 @@ function calculateSerialNumberAndTime(totalBookings: number): {
 }
 
 export class AppointmentService {
-  async createAppointment(data: CreateAppointmentInput, userId?: string) {
+  /**
+   * Check if QA mode is enabled (via environment variable)
+   */
+  private isQAModeEnabled(): boolean {
+    return process.env.QA_MODE === "true" || process.env.NODE_ENV === "development"
+  }
+
+  async createAppointment(data: CreateAppointmentInput, userId?: string, qaMode?: boolean) {
     // Normalize appointment date to start of day (midnight) to match how availability is stored
     const appointmentDate = new Date(data.date)
     appointmentDate.setHours(0, 0, 0, 0)
 
-    // Check if booking window is open
+    // Check if booking window is open (skip in QA mode)
+    const enableQAMode = qaMode || this.isQAModeEnabled()
+    
+    if (!enableQAMode) {
     const now = new Date()
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()
@@ -46,6 +57,7 @@ export class AppointmentService {
 
     if (isBefore5PM) {
       throw new Error("Booking window is not open yet. It opens at 5 PM.")
+      }
     }
 
     // Check doctor availability for the date (normalized to start of day)
@@ -82,24 +94,27 @@ export class AppointmentService {
       slotTime = calculated.slotTime
     }
 
-    // Create appointment
-    const appointment = await prisma.appointment.create({
-      data: {
-        patientName: data.patientName,
+    // Sanitize user inputs
+    const sanitizedData = {
+      patientName: sanitizeInput(data.patientName, 100),
         patientAge: data.patientAge,
-        patientPhone: data.patientPhone,
-        patientCity: data.patientCity,
+      patientPhone: sanitizePhone(data.patientPhone),
+      patientCity: sanitizeInput(data.patientCity, 100),
         date: appointmentDate,
         appointmentType: data.appointmentType,
-        preferredTime: data.preferredTime,
+      preferredTime: data.preferredTime ? sanitizeInput(data.preferredTime, 10) : null,
         paymentMethod: data.paymentMethod,
-        bookingType: "ONLINE",
-        reason: data.reason,
+      bookingType: "ONLINE" as const,
+      reason: data.reason ? sanitizeText(data.reason) : null,
         serialNumber,
         arrivalTime,
         slotTime,
         createdBy: userId,
-      },
+    }
+
+    // Create appointment
+    const appointment = await prisma.appointment.create({
+      data: sanitizedData,
       include: {
         payment: true,
       },

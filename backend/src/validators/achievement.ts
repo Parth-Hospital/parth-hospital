@@ -4,14 +4,14 @@ export const createAchievementSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().optional(),
   date: z.string(),
-  type: z.enum(["OWNER", "HOSPITAL"]),
+  type: z.enum(["DOCTOR", "HOSPITAL"]),
 })
 
 export const updateAchievementSchema = z.object({
   title: z.string().min(3).optional(),
   description: z.string().optional(),
   date: z.string().optional(),
-  type: z.enum(["OWNER", "HOSPITAL"]).optional(),
+  type: z.enum(["DOCTOR", "HOSPITAL"]).optional(),
 })
 
 export type CreateAchievementInput = z.infer<typeof createAchievementSchema>

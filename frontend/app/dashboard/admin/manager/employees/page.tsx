@@ -31,7 +31,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Plus, Search, FileUp, UserPlus, Upload, Key, X, Loader2, Edit, Trash2, Lock } from "lucide-react"
+import { Plus, Search, FileUp, UserPlus, Upload, Key, X, Loader2, Edit, Trash2, Lock, Info } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import {
   Table,
   TableBody,
@@ -42,6 +48,7 @@ import {
 } from "@/components/ui/table"
 import { employeeApi, Employee } from "@/lib/api/employee"
 import { useToast } from "@/hooks/use-toast"
+import { validatePassword } from "@/lib/utils/passwordValidation"
 import * as XLSX from "xlsx"
 
 export default function EmployeesPage() {
@@ -92,6 +99,10 @@ export default function EmployeesPage() {
   // State for editing password
   const [editingPasswordFor, setEditingPasswordFor] = useState<string | null>(null)
   const [editPassword, setEditPassword] = useState("")
+  const [editPasswordError, setEditPasswordError] = useState<string | null>(null)
+  
+  // State for password validation in credential generation
+  const [passwordError, setPasswordError] = useState<string | null>(null)
   
   // State for editing employee
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null)
@@ -134,13 +145,34 @@ export default function EmployeesPage() {
     setGeneratingCredsFor(employeeId)
   }
 
-  // Handle password change
+  // Handle password change with validation
   const handlePasswordChange = (value: string) => {
     if (tempCredentials) {
       setTempCredentials({
         ...tempCredentials,
         password: value,
       })
+      
+      // Validate password in real-time
+      if (value) {
+        const validation = validatePassword(value)
+        setPasswordError(validation.isValid ? null : validation.error || "Password must fulfil all the requirements")
+      } else {
+        setPasswordError(null)
+      }
+    }
+  }
+  
+  // Handle edit password change with validation
+  const handleEditPasswordChange = (value: string) => {
+    setEditPassword(value)
+    
+    // Validate password in real-time
+    if (value) {
+      const validation = validatePassword(value)
+      setEditPasswordError(validation.isValid ? null : validation.error || "Password must fulfil all the requirements")
+    } else {
+      setEditPasswordError(null)
     }
   }
 
@@ -154,6 +186,20 @@ export default function EmployeesPage() {
       })
       return
     }
+
+    // Validate password before submission
+    const validation = validatePassword(tempCredentials.password)
+    if (!validation.isValid) {
+      setPasswordError(validation.error || "Password must fulfil all the requirements")
+      toast({
+        title: "Password Validation Failed",
+        description: validation.error || "Password must fulfil all the requirements",
+        variant: "destructive",
+      })
+      return
+    }
+    
+    setPasswordError(null)
 
     try {
       setSubmitting(true)
@@ -190,6 +236,17 @@ export default function EmployeesPage() {
       // Handle specific error cases
       const errorMessage = error.message || "Failed to generate credentials"
       
+      // Handle backend password validation errors - keep form open
+      if (errorMessage.includes("Password must fulfil") || errorMessage.includes("requirements")) {
+        setPasswordError(errorMessage)
+        toast({
+          title: "Password Validation Failed",
+          description: errorMessage,
+          variant: "destructive",
+        })
+        return // Don't clear form, let user fix the password
+      }
+      
       if (errorMessage.includes("already generated")) {
         toast({
           title: "Credentials Already Exist",
@@ -201,17 +258,18 @@ export default function EmployeesPage() {
         // Clear temporary state
         setGeneratingCredsFor(null)
         setTempCredentials(null)
+        setPasswordError(null)
       } else {
         toast({
           title: "Error",
           description: errorMessage,
           variant: "destructive",
         })
-      }
-      
-      // Clear temporary state on error
+        // Clear temporary state on other errors
       setGeneratingCredsFor(null)
       setTempCredentials(null)
+        setPasswordError(null)
+      }
     } finally {
       setSubmitting(false)
     }
@@ -221,23 +279,39 @@ export default function EmployeesPage() {
   const handleCancelCreds = () => {
     setGeneratingCredsFor(null)
     setTempCredentials(null)
+    setPasswordError(null)
   }
 
   // Handle edit password
   const handleEditPassword = (employee: Employee) => {
     setEditingPasswordFor(employee.id)
     setEditPassword("")
+    setEditPasswordError(null)
   }
 
   const handleUpdatePassword = async () => {
-    if (!editingPasswordFor || !editPassword || editPassword.length < 6) {
+    if (!editingPasswordFor || !editPassword) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters",
+        description: "Please enter a password",
         variant: "destructive",
       })
       return
     }
+
+    // Validate password before submission
+    const validation = validatePassword(editPassword)
+    if (!validation.isValid) {
+      setEditPasswordError(validation.error || "Password must fulfil all the requirements")
+      toast({
+        title: "Password Validation Failed",
+        description: validation.error || "Password must fulfil all the requirements",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setEditPasswordError(null)
 
     try {
       setSubmitting(true)
@@ -248,11 +322,17 @@ export default function EmployeesPage() {
       })
       setEditingPasswordFor(null)
       setEditPassword("")
+      setEditPasswordError(null)
       await loadEmployees()
     } catch (error: any) {
+      // Handle backend validation errors
+      const errorMessage = error.message || "Failed to update password"
+      if (errorMessage.includes("Password must fulfil") || errorMessage.includes("requirements")) {
+        setEditPasswordError(errorMessage)
+      }
       toast({
         title: "Error",
-        description: error.message || "Failed to update password",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -591,12 +671,12 @@ export default function EmployeesPage() {
 
   // Helper function to check if user is admin (not regular employee)
   const isAdminUser = (employee: Employee) => {
-    return employee.role && ["OWNER", "MANAGER", "ACCOUNTANT", "RECEPTIONIST"].includes(employee.role)
+    return employee.role && ["DOCTOR", "MANAGER", "ACCOUNTANT", "RECEPTIONIST"].includes(employee.role)
   }
 
-  // Helper function to check if user is owner
-  const isOwner = (employee: Employee) => {
-    return employee.role === "OWNER"
+  // Helper function to check if user is doctor
+  const isDoctor = (employee: Employee) => {
+    return employee.role === "DOCTOR"
   }
 
   const filteredEmployees = employees
@@ -608,9 +688,9 @@ export default function EmployeesPage() {
         emp.department.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
-      // Owner always first
-      if (isOwner(a) && !isOwner(b)) return -1
-      if (!isOwner(a) && isOwner(b)) return 1
+      // Doctor always first
+      if (isDoctor(a) && !isDoctor(b)) return -1
+      if (!isDoctor(a) && isDoctor(b)) return 1
       // Then sort by name
       return a.name.localeCompare(b.name)
     })
@@ -884,29 +964,51 @@ export default function EmployeesPage() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          {/* Show credentials if they exist, allow generation for non-owner admins */}
+                          {/* Show credentials if they exist, allow generation for non-doctor admins */}
                           {employee.hasAdminCredentials ? (
                             <div className="flex flex-col gap-1">
                               <span className="text-sm text-muted-foreground">
                                 {employee.adminEmail || employee.email}
                               </span>
-                              {/* Owner cannot edit password in manager dashboard */}
-                              {!isOwner(employee) && editingPasswordFor === employee.id ? (
-                                <div className="flex items-center gap-2 mt-2">
+                              {/* Doctor cannot edit password in manager dashboard */}
+                              {!isDoctor(employee) && editingPasswordFor === employee.id ? (
+                                <div className="flex flex-col gap-2 mt-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="relative flex items-center">
                                   <Input
                                     type="password"
                                     value={editPassword}
-                                    onChange={(e) => setEditPassword(e.target.value)}
+                                        onChange={(e) => handleEditPasswordChange(e.target.value)}
                                     placeholder="New password"
-                                    className="h-7 text-xs w-32"
+                                        className={`h-7 text-xs w-32 pr-8 ${editPasswordError ? "border-red-500" : ""}`}
                                     autoFocus
                                   />
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <Info className="absolute right-2 h-3 w-3 text-muted-foreground cursor-help" />
+                                          </TooltipTrigger>
+                                          <TooltipContent side="right" className="max-w-xs">
+                                            <div className="space-y-1 text-xs">
+                                              <p className="font-semibold">Password Requirements:</p>
+                                              <ul className="list-disc list-inside space-y-0.5 text-xs">
+                                                <li>Minimum 8 characters</li>
+                                                <li>At least one uppercase letter</li>
+                                                <li>At least one lowercase letter</li>
+                                                <li>At least one number</li>
+                                                <li>At least one special character</li>
+                                              </ul>
+                                            </div>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    </div>
                                   <Button
                                     size="sm"
                                     variant="default"
                                     onClick={handleUpdatePassword}
                                     className="h-7 text-xs"
-                                    disabled={!editPassword || editPassword.length < 6 || submitting}
+                                      disabled={!editPassword || !!editPasswordError || submitting}
                                   >
                                     {submitting ? (
                                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -920,13 +1022,18 @@ export default function EmployeesPage() {
                                     onClick={() => {
                                       setEditingPasswordFor(null)
                                       setEditPassword("")
+                                      setEditPasswordError(null)
                                     }}
                                     className="h-7 w-7 p-0"
                                   >
                                     <X className="h-3 w-3" />
                                   </Button>
+                                  </div>
+                                  {editPasswordError && (
+                                    <p className="text-xs text-red-500 mt-0">{editPasswordError}</p>
+                                  )}
                                 </div>
-                              ) : !isOwner(employee) ? (
+                              ) : !isDoctor(employee) ? (
                                 <Button
                                   size="sm"
                                   variant="outline"
@@ -938,11 +1045,11 @@ export default function EmployeesPage() {
                                 </Button>
                               ) : (
                                 <span className="text-xs text-muted-foreground mt-1">
-                                  Owner credentials
+                                  Doctor credentials
                                 </span>
                               )}
                             </div>
-                          ) : !isOwner(employee) && !employee.hasAdminCredentials && generatingCredsFor === employee.id && tempCredentials && !submitting ? (
+                          ) : !isDoctor(employee) && !employee.hasAdminCredentials && generatingCredsFor === employee.id && tempCredentials && !submitting ? (
                             <form
                               onSubmit={(e) => {
                                 e.preventDefault()
@@ -960,22 +1067,44 @@ export default function EmployeesPage() {
                                   {tempCredentials.adminEmail}
                                 </span>
                               </div>
+                              <div className="flex flex-col gap-2">
                               <div className="flex items-center gap-2">
+                                  <div className="relative flex-1 flex items-center">
                                 <Input
                                   type="password"
                                   value={tempCredentials.password}
                                   onChange={(e) => handlePasswordChange(e.target.value)}
                                   placeholder="Enter password manually"
-                                  className="h-8 flex-1 text-xs"
+                                      className={`h-8 flex-1 text-xs pr-8 ${passwordError ? "border-red-500" : ""}`}
                                   autoFocus
                                   required
                                 />
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Info className="absolute right-2 h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent side="right" className="max-w-xs">
+                                          <div className="space-y-1 text-xs">
+                                            <p className="font-semibold">Password Requirements:</p>
+                                            <ul className="list-disc list-inside space-y-0.5 text-xs">
+                                              <li>Minimum 8 characters</li>
+                                              <li>At least one uppercase letter</li>
+                                              <li>At least one lowercase letter</li>
+                                              <li>At least one number</li>
+                                              <li>At least one special character</li>
+                                            </ul>
+                                          </div>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
                                 <Button
                                   size="sm"
                                   variant="default"
                                   type="submit"
                                   className="h-8 text-xs"
-                                  disabled={!tempCredentials.password || submitting}
+                                    disabled={!tempCredentials.password || !!passwordError || submitting}
                                 >
                                   {submitting ? (
                                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -996,9 +1125,13 @@ export default function EmployeesPage() {
                                 >
                                   <X className="h-4 w-4" />
                                 </Button>
+                                </div>
+                                {passwordError && (
+                                  <p className="text-xs text-red-500">{passwordError}</p>
+                                )}
                               </div>
                             </form>
-                          ) : !isOwner(employee) && !employee.hasAdminCredentials ? (
+                          ) : !isDoctor(employee) && !employee.hasAdminCredentials ? (
                             <Button
                               size="sm"
                               variant="outline"
@@ -1016,8 +1149,8 @@ export default function EmployeesPage() {
                           ) : null}
                         </TableCell>
                         <TableCell>
-                          {/* Owner cannot be edited or deleted by manager */}
-                          {!isOwner(employee) ? (
+                          {/* Doctor cannot be edited or deleted by manager */}
+                          {!isDoctor(employee) ? (
                             <div className="flex items-center gap-2">
                               <Button
                                 size="sm"
@@ -1037,7 +1170,7 @@ export default function EmployeesPage() {
                               </Button>
                             </div>
                           ) : (
-                            <span className="text-xs text-muted-foreground">Owner</span>
+                            <span className="text-xs text-muted-foreground">Doctor</span>
                           )}
                         </TableCell>
                       </TableRow>

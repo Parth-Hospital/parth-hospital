@@ -10,10 +10,10 @@ export default async function doctorAvailabilityRoutes(fastify: FastifyInstance)
     doctorAvailabilityController.getAvailability(request, reply)
   )
 
-  // Protected route - Set availability (Owner only)
+  // Protected route - Set availability (Doctor only)
   fastify.post(
     "/",
-    { preHandler: [verifyToken, requireRole("OWNER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR")] },
     (request, reply) => doctorAvailabilityController.setAvailability(request, reply)
   )
 

@@ -4,7 +4,7 @@ export const DEMO_CREDENTIALS = {
   password: "Vercel123",
 }
 
-export type UserRole = "employee" | "owner" | "manager" | "accountant" | "receptionist"
+export type UserRole = "employee" | "doctor" | "manager" | "accountant" | "receptionist"
 
 export interface AuthSession {
   email: string

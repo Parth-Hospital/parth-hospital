@@ -32,7 +32,10 @@ export function MotionProvider({ children }: MotionProviderProps) {
           lenis.destroy()
         }
       } catch (error) {
-        console.error("Lenis initialization failed:", error)
+        // Only log in development
+        if (process.env.NODE_ENV === "development") {
+          console.error("Lenis initialization failed:", error)
+        }
       }
     }
 
@@ -43,7 +46,10 @@ export function MotionProvider({ children }: MotionProviderProps) {
 
         gsap.registerPlugin(ScrollTrigger)
       } catch (error) {
-        console.error("GSAP plugins initialization failed:", error)
+        // Only log in development
+        if (process.env.NODE_ENV === "development") {
+          console.error("GSAP plugins initialization failed:", error)
+        }
       }
     }
 

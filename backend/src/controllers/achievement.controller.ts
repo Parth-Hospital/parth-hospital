@@ -35,7 +35,7 @@ export class AchievementController {
 
   async getAchievements(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { type } = request.query as { type?: "OWNER" | "HOSPITAL" }
+      const { type } = request.query as { type?: "DOCTOR" | "HOSPITAL" }
       const achievements = await achievementService.getAchievements(type)
 
       return reply.send({

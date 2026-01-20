@@ -15,12 +15,21 @@ export function Footer() {
             className="space-y-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold tracking-tighter uppercase">Parth Hospital</span>
-              <span className="text-xs uppercase tracking-widest text-white/60">Legacy of Care • Jaunpur</span>
+            <div className="flex items-center gap-3 mb-2">
+              <Image
+                src="/Logo/parth-logo-nobg.png"
+                alt="Parth Hospital"
+                width={48}
+                height={48}
+                className="w-12 h-12 object-contain"
+              />
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold tracking-tighter uppercase">Parth Hospital</span>
+                <span className="text-xs uppercase tracking-widest text-white/60">Legacy of Care • Jaunpur</span>
+              </div>
             </div>
             <p className="text-white/60 leading-relaxed max-w-xs">
               Providing world-class healthcare with a human touch. Led by Dr. Subash Singh, we are committed to medical
@@ -45,7 +54,7 @@ export function Footer() {
             className="space-y-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h4 className="font-bold text-lg">Hospital</h4>
@@ -107,16 +116,19 @@ export function Footer() {
           className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-[13px] text-white/40 font-medium tracking-wide"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
         >
           <p>© 2026 Parth Hospital Jaunpur. All rights reserved.</p>
-          <div className="flex gap-8">
-            <Link href="#" className="hover:text-white transition-colors duration-200">
+          <div className="flex flex-wrap gap-8 justify-center">
+            <Link href="/privacy" className="hover:text-white transition-colors duration-200">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-white transition-colors duration-200">
+            <Link href="/terms" className="hover:text-white transition-colors duration-200">
               Terms of Service
+            </Link>
+            <Link href="/cancellation" className="hover:text-white transition-colors duration-200">
+              Cancellation & Refund Policy
             </Link>
           </div>
         </motion.div>
@@ -125,7 +137,7 @@ export function Footer() {
           className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-3 text-white/60"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <p className="text-xs sm:text-sm">Developed and maintained by</p>

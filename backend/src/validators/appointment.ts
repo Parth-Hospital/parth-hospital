@@ -1,10 +1,10 @@
 import { z } from "zod"
 
 export const createAppointmentSchema = z.object({
-  patientName: z.string().min(2, "Patient name must be at least 2 characters"),
+  patientName: z.string().min(2, "Patient name must be at least 2 characters").max(100),
   patientAge: z.number().int().min(1).max(120),
-  patientPhone: z.string().min(10, "Phone number must be at least 10 digits"),
-  patientCity: z.string().min(2, "City must be at least 2 characters"),
+  patientPhone: z.string().min(10, "Phone number must be at least 10 digits").max(15),
+  patientCity: z.string().min(2, "City must be at least 2 characters").max(100),
   date: z.string().refine(
     (val) => {
       const date = new Date(val)
@@ -13,9 +13,9 @@ export const createAppointmentSchema = z.object({
     { message: "Invalid date format" }
   ),
   appointmentType: z.enum(["GENERAL", "PRIORITY"]),
-  preferredTime: z.string().optional(),
+  preferredTime: z.string().max(10).optional(),
   paymentMethod: z.enum(["ONLINE", "PAY_AT_COUNTER"]),
-  reason: z.string().optional(),
+  reason: z.string().max(1000).optional(),
 })
 
 export const createOfflineAppointmentSchema = z.object({

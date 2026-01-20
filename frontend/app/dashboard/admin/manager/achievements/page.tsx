@@ -23,10 +23,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-type AchievementType = "OWNER" | "HOSPITAL"
+type AchievementType = "DOCTOR" | "HOSPITAL"
 
 export default function ManagerAchievementsPage() {
-  const [activeTab, setActiveTab] = useState<AchievementType>("OWNER")
+  const [activeTab, setActiveTab] = useState<AchievementType>("DOCTOR")
   const [achievements, setAchievements] = useState<Achievement[]>([])
   const [loading, setLoading] = useState(true)
   const [isAdding, setIsAdding] = useState(false)
@@ -34,7 +34,7 @@ export default function ManagerAchievementsPage() {
     title: "",
     description: "",
     date: new Date().toISOString().split("T")[0],
-    type: "OWNER" as AchievementType,
+    type: "DOCTOR" as AchievementType,
   })
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -142,7 +142,7 @@ export default function ManagerAchievementsPage() {
 
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as AchievementType)}>
           <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="OWNER">Dr. Subash's Achievements</TabsTrigger>
+            <TabsTrigger value="DOCTOR">Dr. Subash's Achievements</TabsTrigger>
             <TabsTrigger value="HOSPITAL">Hospital Achievements</TabsTrigger>
           </TabsList>
 
@@ -151,7 +151,7 @@ export default function ManagerAchievementsPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>
-                    {activeTab === "OWNER" ? "Dr. Subash's Achievements" : "Hospital Achievements"}
+                    {activeTab === "DOCTOR" ? "Dr. Subash's Achievements" : "Hospital Achievements"}
                   </CardTitle>
                   <Button
                     onClick={() => {

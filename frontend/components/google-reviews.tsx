@@ -58,7 +58,7 @@ export function GoogleReviews() {
           className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -96,7 +96,7 @@ export function GoogleReviews() {
               key={review.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className="bg-white border border-border/50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-primary/30"
             >

@@ -15,7 +15,7 @@ import {
 import { NavigationItem } from "@/lib/config/navigation"
 
 interface DashboardSidebarProps {
-  role: "employee" | "owner" | "manager" | "accountant" | "receptionist"
+  role: "employee" | "doctor" | "manager" | "accountant" | "receptionist"
   navItems: (NavigationItem & { active?: boolean })[]
 }
 

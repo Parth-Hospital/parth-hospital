@@ -181,10 +181,33 @@ export async function checkDoctorAvailability(date: Date): Promise<boolean> {
     const availability = await doctorAvailabilityApi.getAvailability(date.toISOString())
     return availability?.available || false
   } catch (error) {
-    console.error("Error checking doctor availability:", error)
+    // Only log in development
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error checking doctor availability:", error)
+    }
     // Return false if API call fails
     return false
   }
+}
+
+/**
+ * Check if QA mode is enabled (via query parameter or environment variable)
+ */
+function isQAModeEnabled(): boolean {
+  // Check URL query parameter (client-side)
+  if (typeof window !== "undefined") {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get("qa") === "true") {
+      return true
+    }
+  }
+  
+  // Check environment variable (server-side)
+  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_QA_MODE === "true") {
+    return true
+  }
+  
+  return false
 }
 
 /**
@@ -192,6 +215,7 @@ export async function checkDoctorAvailability(date: Date): Promise<boolean> {
  * Logic:
  * - Before 5 PM: Booking window not opened yet (doctor updates availability before 5 PM)
  * - After 5 PM: Check doctor availability - only open if doctor is attending tomorrow
+ * - QA Mode: Bypass time restrictions if enabled
  */
 export async function isBookingWindowOpen(): Promise<{
   isOpen: boolean
@@ -201,6 +225,43 @@ export async function isBookingWindowOpen(): Promise<{
   doctorAvailabilityMessage: string
   isBefore5PM: boolean
 }> {
+  // QA Mode: Bypass time restrictions
+  const qaMode = isQAModeEnabled()
+  
+  if (qaMode) {
+    // In QA mode, always return tomorrow as available date
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setHours(0, 0, 0, 0)
+    
+    // Skip Sundays
+    if (tomorrow.getDay() === 0) {
+      tomorrow.setDate(tomorrow.getDate() + 1)
+    }
+    
+    // Check doctor availability even in QA mode
+    let doctorAvailable = false
+    try {
+      doctorAvailable = await checkDoctorAvailability(tomorrow)
+    } catch (error) {
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error checking doctor availability:", error)
+      }
+      // In QA mode, default to available if check fails
+      doctorAvailable = true
+    }
+    
+    return {
+      isOpen: true,
+      message: `[QA MODE] Booking window is open for ${formatDate(tomorrow)}`,
+      nextDate: tomorrow,
+      doctorAvailable: true, // Force available in QA mode
+      doctorAvailabilityMessage: `[QA MODE] Dr. Subash Singh is available for consultations tomorrow (${formatDate(tomorrow)}).`,
+      isBefore5PM: false,
+    }
+  }
+  
   const now = new Date()
   const currentHour = now.getHours()
   const currentMinute = now.getMinutes()
@@ -252,7 +313,10 @@ export async function isBookingWindowOpen(): Promise<{
   try {
     doctorAvailable = await checkDoctorAvailability(nextDate)
   } catch (error) {
-    console.error("Error checking doctor availability:", error)
+    // Only log in development
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error checking doctor availability:", error)
+    }
     doctorAvailable = false
   }
   

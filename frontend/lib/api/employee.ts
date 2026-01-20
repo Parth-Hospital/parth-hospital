@@ -9,7 +9,7 @@ export interface Employee {
   department: string
   position: string
   status: "ACTIVE" | "INACTIVE"
-  role?: "OWNER" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE"
+  role?: "DOCTOR" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE"
   adminEmail?: string
   hasAdminCredentials: boolean
   createdAt: string
@@ -22,7 +22,7 @@ export interface CreateEmployeeData {
   phone?: string
   department?: string
   position?: string
-  role?: "OWNER" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE"
+  role?: "DOCTOR" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE"
   password?: string
 }
 

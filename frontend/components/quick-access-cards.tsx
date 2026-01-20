@@ -74,10 +74,10 @@ export function QuickAccessCards() {
             const Icon = service.icon
             return (
               <motion.div
-                key={index}
+                key={`service-${service.title}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
                 <div className="group bg-white border border-border/50 rounded-xl p-6 hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:scale-105 hover:border-primary/50">

@@ -14,38 +14,38 @@ export default async function galleryRoutes(fastify: FastifyInstance) {
   // Protected routes - Manage images
   fastify.post(
     "/images",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => galleryController.createGallery(request, reply)
   )
 
   fastify.patch(
     "/images/:id",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => galleryController.updateGallery(request, reply)
   )
 
   fastify.delete(
     "/images/:id",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => galleryController.deleteGallery(request, reply)
   )
 
   // Protected routes - Manage albums
   fastify.post(
     "/albums",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => galleryController.createAlbum(request, reply)
   )
 
   fastify.patch(
     "/albums/:id",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => galleryController.updateAlbum(request, reply)
   )
 
   fastify.delete(
     "/albums/:id",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => galleryController.deleteAlbum(request, reply)
   )
 }

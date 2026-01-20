@@ -15,24 +15,24 @@ export default async function attendanceRoutes(fastify: FastifyInstance) {
     (request, reply) => attendanceController.createOrUpdateAttendance(request, reply)
   )
 
-  // Get all attendance (Owner, Manager)
+  // Get all attendance (Doctor, Manager)
   fastify.get(
     "/",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => attendanceController.getAttendance(request, reply)
   )
 
-  // Get weekly attendance (Owner, Manager)
+  // Get weekly attendance (Doctor, Manager)
   fastify.get(
     "/weekly",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => attendanceController.getWeeklyAttendance(request, reply)
   )
 
   // Get employee's own attendance (Employee, and admins using employee credentials)
   fastify.get(
     "/employee/:userId",
-    { preHandler: requireRole("EMPLOYEE", "OWNER", "MANAGER", "ACCOUNTANT", "RECEPTIONIST") },
+    { preHandler: requireRole("EMPLOYEE", "DOCTOR", "MANAGER", "ACCOUNTANT", "RECEPTIONIST") },
     (request, reply) => attendanceController.getEmployeeAttendance(request, reply)
   )
 

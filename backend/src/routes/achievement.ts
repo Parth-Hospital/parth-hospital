@@ -12,19 +12,19 @@ export default async function achievementRoutes(fastify: FastifyInstance) {
   // Protected routes - Manage achievements
   fastify.post(
     "/",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => achievementController.createAchievement(request, reply)
   )
 
   fastify.patch(
     "/:id",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => achievementController.updateAchievement(request, reply)
   )
 
   fastify.delete(
     "/:id",
-    { preHandler: [verifyToken, requireRole("OWNER", "MANAGER")] },
+    { preHandler: [verifyToken, requireRole("DOCTOR", "MANAGER")] },
     (request, reply) => achievementController.deleteAchievement(request, reply)
   )
 }

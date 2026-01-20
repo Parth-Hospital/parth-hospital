@@ -93,17 +93,27 @@ class ApiClient {
     } catch (error: any) {
       // Handle network errors (fetch failed completely)
       if (error instanceof TypeError && error.message === "Failed to fetch") {
-        console.error("API Error: Backend server is not reachable. Is it running?", {
-          baseURL: this.baseURL,
-          endpoint,
-        })
+        // Only log in development
+        if (process.env.NODE_ENV === "development") {
+          console.error("API Error: Backend server is not reachable. Is it running?", {
+            baseURL: this.baseURL,
+            endpoint,
+          })
+        }
         throw new Error(
-          "Unable to connect to the server. Please check if the backend is running."
+          "Unable to connect to the server. Please try again later."
         )
       }
 
       // Re-throw other errors (including our custom Error from above)
-      console.error("API Error:", error)
+      // Log important errors for debugging (development only)
+      if (process.env.NODE_ENV === "development") {
+        console.error("API Error:", {
+          endpoint,
+          message: error.message,
+          status: error.status || "N/A",
+        })
+      }
       throw error
     }
   }
@@ -190,16 +200,25 @@ class ApiClient {
     } catch (error: any) {
       // Handle network errors
       if (error instanceof TypeError && error.message === "Failed to fetch") {
-        console.error("API Error: Backend server is not reachable. Is it running?", {
-          baseURL: this.baseURL,
-          endpoint,
-        })
+        // Log network errors for debugging (development only)
+        if (process.env.NODE_ENV === "development") {
+          console.error("Network Error: Backend server unreachable (File Upload)", {
+            endpoint,
+            baseURL: this.baseURL,
+          })
+        }
         throw new Error(
-          "Unable to connect to the server. Please check if the backend is running."
+          "Unable to connect to the server. Please try again later."
         )
       }
 
-      console.error("API Error:", error)
+      // Log important errors for debugging (development only)
+      if (process.env.NODE_ENV === "development") {
+        console.error("API Error (File Upload):", {
+          endpoint,
+          message: error.message,
+        })
+      }
       throw error
     }
   }

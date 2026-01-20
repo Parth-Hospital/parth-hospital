@@ -17,19 +17,19 @@ export default async function appointmentRoutes(fastify: FastifyInstance) {
   // Protected routes - Receptionist and above
   fastify.get(
     "/current/bookings",
-    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "OWNER")] },
+    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "DOCTOR")] },
     (request, reply) => appointmentController.getCurrentBookings(request, reply)
   )
 
   fastify.post(
     "/offline",
-    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "OWNER")] },
+    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "DOCTOR")] },
     (request, reply) => appointmentController.createOfflineAppointment(request, reply)
   )
 
   fastify.patch(
     "/:id/status",
-    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "OWNER")] },
+    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "DOCTOR")] },
     (request, reply) => appointmentController.updateAppointmentStatus(request, reply)
   )
 }

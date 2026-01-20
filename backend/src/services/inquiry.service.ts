@@ -1,17 +1,21 @@
 import prisma from "@/config/database"
 import { CreateInquiryInput, UpdateInquiryStatusInput } from "@/validators/inquiry"
+import { sanitizeText, sanitizeInput, sanitizeEmail, sanitizePhone } from "@/utils/sanitize"
 
 export class InquiryService {
   async createInquiry(data: CreateInquiryInput) {
+    // Sanitize all user inputs
+    const sanitizedData = {
+      name: sanitizeInput(data.name, 100),
+      email: sanitizeEmail(data.email),
+      phone: sanitizePhone(data.phone),
+      subject: sanitizeInput(data.subject, 200),
+      message: sanitizeText(data.message), // Sanitize HTML in messages
+      type: data.type || "GENERAL",
+    }
+
     return prisma.inquiry.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        subject: data.subject,
-        message: data.message,
-        type: data.type || "GENERAL",
-      },
+      data: sanitizedData,
     })
   }
 
@@ -62,11 +66,14 @@ export class InquiryService {
   }
 
   async updateInquiryStatus(id: string, data: UpdateInquiryStatusInput, userId: string) {
+    // Sanitize response if provided
+    const sanitizedResponse = data.response ? sanitizeText(data.response) : null
+
     return prisma.inquiry.update({
       where: { id },
       data: {
         status: data.status,
-        response: data.response,
+        response: sanitizedResponse,
         respondedBy: userId,
       },
     })

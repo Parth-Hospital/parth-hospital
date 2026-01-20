@@ -57,7 +57,7 @@ export default function OrthopedicCarePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-36 md:pt-48 pb-16 md:pb-24 bg-background">
+      <section className="pt-32 pb-12 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <div className="space-y-6 md:space-y-8 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-bold uppercase tracking-widest">

@@ -174,9 +174,9 @@ export class EmployeeService {
       throw new Error("User not found")
     }
 
-    // Cannot generate employee credentials for Owner
-    if (user.role === "OWNER") {
-      throw new Error("Cannot generate employee credentials for Owner")
+    // Cannot generate employee credentials for Doctor
+    if (user.role === "DOCTOR") {
+      throw new Error("Cannot generate employee credentials for Doctor")
     }
 
     // Check if employee credentials already exist

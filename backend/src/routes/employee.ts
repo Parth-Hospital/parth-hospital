@@ -8,52 +8,52 @@ export default async function employeeRoutes(fastify: FastifyInstance) {
   // All routes require authentication
   fastify.addHook("onRequest", verifyToken)
 
-  // Get all employees (Owner, Manager can view all)
+  // Get all employees (Doctor, Manager can view all)
   fastify.get(
     "/",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.getEmployees(request, reply)
   )
 
   // Get single employee
   fastify.get(
     "/:id",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.getEmployeeById(request, reply)
   )
 
-  // Create employee (Owner, Manager)
+  // Create employee (Doctor, Manager)
   fastify.post(
     "/",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.createEmployee(request, reply)
   )
 
-  // Update employee (Owner, Manager)
+  // Update employee (Doctor, Manager)
   fastify.patch(
     "/:id",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.updateEmployee(request, reply)
   )
 
-  // Generate admin credentials (Owner, Manager)
+  // Generate admin credentials (Doctor, Manager)
   fastify.post(
     "/:id/generate-creds",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.generateAdminCredentials(request, reply)
   )
 
-  // Update admin password (Owner, Manager)
+  // Update admin password (Doctor, Manager)
   fastify.patch(
     "/:id/update-password",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.updateAdminPassword(request, reply)
   )
 
-  // Delete employee (Owner, Manager)
+  // Delete employee (Doctor, Manager)
   fastify.delete(
     "/:id",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => employeeController.deleteEmployee(request, reply)
   )
 }

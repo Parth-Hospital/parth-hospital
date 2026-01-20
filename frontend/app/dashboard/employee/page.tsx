@@ -44,7 +44,10 @@ export default function EmployeeOverview() {
       const data = await leaveApi.getMyLeaveRequests()
       setLeaves(data.slice(0, 3)) // Show only recent 3
     } catch (error: any) {
-      console.error("Failed to load leaves:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load leaves:", error)
+      }
     }
   }
 

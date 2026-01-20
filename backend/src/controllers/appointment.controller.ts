@@ -13,8 +13,13 @@ export class AppointmentController {
     try {
       const body = createAppointmentSchema.parse(request.body)
       const userId = request.user?.id
+      
+      // Check for QA mode from query parameter or header
+      const qaMode = 
+        (request.query as any)?.qa === "true" || 
+        request.headers["x-qa-mode"] === "true"
 
-      const appointment = await appointmentService.createAppointment(body, userId)
+      const appointment = await appointmentService.createAppointment(body, userId, qaMode)
 
       return reply.status(201).send({
         success: true,

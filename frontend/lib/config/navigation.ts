@@ -31,20 +31,20 @@ export interface NavigationItem {
 }
 
 export const ADMIN_NAVIGATION: Record<UserRole, NavigationItem[]> = {
-  owner: [
-    { label: "Overview", href: "/dashboard/admin/owner", icon: LayoutDashboard },
-    { label: "Doctor Availability", href: "/dashboard/admin/owner/availability", icon: CalendarCheck },
-    { label: "Prescription", href: "/dashboard/admin/owner/prescription", icon: FileText },
-    { label: "Appointments", href: "/dashboard/admin/owner/appointments", icon: Calendar },
-    { label: "Payments", href: "/dashboard/admin/owner/payments", icon: DollarSign },
-    { label: "Employees", href: "/dashboard/admin/owner/employees", icon: Users },
-    { label: "Attendance", href: "/dashboard/admin/owner/attendance", icon: Clock },
-    { label: "Manager Leaves", href: "/dashboard/admin/owner/manager-leaves", icon: FileCheck },
-    { label: "Inquiry", href: "/dashboard/admin/owner/inquiry", icon: MessageSquare },
-    { label: "Gallery", href: "/dashboard/admin/owner/gallery", icon: Image },
-    { label: "Achievements", href: "/dashboard/admin/owner/achievements", icon: Award },
-    { label: "Hospital Details", href: "/dashboard/admin/owner/settings", icon: Building2 },
-    { label: "NexRoutine", href: "/dashboard/admin/owner/nexroutine", icon: CheckSquare },
+  doctor: [
+    { label: "Overview", href: "/dashboard/admin/doctor", icon: LayoutDashboard },
+    { label: "Doctor Availability", href: "/dashboard/admin/doctor/availability", icon: CalendarCheck },
+    { label: "Prescription", href: "/dashboard/admin/doctor/prescription", icon: FileText },
+    { label: "Appointments", href: "/dashboard/admin/doctor/appointments", icon: Calendar },
+    { label: "Payments", href: "/dashboard/admin/doctor/payments", icon: DollarSign },
+    { label: "Employees", href: "/dashboard/admin/doctor/employees", icon: Users },
+    { label: "Attendance", href: "/dashboard/admin/doctor/attendance", icon: Clock },
+    { label: "Manager Leaves", href: "/dashboard/admin/doctor/manager-leaves", icon: FileCheck },
+    { label: "Inquiry", href: "/dashboard/admin/doctor/inquiry", icon: MessageSquare },
+    { label: "Gallery", href: "/dashboard/admin/doctor/gallery", icon: Image },
+    { label: "Achievements", href: "/dashboard/admin/doctor/achievements", icon: Award },
+    { label: "Hospital Details", href: "/dashboard/admin/doctor/settings", icon: Building2 },
+    { label: "NexRoutine", href: "/dashboard/admin/doctor/nexroutine", icon: CheckSquare },
   ],
   manager: [
     { label: "Overview", href: "/dashboard/admin/manager", icon: LayoutDashboard },
@@ -83,8 +83,8 @@ export const ADMIN_NAVIGATION: Record<UserRole, NavigationItem[]> = {
 }
 
 export const ADMIN_DASHBOARD_TITLES: Record<UserRole, { title: string; subtitle: string }> = {
-  owner: {
-    title: "Owner Dashboard",
+  doctor: {
+    title: "Doctor Dashboard",
     subtitle: "Hospital management and system-level controls",
   },
   manager: {

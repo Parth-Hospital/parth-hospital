@@ -245,7 +245,10 @@ export function AppointmentTicket({
       // Save PDF
       pdf.save(fileName)
     } catch (error) {
-      console.error("Error generating PDF:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error generating PDF:", error)
+      }
       alert("Failed to generate PDF. Please try again.")
     } finally {
       setIsGenerating(false)

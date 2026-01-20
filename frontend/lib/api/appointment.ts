@@ -47,7 +47,14 @@ export interface CurrentBookingsResponse {
 
 export const appointmentApi = {
   createAppointment: async (data: CreateAppointmentData): Promise<Appointment> => {
-    const response = await apiClient.post<Appointment>("/appointments", data)
+    // Check if QA mode is enabled
+    const isQAMode = 
+      (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("qa") === "true") ||
+      (typeof process !== "undefined" && process.env.NEXT_PUBLIC_QA_MODE === "true")
+    
+    // Pass QA mode as query parameter
+    const endpoint = isQAMode ? "/appointments?qa=true" : "/appointments"
+    const response = await apiClient.post<Appointment>(endpoint, data)
     if (response.success && response.data) {
       return response.data
     }

@@ -9,7 +9,7 @@ import Link from "next/link"
 import { achievementApi, Achievement } from "@/lib/api/achievement"
 
 export default function AchievementsPage() {
-  const [ownerAchievements, setOwnerAchievements] = useState<Achievement[]>([])
+  const [doctorAchievements, setDoctorAchievements] = useState<Achievement[]>([])
   const [hospitalAchievements, setHospitalAchievements] = useState<Achievement[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -20,14 +20,17 @@ export default function AchievementsPage() {
   const loadAchievements = async () => {
     try {
       setLoading(true)
-      const [ownerData, hospitalData] = await Promise.all([
-        achievementApi.getAchievements("OWNER"),
+      const [doctorData, hospitalData] = await Promise.all([
+        achievementApi.getAchievements("DOCTOR"),
         achievementApi.getAchievements("HOSPITAL"),
       ])
-      setOwnerAchievements(ownerData)
+      setDoctorAchievements(doctorData)
       setHospitalAchievements(hospitalData)
     } catch (error) {
-      console.error("Failed to load achievements:", error)
+      // Only log in development
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to load achievements:", error)
+      }
     } finally {
       setLoading(false)
     }
@@ -61,7 +64,7 @@ export default function AchievementsPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-36 md:pt-48 pb-16 md:pb-24 bg-background">
+      <section className="pt-32 pb-12 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <div className="space-y-6 md:space-y-8 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-bold uppercase tracking-widest">
@@ -112,13 +115,13 @@ export default function AchievementsPage() {
             <div className="flex items-center justify-center py-16">
               <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
-          ) : ownerAchievements.length === 0 ? (
+          ) : doctorAchievements.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-lg text-muted-foreground">No milestones available at the moment.</p>
             </div>
           ) : (
             <div className="space-y-1">
-              {ownerAchievements.map((achievement) => {
+              {doctorAchievements.map((achievement) => {
                 const year = new Date(achievement.date).getFullYear()
                 return (
                   <div

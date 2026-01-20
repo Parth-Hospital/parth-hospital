@@ -66,7 +66,7 @@ export default function ContactPage() {
       <FloatingActions />
 
       {/* Hero Section */}
-      <section className="pt-36 md:pt-44 pb-16 bg-background">
+      <section className="pt-32 pb-12 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             className="mb-16"

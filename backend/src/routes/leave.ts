@@ -11,10 +11,10 @@ export default async function leaveRoutes(fastify: FastifyInstance) {
   // Create leave request (Employee)
   fastify.post("/", (request, reply) => leaveController.createLeaveRequest(request, reply))
 
-  // Get all leave requests (Manager, Owner)
+  // Get all leave requests (Manager, Doctor)
   fastify.get(
     "/",
-    { preHandler: requireRole("OWNER", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER") },
     (request, reply) => leaveController.getLeaveRequests(request, reply)
   )
 
@@ -26,10 +26,10 @@ export default async function leaveRoutes(fastify: FastifyInstance) {
     leaveController.getEmployeeLeaveRequests(request, reply)
   )
 
-  // Approve/Reject leave request (Manager for non-Manager leaves, Owner for Manager leaves)
+  // Approve/Reject leave request (Manager for non-Manager leaves, Doctor for Manager leaves)
   fastify.patch(
     "/:id/status",
-    { preHandler: requireRole("MANAGER", "OWNER") },
+    { preHandler: requireRole("MANAGER", "DOCTOR") },
     (request, reply) => leaveController.updateLeaveStatus(request, reply)
   )
 }

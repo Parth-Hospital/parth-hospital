@@ -50,7 +50,7 @@ export class LeaveService {
 
     // If requesterRole is MANAGER, only show non-Manager leaves
     // Also exclude the Manager's own leaves explicitly (unless querying for specific userId)
-    // If requesterRole is OWNER, only show Manager leaves
+    // If requesterRole is DOCTOR, only show Manager leaves
     if (filters?.requesterRole === "MANAGER") {
       // Exclude Manager role - this should already exclude Manager's own leaves
       // But we also explicitly exclude by userId as a safety measure
@@ -99,7 +99,7 @@ export class LeaveService {
           where.userId = filters.userId
         }
       }
-    } else if (filters?.requesterRole === "OWNER") {
+    } else if (filters?.requesterRole === "DOCTOR") {
       where.user = {
         role: "MANAGER",
       }
@@ -190,9 +190,9 @@ export class LeaveService {
       throw new Error("Leave request not found")
     }
 
-    // If the leave request is from a Manager, only Owner can approve
-    if (leaveRequest.user.role === "MANAGER" && approverRole !== "OWNER") {
-      throw new Error("Only Owner can approve Manager leave requests")
+    // If the leave request is from a Manager, only Doctor can approve
+    if (leaveRequest.user.role === "MANAGER" && approverRole !== "DOCTOR") {
+      throw new Error("Only Doctor can approve Manager leave requests")
     }
 
     // If the leave request is from a non-Manager, only Manager can approve

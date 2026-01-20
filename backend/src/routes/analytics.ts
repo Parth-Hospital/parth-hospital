@@ -8,31 +8,31 @@ export default async function analyticsRoutes(fastify: FastifyInstance) {
   // All routes require authentication
   fastify.addHook("onRequest", verifyToken)
 
-  // Owner dashboard stats
+  // Doctor dashboard stats
   fastify.get(
-    "/owner",
-    { preHandler: requireRole("OWNER") },
-    (request, reply) => analyticsController.getOwnerDashboardStats(request, reply)
+    "/doctor",
+    { preHandler: requireRole("DOCTOR") },
+    (request, reply) => analyticsController.getDoctorDashboardStats(request, reply)
   )
 
   // Manager dashboard stats
   fastify.get(
     "/manager",
-    { preHandler: requireRole("MANAGER", "OWNER") },
+    { preHandler: requireRole("MANAGER", "DOCTOR") },
     (request, reply) => analyticsController.getManagerDashboardStats(request, reply)
   )
 
   // Receptionist dashboard stats
   fastify.get(
     "/receptionist",
-    { preHandler: requireRole("RECEPTIONIST", "MANAGER", "OWNER") },
+    { preHandler: requireRole("RECEPTIONIST", "MANAGER", "DOCTOR") },
     (request, reply) => analyticsController.getReceptionistDashboardStats(request, reply)
   )
 
   // Employee dashboard stats (accessible to all roles when using employee credentials)
   fastify.get(
     "/employee",
-    { preHandler: requireRole("EMPLOYEE", "OWNER", "MANAGER", "ACCOUNTANT", "RECEPTIONIST") },
+    { preHandler: requireRole("EMPLOYEE", "DOCTOR", "MANAGER", "ACCOUNTANT", "RECEPTIONIST") },
     (request, reply) => analyticsController.getEmployeeDashboardStats(request, reply)
   )
 }

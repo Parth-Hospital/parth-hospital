@@ -1,7 +1,9 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { DoctorHighlight } from "@/components/doctor-highlight"
@@ -13,9 +15,12 @@ import ServicesMarquee from "@/components/services-marquee"
 import { GoogleReviews } from "@/components/google-reviews"
 import { FloatingActions } from "@/components/floating-actions"
 import { MagicCard, MagicCardTitle, MagicCardDescription } from "@/components/ui/magic-card"
+import { Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function Home() {
+  const [isNavigating, setIsNavigating] = useState(false)
+  const router = useRouter()
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
@@ -24,6 +29,56 @@ export default function Home() {
       <FloatingActions />
       <ServicesMarquee />
       <QuickAccessCards />
+      
+      {/* Ayushman Card Acceptance */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            className="relative overflow-hidden rounded-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 opacity-95" />
+            <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10" />
+            <div className="relative px-8 py-12 md:px-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="flex items-center gap-6 flex-1">
+                <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <svg
+                    className="w-12 h-12 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                    We Accept Ayushman Bharat Cards
+                  </h3>
+                  <p className="text-blue-100 text-base md:text-lg leading-relaxed">
+                    Parth Hospital proudly accepts Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY) cards. 
+                    Get quality healthcare services covered under the government health insurance scheme.
+                  </p>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/20">
+                  <p className="text-white/90 text-sm font-medium mb-1">Coverage Available</p>
+                  <p className="text-white text-lg font-bold">AB-PMJAY</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       <section className="py-20 bg-supporting-light/50">
         <div className="max-w-7xl mx-auto px-6">
@@ -131,14 +186,27 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Link href="/appointment">
               <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-gray-100 hover:text-primary rounded-lg px-10 shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-105"
-              >
-                Book Appointment
+              onClick={() => {
+                setIsNavigating(true)
+                // Add a small delay to show loading state before navigation
+                setTimeout(() => {
+                  router.push("/appointment")
+                }, 150)
+              }}
+              disabled={isNavigating}
+            >
+              {isNavigating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Booking...
+                </>
+              ) : (
+                "Book Appointment"
+              )}
               </Button>
-            </Link>
             <a href="tel:+917860115757">
               <Button
                 size="lg"

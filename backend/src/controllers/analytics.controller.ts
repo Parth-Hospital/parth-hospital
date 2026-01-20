@@ -4,9 +4,9 @@ import { AnalyticsService } from "@/services/analytics.service"
 const analyticsService = new AnalyticsService()
 
 export class AnalyticsController {
-  async getOwnerDashboardStats(_request: FastifyRequest, reply: FastifyReply) {
+  async getDoctorDashboardStats(_request: FastifyRequest, reply: FastifyReply) {
     try {
-      const stats = await analyticsService.getOwnerDashboardStats()
+      const stats = await analyticsService.getDoctorDashboardStats()
       return reply.send({
         success: true,
         data: stats,
@@ -14,7 +14,7 @@ export class AnalyticsController {
     } catch (error: any) {
       return reply.status(500).send({
         success: false,
-        message: error.message || "Failed to fetch owner dashboard stats",
+        message: error.message || "Failed to fetch doctor dashboard stats",
       })
     }
   }

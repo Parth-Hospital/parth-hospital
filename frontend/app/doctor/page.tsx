@@ -12,7 +12,7 @@ export default function DoctorPage() {
       <Navbar />
       <FloatingActions />
 
-      <section className="pt-48 pb-24 bg-background">
+      <section className="pt-32 pb-12 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-16 items-start">
             {/* Left Column: Doctor Portrait & Bio */}

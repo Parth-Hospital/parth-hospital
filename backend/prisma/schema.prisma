@@ -42,7 +42,7 @@ model User {
 }
 
 enum UserRole {
-  OWNER
+  DOCTOR
   MANAGER
   ACCOUNTANT
   RECEPTIONIST
@@ -294,7 +294,7 @@ model Achievement {
 }
 
 enum AchievementType {
-  OWNER
+  DOCTOR
   HOSPITAL
 }
 

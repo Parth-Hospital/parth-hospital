@@ -14,7 +14,7 @@ import { getDashboardRoute } from "@/lib/auth"
 
 type LoginStep = "selection" | "role" | "credentials"
 type LoginType = "employee" | "admin"
-type AdminRole = "owner" | "manager" | "accountant" | "receptionist" | null
+type AdminRole = "doctor" | "manager" | "accountant" | "receptionist" | null
 
 export function LoginForm() {
   const router = useRouter()
@@ -53,8 +53,8 @@ export function LoginForm() {
 
   const fillDemoCredentials = () => {
     // Fill with test credentials from seed
-    setEmail("owner@parthhospital.co.in")
-    setPassword("owner123")
+    setEmail("doctor@parthhospital.co.in")
+    setPassword("doctor123")
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -74,7 +74,7 @@ export function LoginForm() {
 
       // Map backend role to frontend role format
       const roleMap: Record<string, string> = {
-        OWNER: "owner",
+        DOCTOR: "doctor",
         MANAGER: "manager",
         ACCOUNTANT: "accountant",
         RECEPTIONIST: "receptionist",
@@ -124,7 +124,16 @@ export function LoginForm() {
       const dashboardRoute = getDashboardRoute(frontendRole as any)
       router.push(dashboardRoute)
     } catch (err: any) {
-      setError(err.message || "Login failed. Please check your credentials.")
+      // Log authentication errors for debugging (development only)
+      if (process.env.NODE_ENV === "development") {
+        console.error("Login error:", {
+          message: err.message,
+          email: email.substring(0, 3) + "***", // Partial email for privacy
+        })
+      }
+      // Always show "Invalid email or password" for any authentication failure
+      // This includes: wrong email, wrong password, invalid email format, user not found, etc.
+      setError("Invalid email or password. Please check your credentials and try again.")
       setIsLoading(false)
     }
   }
@@ -192,7 +201,7 @@ export function LoginForm() {
 
         {step === "role" && (
           <div className="grid grid-cols-2 gap-4">
-            {["owner", "manager", "accountant", "receptionist"].map((role) => (
+            {["doctor", "manager", "accountant", "receptionist"].map((role) => (
               <button
                 key={role}
                 onClick={() => handleRoleSelection(role as AdminRole)}
@@ -207,7 +216,7 @@ export function LoginForm() {
         )}
 
         {step === "credentials" && (
-          <form onSubmit={handleLogin} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <form onSubmit={handleLogin} noValidate className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
             {error && (
               <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">

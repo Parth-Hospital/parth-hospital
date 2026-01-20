@@ -2,6 +2,8 @@ import { FastifyRequest, FastifyReply } from "fastify"
 import { GalleryService } from "@/services/gallery.service"
 import { updateGallerySchema, createAlbumSchema, updateAlbumSchema } from "@/validators/gallery"
 import { uploadToCloudinary, deleteFromCloudinary } from "@/utils/cloudinary"
+import { validateImageFile, sanitizeFilename } from "@/utils/fileValidation"
+import { sanitizeText, sanitizeInput } from "@/utils/sanitize"
 
 const galleryService = new GalleryService()
 
@@ -18,8 +20,21 @@ export class GalleryController {
       }
 
       const buffer = await data.toBuffer()
-      const title = (data.fields.title as any)?.value || ""
-      const description = (data.fields.description as any)?.value || ""
+      const mimetype = data.mimetype || ""
+      const filename = sanitizeFilename(data.filename || "image")
+
+      // Validate file upload
+      const validation = await validateImageFile(buffer, mimetype, filename)
+      if (!validation.isValid) {
+        return reply.status(400).send({
+          success: false,
+          message: validation.error || "File validation failed",
+        })
+      }
+
+      // Sanitize input fields
+      const title = sanitizeInput((data.fields.title as any)?.value || "", 200)
+      const description = sanitizeText((data.fields.description as any)?.value || "")
       const albumId = (data.fields.albumId as any)?.value || null
 
       // Title is required only for single images (not in albums)
@@ -67,6 +82,7 @@ export class GalleryController {
       const body = createAlbumSchema.parse(request.body)
       const uploadedBy = request.user?.id
 
+      // Sanitization is handled in the service layer
       const album = await galleryService.createAlbum(body, uploadedBy)
 
       return reply.status(201).send({

@@ -2,9 +2,9 @@ import { FastifyInstance } from "fastify"
 
 export default async function healthRoutes(fastify: FastifyInstance) {
   fastify.get("/health", async (_request, reply) => {
+    // Minimal health check - no sensitive information
     return reply.send({
-      success: true,
-      message: "Server is running",
+      status: "ok",
       timestamp: new Date().toISOString(),
     })
   })

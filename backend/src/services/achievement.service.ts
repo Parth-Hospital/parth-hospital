@@ -14,7 +14,7 @@ export class AchievementService {
     })
   }
 
-  async getAchievements(type?: "OWNER" | "HOSPITAL") {
+  async getAchievements(type?: "DOCTOR" | "HOSPITAL") {
     const where = type ? { type } : {}
     return prisma.achievement.findMany({
       where,

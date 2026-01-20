@@ -48,7 +48,7 @@ export class AuthService {
       passwordToCheck = user.employeePasswordHash
     } else {
       // If logging in with regular email (admin dashboard login)
-      // For MANAGER/ACCOUNTANT/RECEPTIONIST/OWNER: use regular passwordHash (admin credentials)
+      // For MANAGER/ACCOUNTANT/RECEPTIONIST/DOCTOR: use regular passwordHash (admin credentials)
       // For EMPLOYEE: reject (they must use adminEmail)
       if (user.role === "EMPLOYEE") {
         throw new Error("Employees must use employee credentials to login. Please use your employee email.")
