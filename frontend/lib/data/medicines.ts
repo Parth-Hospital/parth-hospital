@@ -10,12 +10,13 @@ export interface MedicineSalt {
   saltName: string
   shortForm: string
   commonName?: string
+  companyName?: string
 }
 
 export const MEDICINE_SALTS: MedicineSalt[] = medicinesData as MedicineSalt[]
 
 /**
- * Search medicines by salt name or short form
+ * Search medicines by salt name, short form, common name, or company name
  */
 export function searchMedicines(query: string): MedicineSalt[] {
   if (!query.trim()) return []
@@ -26,7 +27,8 @@ export function searchMedicines(query: string): MedicineSalt[] {
     (medicine) =>
       medicine.saltName.toLowerCase().includes(lowerQuery) ||
       medicine.shortForm.toLowerCase().includes(lowerQuery) ||
-      (medicine.commonName && medicine.commonName.toLowerCase().includes(lowerQuery))
+      (medicine.commonName && medicine.commonName.toLowerCase().includes(lowerQuery)) ||
+      (medicine.companyName && medicine.companyName.toLowerCase().includes(lowerQuery))
   )
 }
 

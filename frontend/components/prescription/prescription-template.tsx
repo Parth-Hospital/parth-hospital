@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
 interface PrescriptionItem {
-  id: string
-  saltName: string
-  dosage?: string
-  frequency?: string
-  duration?: string
-  instructions?: string
+  id: string;
+  saltName: string;
+  dosage?: string;
+  frequency?: string;
+  duration?: string;
+  instructions?: string;
 }
 
 interface PrescriptionTemplateProps {
-  date?: string
-  medicines: PrescriptionItem[]
-  doctorName?: string
-  patientName?: string
-  patientAge?: string
-  hospitalName?: string
-  hospitalAddress?: string
+  date?: string;
+  medicines: PrescriptionItem[];
+  doctorName?: string;
+  patientName?: string;
+  patientAge?: string;
+  hospitalName?: string;
+  hospitalAddress?: string;
 }
 
 export function PrescriptionTemplate({
@@ -28,305 +28,232 @@ export function PrescriptionTemplate({
   hospitalName = "Parth Hospital",
   hospitalAddress = "Jaunpur, Uttar Pradesh",
 }: PrescriptionTemplateProps) {
+  // medicines per page
+  const ITEMS_PER_PAGE = 10;
+  const totalPages = Math.ceil(medicines.length / ITEMS_PER_PAGE) || 1;
+
   return (
-    <div
-      id="prescription-print-area"
-      className="bg-white border-2 border-gray-300 relative w-full max-w-full sm:w-[210mm] sm:min-h-[297mm] mx-auto"
-      style={{
-        width: "210mm",
-        minHeight: "297mm",
-        padding: "20mm",
-        margin: "0 auto",
-        boxSizing: "border-box",
-        fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-        position: "relative",
-        overflow: "hidden",
-        display: "block",
-      }}
-    >
-      {/* Top-left Logo */}
-      <img
-        src="/Logo/parth-logo.png"
-        alt="Parth Hospital Logo"
-        style={{
-          position: "absolute",
-          top: "10mm",
-          left: "10mm",
-          height: "30mm",
-          width: "auto",
-          zIndex: 10,
-        }}
-      />
+    <div className="print-container">
+      {Array.from({ length: totalPages }).map((_, pageIndex) => {
+        const currentMedicines = medicines.slice(
+          pageIndex * ITEMS_PER_PAGE,
+          (pageIndex + 1) * ITEMS_PER_PAGE,
+        );
 
-      {/* Centered Watermark */}
-      <img
-        src="/Logo/parth-logo.png"
-        alt="Parth Hospital Watermark"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          height: "150mm",
-          width: "auto",
-          opacity: 0.08,
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Hospital Header & Doctor Name at Top */}
-      <div
-        className="text-center border-b-2 border-gray-800 relative"
-        style={{
-          paddingTop: "8mm",
-          paddingBottom: "16px",
-          marginBottom: "24px",
-          fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          zIndex: 5,
-          position: "relative",
-        }}
-      >
-        <h1
-          className="text-2xl font-bold text-gray-900"
-          style={{
-            fontSize: "24px",
-            fontWeight: "bold",
-            marginBottom: "8px",
-            fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          }}
-        >
-          {hospitalName}
-        </h1>
-        <p
-          className="text-sm text-gray-600"
-          style={{
-            fontSize: "14px",
-            marginBottom: "12px",
-            fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          }}
-        >
-          {hospitalAddress}
-        </p>
-        {/* Patient Information (if provided) */}
-        {(patientName || patientAge) && (
+        return (
           <div
-            className="mb-3"
+            key={pageIndex}
+            className="bg-white relative mx-auto print:border-0 mb-8 last:mb-0 box-border"
             style={{
-              marginBottom: "12px",
+              width: "210mm",
+              height: "297mm",
+              padding: "20mm",
+              position: "relative",
+              overflow: "hidden",
+              pageBreakAfter: pageIndex < totalPages - 1 ? "always" : "auto",
               fontFamily: "var(--font-outfit), 'Inter', sans-serif",
+              border: "2px solid #e5e7eb", // Visible in preview
             }}
           >
+            {/* Watermark - Centered on every page */}
             <div
-              className="flex justify-center gap-4 text-sm"
               style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%",
+                height: "100%",
                 display: "flex",
+                alignItems: "center",
                 justifyContent: "center",
-                gap: "16px",
-                fontSize: "14px",
-                fontFamily: "var(--font-outfit), 'Inter', sans-serif",
+                zIndex: 0,
+                pointerEvents: "none",
               }}
             >
-              {patientName && (
-                <p
-                  className="text-gray-700 font-medium"
-                  style={{
-                    fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                    fontWeight: "500",
-                  }}
-                >
-                  Name: {patientName}
-                </p>
-              )}
-              {patientAge && (
-                <p
-                  className="text-gray-700 font-medium"
-                  style={{
-                    fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                    fontWeight: "500",
-                  }}
-                >
-                  Age: {patientAge}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-        <div
-          className="flex justify-between items-center"
-          style={{
-            paddingTop: "8px",
-            fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          }}
-        >
-          <div className="text-left">
-            <p
-              className="text-xs text-gray-500"
-              style={{
-                fontSize: "12px",
-                fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-              }}
-            >
-              Date: {date}
-            </p>
-          </div>
-          <div className="text-right">
-            <p
-              className="font-semibold text-gray-900 text-base"
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-              }}
-            >
-              {doctorName}
-            </p>
-            <p
-              className="text-xs text-gray-600"
-              style={{
-                fontSize: "12px",
-                fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-              }}
-            >
-              Orthopedic Specialist
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Prescription Medicines */}
-      <div
-        className="mb-6 flex-1 relative"
-        style={{
-          marginBottom: "24px",
-          fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          zIndex: 5,
-          position: "relative",
-        }}
-      >
-        <h2
-          className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-300 pb-2"
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            marginBottom: "16px",
-            paddingBottom: "8px",
-            fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          }}
-        >
-          Prescription
-        </h2>
-        <div
-          className="space-y-4"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-            fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-          }}
-        >
-          {medicines.length === 0 ? (
-            <p
-              className="text-gray-500 italic text-center py-8"
-              style={{
-                paddingTop: "32px",
-                paddingBottom: "32px",
-                fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-              }}
-            >
-              No medicines added
-            </p>
-          ) : (
-            medicines.map((medicine, index) => (
-              <div
-                key={medicine.id}
-                className="border-b border-gray-200"
+              <img
+                src="/Logo/parth-logo.png"
+                alt="Parth Hospital Watermark"
                 style={{
-                  paddingBottom: "12px",
-                  borderBottom: "1px solid #e5e7eb",
-                  fontFamily: "var(--font-outfit), 'Inter', sans-serif",
+                  height: "150mm",
+                  width: "auto",
+                  opacity: 0.08,
                 }}
+              />
+            </div>
+
+            {/* Header Section */}
+            {/* Header Section */}
+            <div className="relative z-10 border-b-2 border-gray-800 pb-4 mb-6">
+              {/* Top Row: Logo - Title - Spacer */}
+              <div
+                className="flex items-start justify-between"
+                style={{ minHeight: "35mm" }}
               >
+                {/* Left: Logo (Moved Upward) */}
                 <div
-                  className="flex items-start gap-4"
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "16px",
-                    fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                  }}
+                  className="shrink-0"
+                  style={{ width: "35mm", marginTop: "-5mm" }}
                 >
-                  <span
-                    className="font-semibold text-gray-700"
+                  <img
+                    src="/Logo/parth-logo.png"
+                    alt="Parth Hospital Logo"
                     style={{
-                      minWidth: "30px",
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      fontFamily: "var(--font-outfit), 'Inter', sans-serif",
+                      height: "30mm",
+                      width: "auto",
                     }}
-                  >
-                    {index + 1}.
-                  </span>
-                  <div
-                    className="flex-1"
-                    style={{
-                      flex: "1",
-                      fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                    }}
-                  >
-                    <p
-                      className="font-semibold text-gray-900 text-lg mb-1"
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: "600",
-                        marginBottom: "4px",
-                        fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                      }}
-                    >
-                      {medicine.saltName}
-                    </p>
-                    {(medicine.dosage || medicine.frequency || medicine.duration || medicine.instructions) && (
+                  />
+                </div>
+
+                {/* Center: Hospital Info */}
+                <div className="flex-1 text-center mt-2">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2 font-heading">
+                    {hospitalName}
+                  </h1>
+                  <p className="text-gray-600 font-medium">{hospitalAddress}</p>
+                </div>
+
+                {/* Right: Invisible Spacer for Centering */}
+                <div className="shrink-0 invisible" style={{ width: "35mm" }}>
+                  {/* Visual balance for logo */}
+                </div>
+              </div>
+
+              {/* Bottom Row: Date & Doctor (Full Width, Extreme Edges) */}
+              <div className="flex justify-between items-end mt-2 pt-2 border-t border-gray-200">
+                <div className="text-sm text-gray-600">
+                  <span className="font-semibold">Date:</span> {date}
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-gray-900 text-lg">
+                    {doctorName}
+                  </p>
+                  <p className="text-sm text-gray-600">Orthopedic Specialist</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Patient Info Row */}
+            {(patientName || patientAge) && (
+              <div className="relative z-10 mb-6 bg-gray-50 p-3 rounded-lg border border-gray-100 flex gap-8 justify-center">
+                {patientName && (
+                  <p className="font-medium text-gray-800">
+                    <span className="text-gray-500 mr-2">Patient Name:</span>
+                    {patientName}
+                  </p>
+                )}
+                {patientAge && (
+                  <p className="font-medium text-gray-800">
+                    <span className="text-gray-500 mr-2">Age:</span>
+                    {patientAge}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Medicines List */}
+            <div className="relative z-10 flex-1">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200 flex items-center gap-2">
+                <span></span>
+                <span className="text-sm font-normal text-gray-500 ml-auto">
+                  Page {pageIndex + 1} of {totalPages}
+                </span>
+              </h2>
+
+              <div className="space-y-0">
+                {currentMedicines.length === 0 ? (
+                  <p className="text-gray-400 italic text-center py-12">
+                    No medicines added
+                  </p>
+                ) : (
+                  currentMedicines.map((medicine, index) => {
+                    const globalIndex = pageIndex * ITEMS_PER_PAGE + index + 1;
+                    return (
                       <div
-                        className="mt-1 text-sm text-gray-700 space-y-1"
-                        style={{
-                          marginTop: "4px",
-                          fontSize: "14px",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "4px",
-                          fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                        }}
+                        key={medicine.id}
+                        className="py-3 border-b border-gray-100 last:border-0"
                       >
-                        {medicine.dosage && (
-                          <p style={{ fontFamily: "var(--font-outfit), 'Inter', sans-serif" }}>Dosage: {medicine.dosage}</p>
-                        )}
-                        {medicine.frequency && (
-                          <p style={{ fontFamily: "var(--font-outfit), 'Inter', sans-serif" }}>Frequency: {medicine.frequency}</p>
-                        )}
-                        {medicine.duration && (
-                          <p style={{ fontFamily: "var(--font-outfit), 'Inter', sans-serif" }}>Duration: {medicine.duration}</p>
-                        )}
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900 text-lg">
+                                {globalIndex}. {medicine.saltName}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-600 mt-1 font-medium">
+                              {[
+                                medicine.dosage,
+                                medicine.frequency,
+                                medicine.duration,
+                              ]
+                                .filter(Boolean)
+                                .join("  •  ")}
+                            </div>
+                          </div>
+                        </div>
                         {medicine.instructions && (
-                          <p
-                            className="italic text-gray-600"
-                            style={{
-                              fontStyle: "italic",
-                              fontFamily: "var(--font-outfit), 'Inter', sans-serif",
-                            }}
-                          >
-                            {medicine.instructions}
+                          <p className="text-sm text-gray-500 mt-1 italic pl-5">
+                            Note: {medicine.instructions}
                           </p>
                         )}
                       </div>
-                    )}
-                  </div>
-                </div>
+                    );
+                  })
+                )}
               </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
+            </div>
 
+            {/* Footer Signatures (Only on last page) */}
+            {pageIndex === totalPages - 1 && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "20mm",
+                  right: "20mm",
+                  textAlign: "center",
+                  zIndex: 10,
+                }}
+              >
+                {/* Placeholder for Signature */}
+                <div
+                  style={{ height: "16mm", width: "32mm", marginBottom: "8px" }}
+                ></div>
+                <p
+                  style={{
+                    borderTop: "1px solid #111827", // gray-900
+                    paddingTop: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                  }}
+                >
+                  Doctor's Signature
+                </p>
+              </div>
+            )}
+
+            {/* Page Footer */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "4mm",
+                left: 0,
+                right: 0,
+                textAlign: "center",
+                zIndex: 10,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: "#9ca3af", // gray-400
+                }}
+              >
+                Not valid for medico-legal purposes. | {hospitalAddress}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
