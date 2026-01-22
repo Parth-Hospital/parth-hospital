@@ -1,5 +1,4 @@
 import sharp from "sharp"
-import { FastifyRequest } from "fastify"
 
 // Allowed MIME types for images
 export const ALLOWED_MIME_TYPES = [
