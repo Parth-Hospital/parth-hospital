@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Award, Users, Zap, Heart, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { achievementApi, Achievement } from "@/lib/api/achievement"
+import { logger } from "@/lib/utils/logger"
 
 export default function AchievementsPage() {
   const [doctorAchievements, setDoctorAchievements] = useState<Achievement[]>([])
@@ -28,9 +29,7 @@ export default function AchievementsPage() {
       setHospitalAchievements(hospitalData)
     } catch (error) {
       // Only log in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to load achievements:", error)
-      }
+      logger.error("Failed to load achievements:", error)
     } finally {
       setLoading(false)
     }

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { NotificationsModal } from "@/components/notifications-modal"
 import { notificationApi } from "@/lib/api/notification"
 import { UserRole } from "@/lib/auth"
+import { logger } from "@/lib/utils/logger"
 
 interface DashboardHeaderProps {
   title: string
@@ -30,7 +31,7 @@ export function DashboardHeader({ title, subtitle, role }: DashboardHeaderProps)
       } catch (error: any) {
         // Silently fail - don't show error for notification count
         // This prevents console spam if backend is not running
-        console.debug("Failed to load unread count:", error.message)
+        logger.debug("Failed to load unread count:", error.message)
         // Set to 0 on error to avoid showing stale count
         setUnreadCount(0)
       }

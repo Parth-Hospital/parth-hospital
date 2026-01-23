@@ -40,7 +40,7 @@ export class PaymentController {
     }
   }
 
-  async getPaymentStats(request: FastifyRequest, reply: FastifyReply) {
+  async getPaymentStats(_request: FastifyRequest, reply: FastifyReply) {
     try {
       const stats = await paymentService.getPaymentStats()
 

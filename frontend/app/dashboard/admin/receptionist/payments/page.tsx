@@ -10,6 +10,7 @@ import { Search, Download, CreditCard, Loader2 } from "lucide-react"
 import { paymentApi, Payment, PaymentStats } from "@/lib/api/payment"
 import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
+import { logger } from "@/lib/utils/logger"
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([])
@@ -44,7 +45,7 @@ export default function PaymentsPage() {
       const data = await paymentApi.getPaymentStats()
       setStats(data)
     } catch (error: any) {
-      console.error("Failed to load payment stats:", error)
+      logger.error("Failed to load payment stats:", error)
     }
   }
 

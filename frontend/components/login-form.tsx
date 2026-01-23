@@ -11,6 +11,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Users, ShieldCheck, ArrowRight, ArrowLeft, AlertCircle, Loader2 } from "lucide-react"
 import { authApi } from "@/lib/api/auth"
 import { getDashboardRoute } from "@/lib/auth"
+import { logger } from "@/lib/utils/logger"
+import { useToast } from "@/hooks/use-toast"
 
 type LoginStep = "selection" | "role" | "credentials"
 type LoginType = "employee" | "admin"
@@ -18,6 +20,7 @@ type AdminRole = "doctor" | "manager" | "accountant" | "receptionist" | null
 
 export function LoginForm() {
   const router = useRouter()
+  const { toast } = useToast()
   const [step, setStep] = useState<LoginStep>("selection")
   const [loginType, setLoginType] = useState<LoginType | null>(null)
   const [adminRole, setAdminRole] = useState<AdminRole>(null)
@@ -120,17 +123,21 @@ export function LoginForm() {
         localStorage.setItem("auth_token", response.token)
       }
 
+      // Show success toast
+      toast({
+        title: "Success",
+        description: `Welcome back, ${response.user.name}!`,
+      })
+
       // Get dashboard route and redirect
       const dashboardRoute = getDashboardRoute(frontendRole as any)
       router.push(dashboardRoute)
     } catch (err: any) {
       // Log authentication errors for debugging (development only)
-      if (process.env.NODE_ENV === "development") {
-        console.error("Login error:", {
-          message: err.message,
-          email: email.substring(0, 3) + "***", // Partial email for privacy
-        })
-      }
+      logger.error("Login error:", {
+        message: err.message,
+        email: email.substring(0, 3) + "***", // Partial email for privacy
+      })
       // Always show "Invalid email or password" for any authentication failure
       // This includes: wrong email, wrong password, invalid email format, user not found, etc.
       setError("Invalid email or password. Please check your credentials and try again.")

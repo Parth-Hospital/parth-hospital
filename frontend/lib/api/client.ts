@@ -1,3 +1,5 @@
+import { logger } from "@/lib/utils/logger"
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 
 export interface ApiResponse<T = any> {
@@ -96,12 +98,10 @@ class ApiClient {
       // Handle network errors (fetch failed completely)
       if (error instanceof TypeError && error.message === "Failed to fetch") {
         // Only log in development
-        if (process.env.NODE_ENV === "development") {
-          console.error("API Error: Backend server is not reachable. Is it running?", {
-            baseURL: this.baseURL,
-            endpoint,
-          })
-        }
+        logger.error("API Error: Backend server is not reachable. Is it running?", {
+          baseURL: this.baseURL,
+          endpoint,
+        })
         throw new Error(
           "Unable to connect to the server. Please try again later."
         )
@@ -109,19 +109,17 @@ class ApiClient {
 
       // Re-throw other errors (including our custom Error from above)
       // Log important errors for debugging (development only)
-      if (process.env.NODE_ENV === "development") {
-        console.error("API Error:", {
-          endpoint,
-          message: error.message || "Unknown error",
-          status: error.status || "N/A",
-          statusText: error.statusText || "N/A",
-          error: error,
-          stack: error.stack,
-          details: error.details,
-          // Try to stringify the error to see all properties
-          errorString: JSON.stringify(error, Object.getOwnPropertyNames(error)),
-        })
-      }
+      logger.error("API Error:", {
+        endpoint,
+        message: error.message || "Unknown error",
+        status: error.status || "N/A",
+        statusText: error.statusText || "N/A",
+        error: error,
+        stack: error.stack,
+        details: error.details,
+        // Try to stringify the error to see all properties
+        errorString: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+      })
       throw error
     }
   }
@@ -209,24 +207,20 @@ class ApiClient {
       // Handle network errors
       if (error instanceof TypeError && error.message === "Failed to fetch") {
         // Log network errors for debugging (development only)
-        if (process.env.NODE_ENV === "development") {
-          console.error("Network Error: Backend server unreachable (File Upload)", {
-            endpoint,
-            baseURL: this.baseURL,
-          })
-        }
+        logger.error("Network Error: Backend server unreachable (File Upload)", {
+          endpoint,
+          baseURL: this.baseURL,
+        })
         throw new Error(
           "Unable to connect to the server. Please try again later."
         )
       }
 
       // Log important errors for debugging (development only)
-      if (process.env.NODE_ENV === "development") {
-        console.error("API Error (File Upload):", {
-          endpoint,
-          message: error.message,
-        })
-      }
+      logger.error("API Error (File Upload):", {
+        endpoint,
+        message: error.message,
+      })
       throw error
     }
   }

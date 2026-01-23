@@ -22,6 +22,7 @@ import {
 import { analyticsApi } from "@/lib/api/analytics"
 import { appointmentApi } from "@/lib/api/appointment"
 import { useToast } from "@/hooks/use-toast"
+import { logger } from "@/lib/utils/logger"
 
 export default function ReceptionistDashboard() {
   const [stats, setStats] = useState<any>(null)
@@ -55,9 +56,7 @@ export default function ReceptionistDashboard() {
       setBookings(data)
     } catch (error: any) {
       // Only log in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to load bookings:", error)
-      }
+      logger.error("Failed to load bookings:", error)
     }
   }
 

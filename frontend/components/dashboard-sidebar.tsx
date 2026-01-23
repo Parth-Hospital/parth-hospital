@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { NavigationItem } from "@/lib/config/navigation"
+import { useToast } from "@/hooks/use-toast"
 
 interface DashboardSidebarProps {
   role: "employee" | "doctor" | "manager" | "accountant" | "receptionist"
@@ -23,6 +24,7 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
   const [open, setOpen] = useState(false) // Mobile menu state
   const [collapsed, setCollapsed] = useState(false) // Desktop collapse state
   const router = useRouter()
+  const { toast } = useToast()
 
   // Load collapsed state from localStorage
   useEffect(() => {
@@ -47,6 +49,10 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
 
   const handleLogout = () => {
     clearAuthSession()
+    toast({
+      title: "Success",
+      description: "You have been logged out successfully",
+    })
     router.push("/login")
   }
 

@@ -14,6 +14,7 @@ import {
 import { employeeApi } from "@/lib/api/employee";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
+import { logger } from "@/lib/utils/logger";
 import {
   Table,
   TableBody,
@@ -159,31 +160,27 @@ export default function AttendancePage() {
       const start = formatDateForAPI(startDateObj);
       const end = formatDateForAPI(endDateObj);
 
-      if (process.env.NODE_ENV === "development") {
-        console.log("Loading attendance for date range:", {
-          start,
-          end,
-          startDate,
-          endDate,
-        });
-      }
+      logger.log("Loading attendance for date range:", {
+        start,
+        end,
+        startDate,
+        endDate,
+      });
 
       const data = await attendanceApi.getAttendanceByDateRange({
         startDate: start,
         endDate: end,
       });
 
-      if (process.env.NODE_ENV === "development") {
-        console.log("Loaded attendance records:", data.length);
-        if (data.length > 0) {
-          console.log("Sample record:", data[0]);
-          console.log("Record date format:", data[0].date, typeof data[0].date);
-        }
+      logger.log("Loaded attendance records:", data.length);
+      if (data.length > 0) {
+        logger.log("Sample record:", data[0]);
+        logger.log("Record date format:", data[0].date, typeof data[0].date);
       }
 
       setAttendanceRecords(data);
     } catch (error: any) {
-      console.error("Failed to load attendance:", error);
+      logger.error("Failed to load attendance:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to load attendance",
@@ -318,10 +315,8 @@ export default function AttendancePage() {
       }
 
       // Debug: Log first row to see column structure
-      if (process.env.NODE_ENV === "development") {
-        console.log("First row columns:", Object.keys(parsedData[0]));
-        console.log("First row data:", parsedData[0]);
-      }
+      logger.log("First row columns:", Object.keys(parsedData[0]));
+      logger.log("First row data:", parsedData[0]);
 
       // Step 2: Generate expected date columns (full dates: DD-MM-YYYY)
       // Parse dates in local timezone to avoid timezone shifts
@@ -344,14 +339,12 @@ export default function AttendancePage() {
         };
       });
 
-      if (process.env.NODE_ENV === "development") {
-        console.log("Expected date columns:", expectedDateColumns);
-        console.log("Alternative formats:", expectedDateColumnsAlt);
-        console.log(
-          "Date range:",
-          dateRange.map((d) => d.toISOString().split("T")[0]),
-        );
-      }
+      logger.log("Expected date columns:", expectedDateColumns);
+      logger.log("Alternative formats:", expectedDateColumnsAlt);
+      logger.log(
+        "Date range:",
+        dateRange.map((d) => d.toISOString().split("T")[0]),
+      );
 
       // Step 3: Fetch employees to map employeeId to userId
       const employees = await employeeApi.getEmployees();
@@ -365,12 +358,12 @@ export default function AttendancePage() {
       const errors: string[] = [];
 
       // Debug: Log all available columns from first row
-      if (parsedData.length > 0 && process.env.NODE_ENV === "development") {
-        console.log("=== EXCEL PARSING DEBUG ===");
-        console.log("All columns in first row:", Object.keys(parsedData[0]));
-        console.log("First row data:", parsedData[0]);
-        console.log("Expected date columns:", expectedDateColumns);
-        console.log(
+      if (parsedData.length > 0) {
+        logger.log("=== EXCEL PARSING DEBUG ===");
+        logger.log("All columns in first row:", Object.keys(parsedData[0]));
+        logger.log("First row data:", parsedData[0]);
+        logger.log("Expected date columns:", expectedDateColumns);
+        logger.log(
           "Date range:",
           dateRange.map((d) => ({
             date: d.toISOString().split("T")[0],
@@ -379,7 +372,7 @@ export default function AttendancePage() {
             day: d.getDate(),
           })),
         );
-        console.log("Alternative formats:", expectedDateColumnsAlt);
+        logger.log("Alternative formats:", expectedDateColumnsAlt);
       }
 
       for (let i = 0; i < parsedData.length; i++) {
@@ -450,16 +443,16 @@ export default function AttendancePage() {
           }
         }
 
-        if (process.env.NODE_ENV === "development" && i === 0) {
-          console.log("\n=== PROCESSING ROW", i + 2, "===");
-          console.log("Employee ID key:", employeeIdKey);
-          console.log("Employee Name key:", employeeNameKey);
-          console.log("All columns found:", allColumns);
-          console.log(
+        if (i === 0) {
+          logger.log("\n=== PROCESSING ROW", i + 2, "===");
+          logger.log("Employee ID key:", employeeIdKey);
+          logger.log("Employee Name key:", employeeNameKey);
+          logger.log("All columns found:", allColumns);
+          logger.log(
             "Date column map (dateISO -> columnKey):",
             Array.from(dateColumnMap.entries()),
           );
-          console.log(
+          logger.log(
             "Expected dates:",
             dateRange.map((d) => d.toISOString().split("T")[0]),
           );
@@ -475,12 +468,12 @@ export default function AttendancePage() {
           const dateColumnKey = dateColumnMap.get(expectedDateLocal);
 
           if (!dateColumnKey) {
-            if (i === 0 && process.env.NODE_ENV === "development") {
-              console.error(
+            if (i === 0) {
+              logger.error(
                 `❌ FAILED: No column found for date ${formatDateDisplay(date)} (${expectedDateLocal})`,
               );
-              console.error("  Expected column:", expectedDateStr);
-              console.error(
+              logger.error("  Expected column:", expectedDateStr);
+              logger.error(
                 "  Available date columns:",
                 Array.from(dateColumnMap.entries()),
               );
@@ -498,13 +491,13 @@ export default function AttendancePage() {
             .trim()
             .toUpperCase();
 
-          if (process.env.NODE_ENV === "development" && i === 0) {
-            console.log(
+          if (i === 0) {
+            logger.log(
               `\n--- Date ${j + 1}/${dateRange.length}: ${formatDateDisplay(date)} (${expectedDateLocal}) ---`,
             );
-            console.log(`  Column key: "${dateColumnKey}"`);
-            console.log(`  Raw value: "${row[dateColumnKey]}"`);
-            console.log(`  Processed value: "${statusValue}"`);
+            logger.log(`  Column key: "${dateColumnKey}"`);
+            logger.log(`  Raw value: "${row[dateColumnKey]}"`);
+            logger.log(`  Processed value: "${statusValue}"`);
           }
 
           // Process the status value
@@ -516,12 +509,12 @@ export default function AttendancePage() {
               status,
             });
 
-            if (process.env.NODE_ENV === "development" && i === 0) {
-              console.log(`  ✅ RECORDED: ${statusValue} -> ${status}`);
+            if (i === 0) {
+              logger.log(`  ✅ RECORDED: ${statusValue} -> ${status}`);
             }
           } else {
-            if (i === 0 && process.env.NODE_ENV === "development") {
-              console.warn(
+            if (i === 0) {
+              logger.warn(
                 `  ⚠️ Invalid status value: "${statusValue}" (expected P or A)`,
               );
             }
@@ -540,9 +533,7 @@ export default function AttendancePage() {
           description: `Found ${errors.length} error(s). Some records may not be uploaded.`,
           variant: "default",
         });
-        if (process.env.NODE_ENV === "development") {
-          console.error("Upload errors:", errors);
-        }
+        logger.error("Upload errors:", errors);
       }
 
       if (attendanceRecords.length === 0) {
@@ -551,21 +542,17 @@ export default function AttendancePage() {
           description: `No valid attendance records found in file. Expected date columns: ${expectedDateColumns.join(", ")}. Check if Excel columns match the selected date range.`,
           variant: "destructive",
         });
-        if (process.env.NODE_ENV === "development") {
-          console.error("No records created. Errors:", errors);
-          console.error(
-            "Available columns in first row:",
-            Object.keys(parsedData[0] || {}),
-          );
-        }
+        logger.error("No records created. Errors:", errors);
+        logger.error(
+          "Available columns in first row:",
+          Object.keys(parsedData[0] || {}),
+        );
         return;
       }
 
       // Step 5: Upload to backend
-      if (process.env.NODE_ENV === "development") {
-        console.log("Uploading attendance records:", attendanceRecords.length);
-        console.log("Sample records:", attendanceRecords.slice(0, 3));
-      }
+      logger.log("Uploading attendance records:", attendanceRecords.length);
+      logger.log("Sample records:", attendanceRecords.slice(0, 3));
 
       const result =
         await attendanceApi.bulkCreateOrUpdateAttendance(attendanceRecords);
@@ -655,10 +642,10 @@ export default function AttendancePage() {
   );
 
   // Debug: Log grouped attendance
-  if (process.env.NODE_ENV === "development" && attendanceRecords.length > 0) {
-    console.log("Attendance records loaded:", attendanceRecords.length);
-    console.log("Grouped attendance:", groupedAttendance);
-    console.log(
+  if (attendanceRecords.length > 0) {
+    logger.log("Attendance records loaded:", attendanceRecords.length);
+    logger.log("Grouped attendance:", groupedAttendance);
+    logger.log(
       "Date range for display:",
       dateRange.map((d) => d.toISOString().split("T")[0]),
     );

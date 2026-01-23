@@ -1,6 +1,7 @@
-console.log("📦 Loading app modules...")
-
 import Fastify from "fastify"
+import { logger } from "@/utils/logger"
+
+logger.log("📦 Loading app modules...")
 import cors from "@fastify/cors"
 import helmet from "@fastify/helmet"
 import rateLimit from "@fastify/rate-limit"
@@ -23,14 +24,14 @@ import todoRoutes from "@/routes/todo"
 import noteRoutes from "@/routes/note"
 import paymentRoutes from "@/routes/payment"
 
-console.log("✅ All modules loaded successfully")
-console.log("🏗️  Creating Fastify app instance...")
+logger.log("✅ All modules loaded successfully")
+logger.log("🏗️  Creating Fastify app instance...")
 
 const app = Fastify({
   logger: env.NODE_ENV === "development",
 })
 
-console.log("✅ Fastify app created")
+logger.log("✅ Fastify app created")
 
 // Register plugins
 app.register(helmet, {

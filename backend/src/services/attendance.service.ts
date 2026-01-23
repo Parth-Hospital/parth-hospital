@@ -1,5 +1,6 @@
 import prisma from "@/config/database"
 import { CreateDailyAttendanceInput } from "@/validators/attendance"
+import { logger } from "@/utils/logger"
 
 export class AttendanceService {
   // Create or update a single daily attendance record
@@ -10,14 +11,12 @@ export class AttendanceService {
     const date = new Date(year, month - 1, day) // month is 0-indexed
     date.setHours(0, 0, 0, 0)
 
-    if (process.env.NODE_ENV === "development") {
-      console.log("Creating/updating attendance:", {
-        userId: data.userId,
-        dateInput: data.date,
-        dateObject: date.toISOString(),
-        status: data.status,
-      })
-    }
+    logger.log("Creating/updating attendance:", {
+      userId: data.userId,
+      dateInput: data.date,
+      dateObject: date.toISOString(),
+      status: data.status,
+    })
 
     return prisma.attendance.upsert({
       where: {
@@ -154,7 +153,7 @@ export class AttendanceService {
           return null
         })
         .filter(Boolean)
-      console.error("Failed attendance records:", failedRecords)
+      logger.error("Failed attendance records:", failedRecords)
     }
 
     return {

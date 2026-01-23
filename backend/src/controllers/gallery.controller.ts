@@ -4,6 +4,7 @@ import { updateGallerySchema, createAlbumSchema, updateAlbumSchema } from "@/val
 import { uploadToCloudinary, deleteFromCloudinary } from "@/utils/cloudinary"
 import { validateImageFile, sanitizeFilename } from "@/utils/fileValidation"
 import { sanitizeText, sanitizeInput } from "@/utils/sanitize"
+import { logger } from "@/utils/logger"
 
 const galleryService = new GalleryService()
 
@@ -270,7 +271,7 @@ export class GalleryController {
           await deleteFromCloudinary(publicId)
         } catch (cloudinaryError) {
           // Log but don't fail if Cloudinary delete fails
-          console.error("Failed to delete from Cloudinary:", cloudinaryError)
+          logger.error("Failed to delete from Cloudinary:", cloudinaryError)
         }
       }
 
@@ -302,7 +303,7 @@ export class GalleryController {
           const publicId = `parth-hospital/gallery/${publicIdWithExt}`
           await deleteFromCloudinary(publicId)
         } catch (cloudinaryError) {
-          console.error("Failed to delete cover image from Cloudinary:", cloudinaryError)
+          logger.error("Failed to delete cover image from Cloudinary:", cloudinaryError)
         }
       }
 
@@ -315,7 +316,7 @@ export class GalleryController {
             const publicId = `parth-hospital/gallery/${publicIdWithExt}`
             await deleteFromCloudinary(publicId)
           } catch (cloudinaryError) {
-            console.error("Failed to delete image from Cloudinary:", cloudinaryError)
+            logger.error("Failed to delete image from Cloudinary:", cloudinaryError)
           }
         }
       }

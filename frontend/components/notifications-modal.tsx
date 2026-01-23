@@ -16,6 +16,7 @@ import { UserRole } from "@/lib/auth"
 import { notificationApi, Notification } from "@/lib/api/notification"
 import { useToast } from "@/hooks/use-toast"
 import { formatDistanceToNow } from "date-fns"
+import { logger } from "@/lib/utils/logger"
 
 interface NotificationsModalProps {
   open: boolean
@@ -47,9 +48,7 @@ export function NotificationsModal({
       setNotifications(data)
     } catch (error: any) {
       // Only log in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to load notifications:", error)
-      }
+      logger.error("Failed to load notifications:", error)
       // Don't show toast for notifications, just fail silently
     } finally {
       setLoading(false)
@@ -62,9 +61,7 @@ export function NotificationsModal({
       setUnreadCount(count)
     } catch (error: any) {
       // Only log in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to load unread count:", error)
-      }
+      logger.error("Failed to load unread count:", error)
     }
   }
 
@@ -73,6 +70,10 @@ export function NotificationsModal({
       await notificationApi.markAsRead(id)
       await loadNotifications()
       await loadUnreadCount()
+      toast({
+        title: "Success",
+        description: "Notification marked as read",
+      })
     } catch (error: any) {
       toast({
         title: "Error",
@@ -87,6 +88,10 @@ export function NotificationsModal({
       await notificationApi.markAllAsRead()
       await loadNotifications()
       await loadUnreadCount()
+      toast({
+        title: "Success",
+        description: "All notifications marked as read",
+      })
     } catch (error: any) {
       toast({
         title: "Error",
@@ -101,6 +106,10 @@ export function NotificationsModal({
       await notificationApi.deleteNotification(id)
       await loadNotifications()
       await loadUnreadCount()
+      toast({
+        title: "Success",
+        description: "Notification deleted successfully",
+      })
     } catch (error: any) {
       toast({
         title: "Error",

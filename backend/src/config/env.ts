@@ -1,5 +1,6 @@
 import { z } from "zod"
 import dotenv from "dotenv"
+import { logger } from "@/utils/logger"
 
 dotenv.config()
 
@@ -37,20 +38,20 @@ export type Env = z.infer<typeof envSchema>
 let env: Env
 
 try {
-  console.log("🔍 Validating environment variables...")
+  logger.log("🔍 Validating environment variables...")
   env = envSchema.parse(process.env)
-  console.log("✅ Environment variables validated successfully")
+  logger.log("✅ Environment variables validated successfully")
 } catch (error) {
   if (error instanceof z.ZodError) {
-    console.error("❌ Invalid environment variables:")
+    logger.error("❌ Invalid environment variables:")
     error.errors.forEach((err) => {
-      console.error(`  - ${err.path.join(".")}: ${err.message}`)
-      console.error(`    Current value: ${process.env[err.path[0] as string] || 'undefined'}`)
+      logger.error(`  - ${err.path.join(".")}: ${err.message}`)
+      logger.error(`    Current value: ${process.env[err.path[0] as string] || 'undefined'}`)
     })
-    console.error("\n📋 Available environment variables:", Object.keys(process.env).filter(k => !k.includes('PASSWORD')).sort())
+    logger.error("\n📋 Available environment variables:", Object.keys(process.env).filter(k => !k.includes('PASSWORD')).sort())
     process.exit(1)
   }
-  console.error("❌ Unexpected error during env validation:", error)
+  logger.error("❌ Unexpected error during env validation:", error)
   throw error
 }
 

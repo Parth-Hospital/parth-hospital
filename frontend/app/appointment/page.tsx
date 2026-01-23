@@ -30,6 +30,7 @@ import {
   type AppointmentType,
 } from "@/lib/utils/appointment"
 import { appointmentApi } from "@/lib/api/appointment"
+import { logger } from "@/lib/utils/logger"
 
 export default function AppointmentPage() {
   const [appointmentType, setAppointmentType] = useState<AppointmentType | null>(null)
@@ -152,12 +153,10 @@ export default function AppointmentPage() {
       setPendingAppointmentData(null)
     } catch (error: any) {
       // Log important booking errors for debugging (development only)
-      if (process.env.NODE_ENV === "development") {
-        console.error("Appointment booking error:", {
-          message: error.message,
-          details: error.details,
-        })
-      }
+      logger.error("Appointment booking error:", {
+        message: error.message,
+        details: error.details,
+      })
       // Handle validation errors from backend
       if (error.details && Array.isArray(error.details)) {
         const validationErrors: Record<string, string> = {}

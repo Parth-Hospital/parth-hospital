@@ -13,33 +13,74 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { attendanceApi, WeeklyAttendance } from "@/lib/api/attendance"
+import { attendanceApi, DailyAttendance } from "@/lib/api/attendance"
 import { useToast } from "@/hooks/use-toast"
 
+// Helper function to generate date range
+const generateDateRange = (startDate: Date, endDate: Date): Date[] => {
+  const dates: Date[] = []
+  const current = new Date(startDate)
+  current.setHours(0, 0, 0, 0)
+  const end = new Date(endDate)
+  end.setHours(0, 0, 0, 0)
+
+  while (current <= end) {
+    dates.push(new Date(current))
+    current.setDate(current.getDate() + 1)
+  }
+  return dates
+}
+
+// Format date as DD-MM-YYYY for display
+const formatDateDisplay = (date: Date): string => {
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  })
+}
+
+// Format date as YYYY-MM-DD in local timezone
+const formatDateLocal = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
 export default function AttendancePage() {
-  const [attendanceRecords, setAttendanceRecords] = useState<WeeklyAttendance[]>([])
+  const [attendanceRecords, setAttendanceRecords] = useState<DailyAttendance[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedWeek, setSelectedWeek] = useState<string>("")
+  const [startDate, setStartDate] = useState<string>("")
+  const [endDate, setEndDate] = useState<string>("")
   const { toast } = useToast()
 
-  const getWeekStart = (date: Date = new Date()): Date => {
-    const d = new Date(date)
-    const day = d.getDay()
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-    return new Date(d.setDate(diff))
-  }
-
+  // Initialize with current date range (today to 7 days ahead)
   useEffect(() => {
-    const weekStart = getWeekStart()
-    const weekStartStr = weekStart.toISOString()
-    setSelectedWeek(weekStartStr)
-    loadAttendance(weekStartStr)
+    const today = new Date()
+    const nextWeek = new Date(today)
+    nextWeek.setDate(nextWeek.getDate() + 7)
+
+    setStartDate(today.toISOString().split("T")[0])
+    setEndDate(nextWeek.toISOString().split("T")[0])
   }, [])
 
-  const loadAttendance = async (weekStartDate: string) => {
+  // Load attendance when date range changes
+  useEffect(() => {
+    if (startDate && endDate) {
+      loadAttendance()
+    }
+  }, [startDate, endDate])
+
+  const loadAttendance = async () => {
+    if (!startDate || !endDate) return
+
     try {
       setLoading(true)
-      const data = await attendanceApi.getWeeklyAttendance(weekStartDate)
+      const data = await attendanceApi.getAttendanceByDateRange({
+        startDate,
+        endDate,
+      })
       setAttendanceRecords(data)
     } catch (error: any) {
       toast({
@@ -52,17 +93,12 @@ export default function AttendancePage() {
     }
   }
 
-  const handleWeekChange = (weekStartDate: string) => {
-    setSelectedWeek(weekStartDate)
-    loadAttendance(weekStartDate)
-  }
-
-  const getStatusBadge = (status: string | null) => {
+  const getStatusBadge = (status: string | null | undefined) => {
     const statusMap: Record<string, { label: string; className: string }> = {
-      PRESENT: { label: "Present", className: "bg-green-100 text-green-800" },
-      ABSENT: { label: "Absent", className: "bg-red-100 text-red-800" },
-      ON_LEAVE: { label: "On Leave", className: "bg-yellow-100 text-yellow-800" },
-      OFF: { label: "Off", className: "bg-gray-100 text-gray-800" },
+      PRESENT: { label: "P", className: "bg-green-100 text-green-800" },
+      ABSENT: { label: "A", className: "bg-red-100 text-red-800" },
+      ON_LEAVE: { label: "L", className: "bg-yellow-100 text-yellow-800" },
+      OFF: { label: "O", className: "bg-gray-100 text-gray-800" },
     }
     const statusInfo = statusMap[status || "OFF"] || statusMap.OFF
     return (
@@ -71,6 +107,30 @@ export default function AttendancePage() {
       </span>
     )
   }
+
+  // Generate date range and group attendance by user
+  const dateRange = startDate && endDate ? generateDateRange(new Date(startDate), new Date(endDate)) : []
+  
+  // Group attendance by userId and date
+  const groupedAttendance = attendanceRecords.reduce((acc, record) => {
+    const userId = record.userId
+    const date = record.date // Already in YYYY-MM-DD format from backend
+    
+    if (!acc[userId]) {
+      acc[userId] = {
+        user: record.user,
+        attendance: {} as Record<string, string>,
+      }
+    }
+    
+    acc[userId].attendance[date] = record.status
+    return acc
+  }, {} as Record<string, { user?: DailyAttendance["user"]; attendance: Record<string, string> }>)
+
+  const groupedArray = Object.entries(groupedAttendance).map(([userId, data]) => ({
+    userId,
+    ...data,
+  }))
 
 
   return (
@@ -85,20 +145,21 @@ export default function AttendancePage() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <CardTitle>Employee Attendance Details</CardTitle>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <Input
                   type="date"
-                  value={selectedWeek ? new Date(selectedWeek).toISOString().split("T")[0] : ""}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      const date = new Date(e.target.value)
-                      const weekStart = getWeekStart(date)
-                      handleWeekChange(weekStart.toISOString())
-                    }
-                  }}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-40"
+                />
+                <span className="text-muted-foreground">to</span>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
                   className="w-40"
                 />
               </div>
@@ -114,40 +175,47 @@ export default function AttendancePage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Employee ID</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Department</TableHead>
-                      <TableHead>Mon</TableHead>
-                      <TableHead>Tue</TableHead>
-                      <TableHead>Wed</TableHead>
-                      <TableHead>Thu</TableHead>
-                      <TableHead>Fri</TableHead>
-                      <TableHead>Sat</TableHead>
-                      <TableHead>Sun</TableHead>
+                      <TableHead className="sticky left-0 bg-background z-10">Employee ID</TableHead>
+                      <TableHead className="sticky left-[120px] bg-background z-10">Name</TableHead>
+                      <TableHead className="sticky left-[240px] bg-background z-10">Department</TableHead>
+                      {dateRange.map((date) => (
+                        <TableHead key={formatDateLocal(date)} className="min-w-[100px]">
+                          {formatDateDisplay(date)}
+                        </TableHead>
+                      ))}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {attendanceRecords.length === 0 ? (
+                    {groupedArray.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
-                          No attendance records found for this week
+                        <TableCell 
+                          colSpan={3 + dateRange.length} 
+                          className="text-center py-8 text-muted-foreground"
+                        >
+                          No attendance records found for this date range
                         </TableCell>
                       </TableRow>
                     ) : (
-                      attendanceRecords.map((record) => (
-                        <TableRow key={record.id}>
-                          <TableCell className="font-medium">
-                            {record.user?.id || "N/A"}
+                      groupedArray.map((group) => (
+                        <TableRow key={group.userId}>
+                          <TableCell className="font-medium sticky left-0 bg-background z-10">
+                            {group.user?.employee?.employeeId || group.userId.substring(0, 8)}
                           </TableCell>
-                          <TableCell>{record.user?.name || "N/A"}</TableCell>
-                          <TableCell>{record.user?.department || "N/A"}</TableCell>
-                          <TableCell>{getStatusBadge(record.monday)}</TableCell>
-                          <TableCell>{getStatusBadge(record.tuesday)}</TableCell>
-                          <TableCell>{getStatusBadge(record.wednesday)}</TableCell>
-                          <TableCell>{getStatusBadge(record.thursday)}</TableCell>
-                          <TableCell>{getStatusBadge(record.friday)}</TableCell>
-                          <TableCell>{getStatusBadge(record.saturday)}</TableCell>
-                          <TableCell>{getStatusBadge(record.sunday)}</TableCell>
+                          <TableCell className="sticky left-[120px] bg-background z-10">
+                            {group.user?.name || "N/A"}
+                          </TableCell>
+                          <TableCell className="sticky left-[240px] bg-background z-10">
+                            {group.user?.department || "N/A"}
+                          </TableCell>
+                          {dateRange.map((date) => {
+                            const dateStr = formatDateLocal(date)
+                            const status = group.attendance[dateStr]
+                            return (
+                              <TableCell key={dateStr}>
+                                {getStatusBadge(status)}
+                              </TableCell>
+                            )
+                          })}
                         </TableRow>
                       ))
                     )}

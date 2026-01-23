@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify"
 import { AttendanceService } from "@/services/attendance.service"
+import { logger } from "@/utils/logger"
 import { 
   createDailyAttendanceSchema, 
   bulkCreateAttendanceSchema,
@@ -75,7 +76,7 @@ export class AttendanceController {
       }
 
       // Log error for debugging
-      console.error("Error in getAttendance:", {
+      logger.error("Error in getAttendance:", {
         error: error.message,
         stack: error.stack,
         query: request.query,

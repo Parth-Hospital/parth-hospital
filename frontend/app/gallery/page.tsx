@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { FloatingActions } from "@/components/floating-actions"
 import { galleryApi, Gallery, GalleryAlbum } from "@/lib/api/gallery"
+import { logger } from "@/lib/utils/logger"
 import { Loader2, ImageIcon, Images, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
@@ -32,9 +33,7 @@ export default function GalleryPage() {
       setAlbums(data.albums)
     } catch (error) {
       // Only log in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to load galleries:", error)
-      }
+      logger.error("Failed to load galleries:", error)
     } finally {
       setLoading(false)
     }
