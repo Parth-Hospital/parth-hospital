@@ -20,7 +20,7 @@ export function Footer() {
           >
             <div className="flex items-center gap-3 mb-2">
               <Image
-                src="/Logo/parth-logo-nobg.png"
+                src="/Logo/parth-logo.png"
                 alt="Parth Hospital"
                 width={48}
                 height={48}

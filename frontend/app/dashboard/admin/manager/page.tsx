@@ -10,8 +10,6 @@ import { Users, FileUp, CheckCircle, TrendingUp, AlertCircle, Loader2 } from "lu
 import {
   BarChart,
   Bar,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -130,92 +128,56 @@ export default function ManagerDashboard() {
             </section>
 
           {/* Charts */}
-          <Tabs defaultValue="attendance" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="attendance">Weekly Attendance</TabsTrigger>
-              <TabsTrigger value="department">Department Distribution</TabsTrigger>
-              <TabsTrigger value="trends">Attendance Trends</TabsTrigger>
-            </TabsList>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Weekly Attendance Overview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {attendanceData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={attendanceData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="day" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="present" fill="#10b981" />
+                      <Bar dataKey="absent" fill="#ef4444" />
+                      <Bar dataKey="onLeave" fill="#f59e0b" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center py-8 text-muted-foreground">
+                    No attendance data available
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            <TabsContent value="attendance">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Weekly Attendance Overview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {attendanceData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={attendanceData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="present" fill="#10b981" />
-                        <Bar dataKey="absent" fill="#ef4444" />
-                        <Bar dataKey="onLeave" fill="#f59e0b" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No attendance data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="department">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Employees by Department</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {departmentData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={departmentData} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" />
-                        <YAxis dataKey="department" type="category" width={100} />
-                        <Tooltip />
-                        <Bar dataKey="count" fill="#0ea5e9" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No department data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="trends">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Attendance Rate Trend</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {attendanceData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={attendanceData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Area type="monotone" dataKey="present" fill="#10b981" stroke="#10b981" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No trend data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            <Card>
+              <CardHeader>
+                <CardTitle>Employees by Department</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {departmentData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={departmentData} layout="vertical">
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis type="number" />
+                      <YAxis dataKey="department" type="category" width={100} />
+                      <Tooltip />
+                      <Bar dataKey="count" fill="#0ea5e9" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center py-8 text-muted-foreground">
+                    No department data available
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
           </>
         )}
       </div>

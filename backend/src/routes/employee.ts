@@ -8,10 +8,10 @@ export default async function employeeRoutes(fastify: FastifyInstance) {
   // All routes require authentication
   fastify.addHook("onRequest", verifyToken)
 
-  // Get all employees (Doctor, Manager can view all)
+  // Get all employees (Doctor, Manager, Receptionist can view all)
   fastify.get(
     "/",
-    { preHandler: requireRole("DOCTOR", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER", "RECEPTIONIST") },
     (request, reply) => employeeController.getEmployees(request, reply)
   )
 

@@ -1,13 +1,143 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { AdminLayout } from "@/components/layouts/admin-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, Download, CreditCard } from "lucide-react"
+import { Search, Download, CreditCard, Loader2 } from "lucide-react"
+import { paymentApi, Payment, PaymentStats } from "@/lib/api/payment"
+import { useToast } from "@/hooks/use-toast"
+import { format } from "date-fns"
 
 export default function PaymentsPage() {
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [stats, setStats] = useState<PaymentStats | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const { toast } = useToast()
+
+  useEffect(() => {
+    loadPayments()
+    loadStats()
+  }, [])
+
+  const loadPayments = async () => {
+    try {
+      setLoading(true)
+      const data = await paymentApi.getPayments()
+      setPayments(data)
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to load payments",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadStats = async () => {
+    try {
+      const data = await paymentApi.getPaymentStats()
+      setStats(data)
+    } catch (error: any) {
+      console.error("Failed to load payment stats:", error)
+    }
+  }
+
+  const handleExport = () => {
+    try {
+      // Filter payments based on search query
+      const filteredPayments = payments.filter(
+        (payment) =>
+          payment.appointment.patientName
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          payment.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          payment.razorpayPaymentId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          payment.razorpayOrderId?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+
+      // Create CSV content
+      const headers = [
+        "Transaction ID",
+        "Razorpay Order ID",
+        "Razorpay Payment ID",
+        "Patient Name",
+        "Patient Phone",
+        "Amount (₹)",
+        "Status",
+        "Payment Method",
+        "Appointment Type",
+        "Date & Time",
+      ]
+
+      const rows = filteredPayments.map((payment) => [
+        payment.id,
+        payment.razorpayOrderId || "N/A",
+        payment.razorpayPaymentId || "N/A",
+        payment.appointment.patientName,
+        payment.appointment.patientPhone,
+        payment.amount.toFixed(2),
+        payment.status,
+        payment.method,
+        payment.appointment.appointmentType,
+        format(new Date(payment.createdAt), "dd/MM/yyyy HH:mm:ss"),
+      ])
+
+      const csvContent = [
+        headers.join(","),
+        ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+      ].join("\n")
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+      const link = document.createElement("a")
+      const url = URL.createObjectURL(blob)
+      link.setAttribute("href", url)
+      link.setAttribute(
+        "download",
+        `payments_${format(new Date(), "yyyy-MM-dd_HH-mm-ss")}.csv`
+      )
+      link.style.visibility = "hidden"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      toast({
+        title: "Success",
+        description: `Exported ${filteredPayments.length} payment(s) to CSV`,
+      })
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to export payments",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const filteredPayments = payments.filter(
+    (payment) =>
+      payment.appointment.patientName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      payment.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.razorpayPaymentId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.razorpayOrderId?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(amount)
+  }
+
   return (
     <AdminLayout role="accountant">
       <div className="space-y-6">
@@ -27,8 +157,18 @@ export default function PaymentsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-primary">₹12,500</p>
-              <p className="text-xs text-muted-foreground mt-2">8 transactions</p>
+              {stats ? (
+                <>
+                  <p className="text-3xl font-bold text-primary">
+                    {formatCurrency(stats.today.amount)}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {stats.today.count} transaction{stats.today.count !== 1 ? "s" : ""}
+                  </p>
+                </>
+              ) : (
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              )}
             </CardContent>
           </Card>
 
@@ -39,8 +179,18 @@ export default function PaymentsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-secondary">₹2,45,000</p>
-              <p className="text-xs text-muted-foreground mt-2">156 transactions</p>
+              {stats ? (
+                <>
+                  <p className="text-3xl font-bold text-secondary">
+                    {formatCurrency(stats.thisMonth.amount)}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {stats.thisMonth.count} transaction{stats.thisMonth.count !== 1 ? "s" : ""}
+                  </p>
+                </>
+              ) : (
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              )}
             </CardContent>
           </Card>
 
@@ -51,8 +201,18 @@ export default function PaymentsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-accent">₹3,500</p>
-              <p className="text-xs text-muted-foreground mt-2">2 transactions</p>
+              {stats ? (
+                <>
+                  <p className="text-3xl font-bold text-accent">
+                    {formatCurrency(stats.pending.amount)}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {stats.pending.count} transaction{stats.pending.count !== 1 ? "s" : ""}
+                  </p>
+                </>
+              ) : (
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              )}
             </CardContent>
           </Card>
 
@@ -63,8 +223,16 @@ export default function PaymentsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-green-600">98.5%</p>
-              <p className="text-xs text-muted-foreground mt-2">Last 30 days</p>
+              {stats ? (
+                <>
+                  <p className="text-3xl font-bold text-green-600">
+                    {stats.successRate}%
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">Last 30 days</p>
+                </>
+              ) : (
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              )}
             </CardContent>
           </Card>
         </div>
@@ -78,10 +246,12 @@ export default function PaymentsPage() {
                 <Input
                   placeholder="Search by patient name, transaction ID..."
                   className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <Button variant="outline">
-                <Download size={16} className="" />
+              <Button variant="outline" onClick={handleExport}>
+                <Download size={16} className="mr-2" />
                 Export
               </Button>
             </div>
@@ -94,47 +264,79 @@ export default function PaymentsPage() {
             <CardTitle>Recent Payments</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-border bg-background">
-                  <tr>
-                    <th className="p-4 text-left font-semibold">Transaction ID</th>
-                    <th className="p-4 text-left font-semibold">Patient Name</th>
-                    <th className="p-4 text-left font-semibold">Amount</th>
-                    <th className="p-4 text-left font-semibold">Date & Time</th>
-                    <th className="p-4 text-left font-semibold">Status</th>
-                    <th className="p-4 text-left font-semibold">Payment Method</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                    <tr key={i} className="border-b border-border hover:bg-background/50">
-                      <td className="p-4 font-mono text-xs">TXN{1000 + i}</td>
-                      <td className="p-4 font-medium">Patient {i}</td>
-                      <td className="p-4 font-semibold">₹1,000</td>
-                      <td className="p-4 text-muted-foreground">
-                        {new Date().toLocaleDateString("en-IN")} {10 + i}:30 AM
-                      </td>
-                      <td className="p-4">
-                        <Badge className={i <= 6 ? "bg-green-600" : "bg-yellow-600"}>
-                          {i <= 6 ? "Success" : "Pending"}
-                        </Badge>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex items-center gap-2">
-                          <CreditCard size={14} />
-                          <span className="text-xs">Razorpay</span>
-                        </div>
-                      </td>
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b border-border bg-background">
+                    <tr>
+                      <th className="p-4 text-left font-semibold">Transaction ID</th>
+                      <th className="p-4 text-left font-semibold">Patient Name</th>
+                      <th className="p-4 text-left font-semibold">Amount</th>
+                      <th className="p-4 text-left font-semibold">Date & Time</th>
+                      <th className="p-4 text-left font-semibold">Status</th>
+                      <th className="p-4 text-left font-semibold">Payment Method</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filteredPayments.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                          No payments found
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredPayments.map((payment) => (
+                        <tr
+                          key={payment.id}
+                          className="border-b border-border hover:bg-background/50"
+                        >
+                          <td className="p-4 font-mono text-xs">
+                            {payment.razorpayPaymentId || payment.id.slice(0, 12)}
+                          </td>
+                          <td className="p-4 font-medium">
+                            {payment.appointment.patientName}
+                          </td>
+                          <td className="p-4 font-semibold">
+                            {formatCurrency(payment.amount)}
+                          </td>
+                          <td className="p-4 text-muted-foreground">
+                            {format(new Date(payment.createdAt), "dd/MM/yyyy HH:mm")}
+                          </td>
+                          <td className="p-4">
+                            <Badge
+                              className={
+                                payment.status === "SUCCESS"
+                                  ? "bg-green-600"
+                                  : payment.status === "PENDING"
+                                    ? "bg-yellow-600"
+                                    : "bg-red-600"
+                              }
+                            >
+                              {payment.status}
+                            </Badge>
+                          </td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <CreditCard size={14} />
+                              <span className="text-xs">
+                                {payment.method === "ONLINE" ? "Online" : "Pay at Counter"}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
     </AdminLayout>
   )
 }
-

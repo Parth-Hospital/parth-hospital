@@ -37,7 +37,19 @@ export default function AppointmentsPage() {
       if (dateFilter) filters.date = dateFilter
 
       const data = await appointmentApi.getAppointments(filters)
-      setAppointments(data)
+      // Sort by date ascending, then by serial number ascending
+      const sorted = [...data].sort((a, b) => {
+        const dateA = new Date(a.date).getTime()
+        const dateB = new Date(b.date).getTime()
+        if (dateA !== dateB) {
+          return dateA - dateB
+        }
+        // If same date, sort by serial number
+        const serialA = a.serialNumber || 0
+        const serialB = b.serialNumber || 0
+        return serialA - serialB
+      })
+      setAppointments(sorted)
     } catch (error: any) {
       toast({
         title: "Error",

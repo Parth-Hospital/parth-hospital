@@ -29,27 +29,12 @@ export class AnalyticsService {
     // Staff present today
     const todayAttendance = await prisma.attendance.findMany({
       where: {
-        weekStartDate: {
-          lte: today,
-          gte: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000),
-        },
+        date: today,
       },
     })
 
-    const dayOfWeek = today.getDay()
-    const dayMap: Record<number, keyof typeof todayAttendance[0]> = {
-      0: "sunday",
-      1: "monday",
-      2: "tuesday",
-      3: "wednesday",
-      4: "thursday",
-      5: "friday",
-      6: "saturday",
-    }
-    const todayField = dayMap[dayOfWeek]
-
     const staffPresent = todayAttendance.filter(
-      (a) => a[todayField] === "PRESENT"
+      (a) => a.status === "PRESENT"
     ).length
 
     // Revenue (from payments - will be 0 until payments are integrated)
@@ -94,29 +79,14 @@ export class AnalyticsService {
     })
 
     // Present today
-    const weekStart = new Date(today)
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay())
-
     const todayAttendance = await prisma.attendance.findMany({
       where: {
-        weekStartDate: weekStart,
+        date: today,
       },
     })
 
-    const dayOfWeek = today.getDay()
-    const dayMap: Record<number, keyof typeof todayAttendance[0]> = {
-      0: "sunday",
-      1: "monday",
-      2: "tuesday",
-      3: "wednesday",
-      4: "thursday",
-      5: "friday",
-      6: "saturday",
-    }
-    const todayField = dayMap[dayOfWeek]
-
     const presentToday = todayAttendance.filter(
-      (a) => a[todayField] === "PRESENT"
+      (a) => a.status === "PRESENT"
     ).length
 
     // Pending approvals (leave requests)
@@ -128,7 +98,7 @@ export class AnalyticsService {
 
     // On leave today
     const onLeaveToday = todayAttendance.filter(
-      (a) => a[todayField] === "ON_LEAVE"
+      (a) => a.status === "ON_LEAVE"
     ).length
 
     // Weekly attendance trends
@@ -242,7 +212,7 @@ export class AnalyticsService {
     const attendanceRecords = await prisma.attendance.findMany({
       where: {
         userId,
-        weekStartDate: {
+        date: {
           gte: monthStart,
         },
       },
@@ -317,21 +287,10 @@ export class AnalyticsService {
   private calculateAttendanceSummary(records: any[]) {
     let presentDays = 0
     let absentDays = 0
-    const dayMap: Record<number, keyof typeof records[0]> = {
-      0: "sunday",
-      1: "monday",
-      2: "tuesday",
-      3: "wednesday",
-      4: "thursday",
-      5: "friday",
-      6: "saturday",
-    }
 
     records.forEach((record) => {
-      Object.values(dayMap).forEach((day) => {
-        if (record[day] === "PRESENT") presentDays++
-        if (record[day] === "ABSENT") absentDays++
-      })
+      if (record.status === "PRESENT") presentDays++
+      if (record.status === "ABSENT") absentDays++
     })
 
     const totalDays = presentDays + absentDays
@@ -348,15 +307,18 @@ export class AnalyticsService {
     const weeks: Record<string, { present: number; absent: number }> = {}
 
     records.forEach((record) => {
-      const weekKey = new Date(record.weekStartDate).toLocaleDateString()
+      // Group by week (Monday of the week)
+      const recordDate = new Date(record.date)
+      const weekStart = new Date(recordDate)
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay() + (weekStart.getDay() === 0 ? -6 : 1))
+      const weekKey = weekStart.toLocaleDateString()
+
       if (!weeks[weekKey]) {
         weeks[weekKey] = { present: 0, absent: 0 }
       }
 
-      Object.values(record).forEach((day) => {
-        if (day === "PRESENT") weeks[weekKey].present++
-        if (day === "ABSENT") weeks[weekKey].absent++
-      })
+      if (record.status === "PRESENT") weeks[weekKey].present++
+      if (record.status === "ABSENT") weeks[weekKey].absent++
     })
 
     return Object.entries(weeks).map(([week, data]) => ({
@@ -367,12 +329,18 @@ export class AnalyticsService {
 
   private async getWeeklyAttendanceTrends() {
     const today = new Date()
+    today.setHours(0, 0, 0, 0)
     const weekStart = new Date(today)
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + (weekStart.getDay() === 0 ? -6 : 1))
+    const weekEnd = new Date(weekStart)
+    weekEnd.setDate(weekEnd.getDate() + 6)
 
     const attendance = await prisma.attendance.findMany({
       where: {
-        weekStartDate: weekStart,
+        date: {
+          gte: weekStart,
+          lte: weekEnd,
+        },
       },
     })
 
@@ -386,12 +354,23 @@ export class AnalyticsService {
     }
 
     attendance.forEach((record) => {
-      Object.entries(trends).forEach(([day, data]) => {
-        const status = record[day as keyof typeof record]
-        if (status === "PRESENT") data.present++
-        if (status === "ABSENT") data.absent++
-        if (status === "ON_LEAVE") data.onLeave++
-      })
+      const recordDate = new Date(record.date)
+      const dayOfWeek = recordDate.getDay()
+      const dayMap: Record<number, keyof typeof trends> = {
+        0: "monday", // Sunday maps to Monday for display (adjust if needed)
+        1: "monday",
+        2: "tuesday",
+        3: "wednesday",
+        4: "thursday",
+        5: "friday",
+        6: "saturday",
+      }
+      const dayKey = dayMap[dayOfWeek] || "monday"
+      const data = trends[dayKey]
+      
+      if (record.status === "PRESENT") data.present++
+      if (record.status === "ABSENT") data.absent++
+      if (record.status === "ON_LEAVE") data.onLeave++
     })
 
     return Object.entries(trends).map(([day, data]) => ({

@@ -21,6 +21,7 @@ import notificationRoutes from "@/routes/notification"
 import analyticsRoutes from "@/routes/analytics"
 import todoRoutes from "@/routes/todo"
 import noteRoutes from "@/routes/note"
+import paymentRoutes from "@/routes/payment"
 
 console.log("✅ All modules loaded successfully")
 console.log("🏗️  Creating Fastify app instance...")
@@ -67,6 +68,7 @@ app.register(notificationRoutes, { prefix: `${env.API_PREFIX}/notifications` })
 app.register(analyticsRoutes, { prefix: `${env.API_PREFIX}/analytics` })
 app.register(todoRoutes, { prefix: `${env.API_PREFIX}/todos` })
 app.register(noteRoutes, { prefix: `${env.API_PREFIX}/notes` })
+app.register(paymentRoutes, { prefix: `${env.API_PREFIX}/payments` })
 
 // Error handler
 app.setErrorHandler(errorHandler)

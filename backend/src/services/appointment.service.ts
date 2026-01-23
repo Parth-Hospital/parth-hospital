@@ -37,9 +37,10 @@ export class AppointmentService {
   }
 
   async createAppointment(data: CreateAppointmentInput, userId?: string, qaMode?: boolean) {
-    // Normalize appointment date to start of day (midnight) to match how availability is stored
-    const appointmentDate = new Date(data.date)
-    appointmentDate.setHours(0, 0, 0, 0)
+    // Normalize appointment date to start of day (midnight UTC) to match how availability is stored
+    // Extract date part and create new date at UTC midnight to avoid timezone issues
+    const dateStr = data.date.includes("T") ? data.date.split("T")[0] : data.date // Get YYYY-MM-DD part
+    const appointmentDate = new Date(`${dateStr}T00:00:00.000Z`)
 
     // Check if booking window is open (skip in QA mode)
     const enableQAMode = qaMode || this.isQAModeEnabled()
@@ -81,9 +82,16 @@ export class AppointmentService {
 
     if (data.appointmentType === "GENERAL") {
       // Get total bookings for the date (online + offline)
+      // Use date range to ensure we count all appointments for the day
+      const nextDay = new Date(appointmentDate)
+      nextDay.setDate(nextDay.getDate() + 1)
+      
       const totalBookings = await prisma.appointment.count({
         where: {
-          date: appointmentDate,
+          date: {
+            gte: appointmentDate,
+            lt: nextDay,
+          },
           appointmentType: "GENERAL",
         },
       })
@@ -124,12 +132,22 @@ export class AppointmentService {
   }
 
   async createOfflineAppointment(data: CreateOfflineAppointmentInput) {
-    const appointmentDate = new Date(data.date)
+    // Normalize appointment date to start of day (midnight UTC) to match how availability is stored
+    // Extract date part and create new date at UTC midnight to avoid timezone issues
+    const dateStr = data.date.includes("T") ? data.date.split("T")[0] : data.date // Get YYYY-MM-DD part
+    const appointmentDate = new Date(`${dateStr}T00:00:00.000Z`)
 
-    // For offline appointments, always calculate serial number
+    // For offline appointments, always calculate serial number (only count GENERAL appointments)
+    // Use date range to ensure we count all appointments for the day
+    const nextDay = new Date(appointmentDate)
+    nextDay.setDate(nextDay.getDate() + 1)
+    
     const totalBookings = await prisma.appointment.count({
       where: {
-        date: appointmentDate,
+        date: {
+          gte: appointmentDate,
+          lt: nextDay,
+        },
         appointmentType: "GENERAL",
       },
     })
@@ -177,9 +195,11 @@ export class AppointmentService {
 
     return prisma.appointment.findMany({
       where,
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        { date: "asc" },
+        { serialNumber: "asc" },
+        { createdAt: "asc" },
+      ],
       include: {
         payment: true,
       },

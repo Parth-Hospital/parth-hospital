@@ -1,7 +1,7 @@
 # Parth Hospital ERP System - Complete Documentation
 
 **Last Updated:** January 2025  
-**Status:** Fully Integrated (Payment System Excluded)
+**Status:** Fully Integrated (Razorpay Payment Integration Pending - Dummy Payment Implemented)
 
 ---
 
@@ -131,11 +131,53 @@ All routes are prefixed with `/api` (configurable via `API_PREFIX` env variable)
 - `PATCH /:id/status` - Update appointment status (protected)
 
 **Key Features:**
-- **Serial Number Calculation**: For general appointments, serial numbers are calculated based on total bookings (online + offline) for the day
-- **Time Slot Allocation**: 30 patients per 30-minute slot (11 AM - 5 PM)
-- **Booking Window**: Opens at 5 PM for next day, closes at 8:15 AM on appointment day
-- **Doctor Availability Check**: Validates doctor availability before allowing booking
-- **Priority Appointments**: No serial numbers, flexible timing, mandatory online payment
+
+**Payment Methods:**
+- Two payment methods in the system:
+  1. **ONLINE** - Through website (currently dummy payment for testing, Razorpay pending)
+     - General appointment: ₹500
+     - Priority appointment: ₹1,000
+     - Dummy payment: Enter `parth@upi.id` to complete payment
+     - Payment status tracked: PENDING, SUCCESS, FAILED
+  2. **PAY_AT_COUNTER** - Payment at hospital counter
+     - Not tracked in payment system
+     - Only appointment record is created
+- Online payments are tracked and managed in the system
+- Payment records linked to appointments
+
+**Appointment Types:**
+
+1. **General Appointment:**
+   - Can choose: Online payment (Razorpay) OR Pay at Counter
+   - Gets sequenced serial number and specific arrival time
+   - Serial numbers calculated based on total GENERAL bookings (online + offline) for the day
+   - Time slots: 30 patients per 30-minute slot (11 AM - 5 PM)
+     - Serial 1-30: 11:00 AM
+     - Serial 31-60: 11:30 AM
+     - Serial 61-90: 12:00 PM
+     - And so on until 5:00 PM
+
+2. **Priority Appointment:**
+   - **MANDATORY**: Must book online only (Online payment required)
+   - Cost: ₹1,000 (online payment)
+   - No serial number assigned
+   - Preferred time selection: Only between 11 AM - 5 PM
+   - Minutes: Only 00 and 30 allowed (e.g., 11:00, 11:30, 12:00, etc.)
+   - Backend validation enforces ONLINE payment for priority appointments
+
+**Serial Number System:**
+- Serial numbers are only assigned to GENERAL appointments
+- Calculation counts total GENERAL bookings (both ONLINE and OFFLINE) for the day
+- Offline bookings are added via receptionist dashboard without patient details
+- Offline bookings increase the total booking count to properly allocate timings
+- Priority appointments are NOT counted in serial number calculation
+
+**Booking Window:**
+- Opens at 5 PM today for next day's appointments
+- Closes at 8:15 AM on appointment day
+- Doctor availability check validates doctor availability before allowing booking
+- Doctor is available by default (unless explicitly marked unavailable)
+- Appointments displayed in ascending order (oldest first, serial 1, 2, 3...)
 
 #### 3. Doctor Availability (`/api/doctor-availability`)
 - `GET /` - Check availability for a date
@@ -149,12 +191,14 @@ All routes are prefixed with `/api` (configurable via `API_PREFIX` env variable)
 - Operation hours: 5 AM - 10 AM
 
 #### 4. Employees (`/api/employees`)
-- `GET /` - Get all employees (protected - Owner/Manager)
+- `GET /` - Get all employees (protected - Owner/Manager/Doctor/Receptionist)
 - `GET /:id` - Get employee by ID
 - `POST /` - Create employee (protected - Manager only)
 - `PATCH /:id` - Update employee
 - `DELETE /:id` - Delete employee
 - `POST /:id/generate-creds` - Generate admin credentials
+
+**Note:** Receptionists can access employee list for attendance upload purposes.
 
 **Admin Credentials Generation:**
 - Email format: `employeename@parthhospital.co.in`
@@ -162,16 +206,18 @@ All routes are prefixed with `/api` (configurable via `API_PREFIX` env variable)
 - Can only be generated once per employee
 
 #### 5. Attendance (`/api/attendance`)
-- `POST /` - Create/update attendance (protected - Manager)
-- `GET /` - Get attendance records (protected - Owner/Manager)
-- `GET /weekly` - Get weekly attendance (protected)
-- `GET /employee/:userId` - Get employee's attendance (protected)
-- `POST /bulk` - Bulk upload attendance (protected - Manager)
+- `POST /` - Create/update daily attendance (protected - Manager/Receptionist)
+- `GET /` - Get attendance by date range (protected - Manager/Receptionist)
+- `GET /employee/:userId` - Get employee's attendance for date range (protected)
+- `POST /bulk` - Bulk upload attendance (protected - Manager/Receptionist)
 
 **Attendance Structure:**
-- Weekly-based records (Monday to Sunday)
+- **Date-range based daily records** (not weekly)
+- Each record represents one day for one employee
 - Status values: PRESENT, ABSENT, ON_LEAVE, OFF
-- Supports bulk CSV/Excel upload
+- Supports bulk CSV/Excel upload with date columns (DD-MM-YYYY format)
+- Date range: Minimum 1 day, Maximum 31 days
+- Receptionists can now upload attendance (same as managers)
 
 #### 6. Leave Management (`/api/leaves`)
 - `GET /` - Get all leave requests (protected - Manager)
@@ -239,7 +285,44 @@ All routes are prefixed with `/api` (configurable via `API_PREFIX` env variable)
 - Patient flow data
 - Collection data (when payments are integrated)
 
-#### 13. Hospital Details
+#### 13. Payments (`/api/payments`)
+- `GET /` - Get all payments with filters (protected - Doctor/Accountant/Receptionist)
+- `GET /stats` - Get payment statistics (protected - Doctor/Accountant/Receptionist)
+
+**Payment Features:**
+- View online payments from website
+- Filter by status (PENDING, SUCCESS, FAILED)
+- Filter by method (ONLINE, PAY_AT_COUNTER)
+- Filter by date range
+- Payment statistics: Today's payments, Monthly payments, Pending payments, Success rate
+- CSV export functionality
+
+**Note:** Currently using dummy payment system for testing. Razorpay integration pending.
+
+#### 14. Todos (`/api/todos`)
+- `POST /` - Create todo (protected)
+- `GET /` - Get user's todos (protected)
+- `PATCH /:id` - Update todo (protected)
+- `DELETE /:id` - Delete todo (protected)
+
+**Todo Features:**
+- Personal task management (NexRoutine feature)
+- Priority levels: LOW, MEDIUM, HIGH
+- Due dates support
+- Completion tracking
+
+#### 15. Notes (`/api/notes`)
+- `POST /` - Create note (protected)
+- `GET /` - Get user's notes (protected)
+- `PATCH /:id` - Update note (protected)
+- `DELETE /:id` - Delete note (protected)
+
+**Note Features:**
+- Personal note-taking (NexRoutine feature)
+- Color-coded notes
+- Title and content support
+
+#### 16. Hospital Details
 **Note:** Hospital details are hardcoded in the frontend and displayed as read-only information. No backend API exists. The "Hospital Details" page shows fixed hospital information that doesn't change.
 
 **Hospital Details Displayed:**
@@ -323,6 +406,9 @@ All API services are in `frontend/lib/api/`:
 9. **achievement.ts** - Hospital achievements
 10. **notification.ts** - Notifications
 11. **analytics.ts** - Dashboard analytics
+12. **payment.ts** - Payment management
+13. **todo.ts** - Todo management (NexRoutine)
+14. **note.ts** - Note management (NexRoutine)
 
 ### Frontend Pages Integration
 
@@ -471,8 +557,22 @@ All API services are in `frontend/lib/api/`:
    - View all bookings (historical)
    - Search and filter by status/type
    - Shows token, patient info, date, time, status, type, booking type
+   - Displayed in ascending order (serial 1, 2, 3...)
 
-5. **Inquiry** (`/dashboard/admin/receptionist/inquiry/page.tsx`)
+5. **Attendance** (`/dashboard/admin/receptionist/attendance/page.tsx`)
+   - ✅ Integrated with attendance API
+   - Same functionality as Manager attendance page
+   - Date-range based attendance upload (1-31 days)
+   - CSV/Excel bulk upload with date columns (DD-MM-YYYY format)
+   - View attendance records by date range
+
+6. **Payments** (`/dashboard/admin/receptionist/payments/page.tsx`)
+   - ✅ Integrated with payments API
+   - View online payments from website
+   - Payment statistics and filters
+   - CSV export functionality
+
+7. **Inquiry** (`/dashboard/admin/receptionist/inquiry/page.tsx`)
    - ✅ Integrated with inquiries API
    - View and respond to inquiries
    - Update inquiry status
@@ -488,9 +588,9 @@ All API services are in `frontend/lib/api/`:
 
 2. **Attendance** (`/dashboard/employee/attendance/page.tsx`)
    - ✅ Integrated with attendance API
-   - View weekly attendance
-   - Attendance history
-   - Uses employee-specific endpoint
+   - View attendance by date range
+   - Attendance history with daily records
+   - Uses employee-specific endpoint with date range
 
 3. **Leave** (`/dashboard/employee/leave/page.tsx`)
    - ✅ Integrated with leave API
@@ -501,8 +601,13 @@ All API services are in `frontend/lib/api/`:
 4. **Profile** (`/dashboard/employee/profile/page.tsx`)
    - ✅ Integrated with `/auth/me` endpoint
    - View employee profile
+   - Shows employee ID (e.g., EMP04) instead of database ID
    - Shows join date and days of service
    - Note about additional fields requiring HR updates
+
+5. **NexRoutine** (`/dashboard/employee/nexroutine/page.tsx`)
+   - ✅ Integrated with todos and notes API
+   - Personal task and note management
 
 ### CSV/Excel Parsing Implementation
 
@@ -532,10 +637,13 @@ All API services are in `frontend/lib/api/`:
    - Shows success/failure counts
    - Reloads attendance data after upload
 
-**Expected File Format:**
-- Columns: Employee ID, Name, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
-- Status values: Present, Absent, On Leave, Off (case-insensitive)
+**Expected File Format (Date-Range Based):**
+- Columns: Employee ID, Employee Name, Date columns (DD-MM-YYYY or DD/MM/YYYY format)
+- Example: Employee ID, Employee Name, 11-01-2026, 12-01-2026, 13-01-2026, ...
+- Status values: P (Present), A (Absent), L (On Leave), O (Off)
+- Date range: Minimum 1 day, Maximum 31 days
 - First row should contain headers
+- Dates can be in formats: DD-MM-YYYY, DD/MM/YYYY, or numeric day (11, 12, 13...)
 
 ---
 
@@ -549,7 +657,9 @@ All API services are in `frontend/lib/api/`:
 4. **Payment** - Payment records (structure ready, integration pending)
 5. **DoctorAvailability** - Doctor availability calendar
 6. **LeaveRequest** - Employee leave requests
-7. **Attendance** - Weekly attendance records
+7. **Attendance** - Daily attendance records (date-range based)
+8. **Todo** - Personal tasks (NexRoutine)
+9. **Note** - Personal notes (NexRoutine)
 8. **Inquiry** - Patient inquiries from contact form
 9. **Gallery** - Hospital gallery images
 10. **Achievement** - Hospital achievements
@@ -563,6 +673,8 @@ All API services are in `frontend/lib/api/`:
 - User ↔ LeaveRequest (One-to-Many via employeeId)
 - User ↔ Attendance (One-to-Many via userId)
 - User ↔ Notification (One-to-Many)
+- User ↔ Todo (One-to-Many via userId)
+- User ↔ Note (One-to-Many via userId)
 
 ---
 
@@ -994,9 +1106,33 @@ function calculateSerialNumberAndTime(totalBookings: number) {
    - Salary upload/processing
    - Salary reports
 
-3. **Accountant Dashboard Features**
-   - Most features depend on payment system
-   - Will be implemented after payment integration
+3. **Accountant Dashboard** (`/dashboard/admin/accountant`)
+
+**Note:** Some features use sample data, not fully integrated.
+
+1. **Overview** (`/dashboard/admin/accountant/page.tsx`)
+   - ⚠️ Frontend-only (sample data)
+   - Shows payroll statistics (not integrated with backend)
+   - Monthly salary trends (sample data)
+
+2. **Payments** (`/dashboard/admin/accountant/payments/page.tsx`)
+   - ✅ Integrated with payments API
+   - View online payments from website
+   - Payment statistics and filters
+   - CSV export functionality
+
+3. **Salary** (`/dashboard/admin/accountant/salary/page.tsx`)
+   - ⚠️ Frontend-only (sample data)
+   - Salary upload UI (not implemented)
+   - Salary table display (sample data)
+   - TODO: Implement backend API and CSV/Excel upload
+
+4. **Reports** (`/dashboard/admin/accountant/reports/page.tsx`)
+   - ⚠️ Not implemented
+
+5. **NexRoutine** (`/dashboard/admin/accountant/nexroutine/page.tsx`)
+   - ✅ Integrated with todos and notes API
+   - Personal task and note management
 
 ---
 
@@ -1004,14 +1140,17 @@ function calculateSerialNumberAndTime(totalBookings: number) {
 
 The Parth Hospital ERP system is **fully integrated** end-to-end (excluding payments). All major features are implemented:
 
-- ✅ Complete backend API with 13 route modules
+- ✅ Complete backend API with 16 route modules (auth, appointments, employees, attendance, leaves, inquiries, gallery, achievements, notifications, analytics, payments, todos, notes, doctor-availability, health)
 - ✅ Full frontend integration with all dashboard pages
 - ✅ Authentication and authorization
 - ✅ File uploads (Cloudinary for images, CSV/Excel for attendance)
 - ✅ Real-time notifications
 - ✅ Analytics dashboards for all roles
-- ✅ Appointment booking with serial numbers
-- ✅ Attendance management with bulk upload
+- ✅ Appointment booking with serial numbers (ascending order)
+- ✅ Date-range based attendance management with bulk upload (Manager & Receptionist)
+- ✅ Dummy payment system for testing (Razorpay pending)
+- ✅ Payment tracking and statistics (Doctor, Accountant, Receptionist)
+- ✅ Todo and Note management (NexRoutine feature)
 - ✅ Leave management
 - ✅ Employee management
 - ✅ Inquiry management

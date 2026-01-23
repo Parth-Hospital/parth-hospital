@@ -6,6 +6,27 @@ const prisma = new PrismaClient()
 async function main() {
   console.log("🌱 Seeding database...")
 
+  // Helper function to generate sequential employee ID
+  async function generateEmployeeId(role: string, assignedIds: Set<string>): Promise<string> {
+    // Doctor always gets EMP01
+    if (role === "DOCTOR") {
+      if (assignedIds.has("EMP01")) {
+        throw new Error("EMP01 is already assigned. Only one doctor can have EMP01.")
+      }
+      return "EMP01"
+    }
+
+    // For other roles, find the next available number
+    let nextNumber = 2 // Start from 2 since EMP01 is for doctor
+    
+    // Find the first available number
+    while (assignedIds.has(`EMP${String(nextNumber).padStart(2, "0")}`)) {
+      nextNumber++
+    }
+
+    return `EMP${String(nextNumber).padStart(2, "0")}`
+  }
+
   // Helper function to create user with employee record
   async function createUserWithEmployee(
     name: string,
@@ -14,20 +35,29 @@ async function main() {
     phone: string,
     role: "DOCTOR" | "MANAGER" | "ACCOUNTANT" | "RECEPTIONIST" | "EMPLOYEE",
     department: string,
-    position: string
+    position: string,
+    assignedIds: Set<string>
   ) {
     // Check if user already exists
     const existing = await prisma.user.findUnique({
       where: { email },
+      include: { employee: true },
     })
 
     if (existing) {
       console.log(`⚠️  User ${email} already exists, skipping...`)
+      if (existing.employee) {
+        assignedIds.add(existing.employee.employeeId)
+      }
       return existing
     }
 
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10)
+
+    // Generate employee ID
+    const employeeId = await generateEmployeeId(role, assignedIds)
+    assignedIds.add(employeeId)
 
     // Create user
     const user = await prisma.user.create({
@@ -42,9 +72,6 @@ async function main() {
         status: "ACTIVE",
       },
     })
-
-    // Generate employee ID
-    const employeeId = `EMP${String(user.id).slice(-6).toUpperCase()}`
 
     // Create employee record
     await prisma.employee.create({
@@ -66,7 +93,10 @@ async function main() {
     return user
   }
 
-  // Create Doctor
+  // Track assigned employee IDs to ensure uniqueness
+  const assignedIds = new Set<string>()
+
+  // Create Doctor (always gets EMP01)
   await createUserWithEmployee(
     "Dr. Subash Singh",
     "doctor@parthhospital.co.in",
@@ -74,10 +104,11 @@ async function main() {
     "9876543210",
     "DOCTOR",
     "Orthopedics",
-    "Doctor & Chief Surgeon"
+    "Doctor & Chief Surgeon",
+    assignedIds
   )
 
-  // Create Manager
+  // Create Manager (gets EMP02)
   await createUserWithEmployee(
     "Rajesh Kumar",
     "manager@parthhospital.co.in",
@@ -85,10 +116,11 @@ async function main() {
     "9876543211",
     "MANAGER",
     "Administration",
-    "Hospital Manager"
+    "Hospital Manager",
+    assignedIds
   )
 
-  // Create Accountant
+  // Create Accountant (gets EMP03)
   await createUserWithEmployee(
     "Priya Sharma",
     "accountant@parthhospital.co.in",
@@ -96,10 +128,11 @@ async function main() {
     "9876543212",
     "ACCOUNTANT",
     "Finance",
-    "Senior Accountant"
+    "Senior Accountant",
+    assignedIds
   )
 
-  // Create Receptionist
+  // Create Receptionist (gets EMP04)
   await createUserWithEmployee(
     "Anjali Verma",
     "receptionist@parthhospital.co.in",
@@ -107,7 +140,8 @@ async function main() {
     "9876543213",
     "RECEPTIONIST",
     "Reception",
-    "Receptionist"
+    "Receptionist",
+    assignedIds
   )
 
   console.log("\n🎉 Seeding completed!")

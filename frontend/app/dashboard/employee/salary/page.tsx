@@ -3,8 +3,7 @@
 import { EmployeeLayout } from "@/components/layouts/employee-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { DollarSign, TrendingUp, FileText, Calendar } from "lucide-react"
-import { PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, CartesianGrid } from "recharts"
+import { DollarSign, FileText, Calendar } from "lucide-react"
 
 // Current month salary breakdown
 const currentSalary = {
@@ -14,13 +13,6 @@ const currentSalary = {
   deductions: 2000,
   netSalary: 35000,
 }
-
-const salaryBreakdown = [
-  { name: "Base Salary", value: currentSalary.baseSalary, color: "#0ea5e9" },
-  { name: "Allowances", value: currentSalary.allowances, color: "#10b981" },
-  { name: "Bonus", value: currentSalary.bonus, color: "#f59e0b" },
-  { name: "Deductions", value: Math.abs(currentSalary.deductions), color: "#ef4444" },
-]
 
 // Salary history
 const salaryHistory = [
@@ -75,34 +67,6 @@ export default function EmployeeSalary() {
           </CardContent>
         </Card>
 
-        {/* Salary Breakdown Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Salary Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={salaryBreakdown}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ₹${value.toLocaleString()}`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {salaryBreakdown.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => `₹${value.toLocaleString()}`} />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
         {/* Salary History */}
         <Card>
           <CardHeader>
@@ -142,26 +106,6 @@ export default function EmployeeSalary() {
           </CardContent>
         </Card>
 
-        {/* Salary Trend Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5" />
-              Salary Trend (Last 6 Months)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={salaryHistory}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip formatter={(value) => `₹${value.toLocaleString()}`} />
-                <Bar dataKey="amount" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
       </div>
     </EmployeeLayout>
   )

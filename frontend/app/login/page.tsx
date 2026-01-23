@@ -24,7 +24,7 @@ export default function LoginPage() {
           <div className="absolute inset-0 flex flex-col justify-between p-8 lg:p-20 text-white">
             <div className="flex items-center gap-3">
               <Image
-                src="/Logo/parth-logo-nobg.png"
+                src="/Logo/parth-logo.png"
                 alt="Parth Hospital"
                 width={48}
                 height={48}

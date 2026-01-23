@@ -187,24 +187,18 @@ enum LeaveStatus {
 
 // Attendance model
 model Attendance {
-  id            String   @id @default(cuid())
-  userId        String   @map("user_id")
-  weekStartDate DateTime @map("week_start_date")
-  monday        AttendanceStatus
-  tuesday       AttendanceStatus
-  wednesday     AttendanceStatus
-  thursday      AttendanceStatus
-  friday        AttendanceStatus
-  saturday      AttendanceStatus
-  sunday        AttendanceStatus
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  date      DateTime         @db.Date
+  status    AttendanceStatus
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, weekStartDate])
+  @@unique([userId, date])
   @@index([userId])
-  @@index([weekStartDate])
+  @@index([date])
   @@map("attendance")
 }
 

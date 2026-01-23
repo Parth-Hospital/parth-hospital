@@ -1,15 +1,20 @@
 import { FastifyRequest, FastifyReply } from "fastify"
 import { AttendanceService } from "@/services/attendance.service"
-import { createAttendanceSchema } from "@/validators/attendance"
+import { 
+  createDailyAttendanceSchema, 
+  bulkCreateAttendanceSchema,
+  getAttendanceByDateRangeSchema 
+} from "@/validators/attendance"
 
 const attendanceService = new AttendanceService()
 
 export class AttendanceController {
+  // Create or update a single daily attendance record
   async createOrUpdateAttendance(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const body = createAttendanceSchema.parse(request.body)
+      const body = createDailyAttendanceSchema.parse(request.body)
 
-      const attendance = await attendanceService.createOrUpdateAttendance(body)
+      const attendance = await attendanceService.createOrUpdateDailyAttendance(body)
 
       return reply.send({
         success: true,
@@ -32,36 +37,75 @@ export class AttendanceController {
     }
   }
 
+  // Get attendance by date range
   async getAttendance(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { userId, weekStartDate } = request.query as any
+      const { userId, startDate, endDate } = request.query as any
 
-      const filters: any = {}
-      if (userId) filters.userId = userId
-      if (weekStartDate) filters.weekStartDate = new Date(weekStartDate)
+      if (!startDate || !endDate) {
+        return reply.status(400).send({
+          success: false,
+          message: "startDate and endDate parameters are required",
+        })
+      }
 
-      const attendance = await attendanceService.getAttendance(filters)
+      const query = getAttendanceByDateRangeSchema.parse({
+        userId,
+        startDate,
+        endDate,
+      })
+
+      const attendance = await attendanceService.getAttendanceByDateRange({
+        userId: query.userId,
+        startDate: new Date(query.startDate),
+        endDate: new Date(query.endDate),
+      })
 
       return reply.send({
         success: true,
         data: attendance,
       })
     } catch (error: any) {
+      if (error.name === "ZodError") {
+        return reply.status(400).send({
+          success: false,
+          message: "Validation error",
+          errors: error.errors,
+        })
+      }
+
+      // Log error for debugging
+      console.error("Error in getAttendance:", {
+        error: error.message,
+        stack: error.stack,
+        query: request.query,
+      })
+
       return reply.status(500).send({
         success: false,
         message: error.message || "Failed to fetch attendance",
+        error: process.env.NODE_ENV === "development" ? error.message : undefined,
       })
     }
   }
 
+  // Get employee's own attendance by date range
   async getEmployeeAttendance(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { userId } = request.params as { userId: string }
-      const { weekStartDate } = request.query as any
+      const { startDate, endDate } = request.query as any
+
+      if (!startDate || !endDate) {
+        return reply.status(400).send({
+          success: false,
+          message: "startDate and endDate parameters are required",
+        })
+      }
 
       const attendance = await attendanceService.getEmployeeAttendance(
         userId,
-        weekStartDate ? new Date(weekStartDate) : undefined
+        new Date(startDate),
+        new Date(endDate)
       )
 
       return reply.send({
@@ -76,6 +120,7 @@ export class AttendanceController {
     }
   }
 
+  // Deprecated: For backward compatibility, redirects to getAttendance
   async getWeeklyAttendance(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { weekStartDate } = request.query as { weekStartDate?: string }
@@ -83,11 +128,19 @@ export class AttendanceController {
       if (!weekStartDate) {
         return reply.status(400).send({
           success: false,
-          message: "weekStartDate parameter is required",
+          message: "weekStartDate parameter is required (deprecated - use startDate/endDate instead)",
         })
       }
 
-      const attendance = await attendanceService.getWeeklyAttendance(new Date(weekStartDate))
+      // Calculate week range from weekStartDate
+      const startDate = new Date(weekStartDate)
+      const endDate = new Date(startDate)
+      endDate.setDate(endDate.getDate() + 6) // 7 days total (Monday-Sunday)
+
+      const attendance = await attendanceService.getAttendanceByDateRange({
+        startDate,
+        endDate,
+      })
 
       return reply.send({
         success: true,
@@ -101,28 +154,17 @@ export class AttendanceController {
     }
   }
 
+  // Bulk create or update daily attendance records
   async bulkCreateOrUpdateAttendance(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const body = request.body as { records: any[] }
-      
-      if (!Array.isArray(body.records)) {
-        return reply.status(400).send({
-          success: false,
-          message: "Records array is required",
-        })
-      }
+      const body = bulkCreateAttendanceSchema.parse(request.body)
 
-      // Validate all records
-      const validatedRecords = body.records.map((record) =>
-        createAttendanceSchema.parse(record)
-      )
-
-      const attendance = await attendanceService.bulkCreateOrUpdateAttendance(validatedRecords)
+      const result = await attendanceService.bulkCreateOrUpdateAttendance(body.records)
 
       return reply.send({
         success: true,
-        data: attendance,
-        message: "Bulk attendance saved successfully",
+        data: result,
+        message: `Successfully processed ${result.success} records (${result.failed} failed)`,
       })
     } catch (error: any) {
       if (error.name === "ZodError") {

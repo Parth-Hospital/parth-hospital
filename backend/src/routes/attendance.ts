@@ -8,24 +8,24 @@ export default async function attendanceRoutes(fastify: FastifyInstance) {
   // All routes require authentication
   fastify.addHook("onRequest", verifyToken)
 
-  // Upload/Update attendance (Manager only)
+  // Upload/Update attendance (Manager, Receptionist)
   fastify.post(
     "/",
-    { preHandler: requireRole("MANAGER") },
+    { preHandler: requireRole("MANAGER", "RECEPTIONIST") },
     (request, reply) => attendanceController.createOrUpdateAttendance(request, reply)
   )
 
-  // Get all attendance (Doctor, Manager)
+  // Get all attendance (Doctor, Manager, Receptionist)
   fastify.get(
     "/",
-    { preHandler: requireRole("DOCTOR", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER", "RECEPTIONIST") },
     (request, reply) => attendanceController.getAttendance(request, reply)
   )
 
-  // Get weekly attendance (Doctor, Manager)
+  // Get weekly attendance (Doctor, Manager, Receptionist)
   fastify.get(
     "/weekly",
-    { preHandler: requireRole("DOCTOR", "MANAGER") },
+    { preHandler: requireRole("DOCTOR", "MANAGER", "RECEPTIONIST") },
     (request, reply) => attendanceController.getWeeklyAttendance(request, reply)
   )
 
@@ -36,10 +36,10 @@ export default async function attendanceRoutes(fastify: FastifyInstance) {
     (request, reply) => attendanceController.getEmployeeAttendance(request, reply)
   )
 
-  // Bulk upload attendance (Manager only)
+  // Bulk upload attendance (Manager, Receptionist)
   fastify.post(
     "/bulk",
-    { preHandler: requireRole("MANAGER") },
+    { preHandler: requireRole("MANAGER", "RECEPTIONIST") },
     (request, reply) => attendanceController.bulkCreateOrUpdateAttendance(request, reply)
   )
 }

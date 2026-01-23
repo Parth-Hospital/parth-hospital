@@ -60,14 +60,6 @@ const formatDateDisplay = (date: Date): string => {
   });
 };
 
-// Format date as YYYY-MM-DD in local timezone (not UTC) to avoid timezone shifts
-const formatDateLocal = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
 // Parse date string from Excel (handles DD-MM-YYYY, DD/MM/YYYY, etc.)
 const parseDateFromColumn = (dateStr: string): Date | null => {
   if (!dateStr || typeof dateStr !== "string") return null;
@@ -112,7 +104,7 @@ const parseDateFromColumn = (dateStr: string): Date | null => {
   return null;
 };
 
-export default function AttendancePage() {
+export default function ReceptionistAttendancePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [attendanceRecords, setAttendanceRecords] = useState<DailyAttendance[]>(
     [],
@@ -145,10 +137,35 @@ export default function AttendancePage() {
 
     try {
       setLoading(true);
-
       // Parse dates in local timezone to avoid timezone shifts
       const startDateObj = parseLocalDate(startDate);
       const endDateObj = parseLocalDate(endDate);
+
+      // Validate date range (max 31 days)
+      const diffTime = endDateObj.getTime() - startDateObj.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        toast({
+          title: "Error",
+          description: "Start date must be before or equal to end date",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (diffDays > 30) {
+        toast({
+          title: "Error",
+          description:
+            "Date range cannot exceed 31 days. Please select a smaller range.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       // Format as YYYY-MM-DD for API
       const formatDateForAPI = (date: Date): string => {
         const year = date.getFullYear();
@@ -156,39 +173,39 @@ export default function AttendancePage() {
         const day = String(date.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
       };
-      const start = formatDateForAPI(startDateObj);
-      const end = formatDateForAPI(endDateObj);
-
-      if (process.env.NODE_ENV === "development") {
-        console.log("Loading attendance for date range:", {
-          start,
-          end,
-          startDate,
-          endDate,
-        });
-      }
-
       const data = await attendanceApi.getAttendanceByDateRange({
-        startDate: start,
-        endDate: end,
+        startDate: formatDateForAPI(startDateObj),
+        endDate: formatDateForAPI(endDateObj),
       });
-
-      if (process.env.NODE_ENV === "development") {
-        console.log("Loaded attendance records:", data.length);
-        if (data.length > 0) {
-          console.log("Sample record:", data[0]);
-          console.log("Record date format:", data[0].date, typeof data[0].date);
-        }
-      }
-
       setAttendanceRecords(data);
     } catch (error: any) {
-      console.error("Failed to load attendance:", error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to load attendance",
-        variant: "destructive",
-      });
+      // Check if it's a validation error from backend
+      if (error.details && Array.isArray(error.details)) {
+        const validationError = error.details.find(
+          (e: any) =>
+            e.message?.includes("Date range") || e.message?.includes("31 days"),
+        );
+        if (validationError) {
+          toast({
+            title: "Error",
+            description:
+              "Date range cannot exceed 31 days. Please select a smaller range.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: error.message || "Failed to load attendance",
+            variant: "destructive",
+          });
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to load attendance",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -562,11 +579,6 @@ export default function AttendancePage() {
       }
 
       // Step 5: Upload to backend
-      if (process.env.NODE_ENV === "development") {
-        console.log("Uploading attendance records:", attendanceRecords.length);
-        console.log("Sample records:", attendanceRecords.slice(0, 3));
-      }
-
       const result =
         await attendanceApi.bulkCreateOrUpdateAttendance(attendanceRecords);
 
@@ -577,9 +589,6 @@ export default function AttendancePage() {
 
       // Step 6: Reload attendance data
       setSelectedFile(null);
-
-      // Small delay to ensure database has processed the records
-      await new Promise((resolve) => setTimeout(resolve, 500));
       await loadAttendance();
     } catch (error: any) {
       toast({
@@ -609,40 +618,17 @@ export default function AttendancePage() {
     );
   };
 
-  // Parse dates in local timezone to avoid timezone shifts
-  const dateRange =
-    startDate && endDate
-      ? (() => {
-          const startDateObj = parseLocalDate(startDate);
-          const endDateObj = parseLocalDate(endDate);
-          return generateDateRange(startDateObj, endDateObj);
-        })()
-      : [];
-
   // Group attendance records by user and date
-  // Normalize date format to YYYY-MM-DD for consistent matching
   const groupedAttendance = attendanceRecords.reduce(
     (acc, record) => {
       const userId = record.userId;
-
-      // Normalize date to YYYY-MM-DD format
-      let normalizedDate: string;
-      if (typeof record.date === "string") {
-        // If it's already a string, ensure it's in YYYY-MM-DD format
-        const dateObj = new Date(record.date);
-        normalizedDate = dateObj.toISOString().split("T")[0];
-      } else {
-        // If it's a Date object, convert to YYYY-MM-DD
-        normalizedDate = new Date(record.date).toISOString().split("T")[0];
-      }
-
       if (!acc[userId]) {
         acc[userId] = {
           user: record.user,
           records: {} as Record<string, DailyAttendance>,
         };
       }
-      acc[userId].records[normalizedDate] = record;
+      acc[userId].records[record.date] = record;
       return acc;
     },
     {} as Record<
@@ -654,18 +640,18 @@ export default function AttendancePage() {
     >,
   );
 
-  // Debug: Log grouped attendance
-  if (process.env.NODE_ENV === "development" && attendanceRecords.length > 0) {
-    console.log("Attendance records loaded:", attendanceRecords.length);
-    console.log("Grouped attendance:", groupedAttendance);
-    console.log(
-      "Date range for display:",
-      dateRange.map((d) => d.toISOString().split("T")[0]),
-    );
-  }
+  // Parse dates in local timezone to avoid timezone shifts
+  const dateRange =
+    startDate && endDate
+      ? (() => {
+          const startDateObj = parseLocalDate(startDate);
+          const endDateObj = parseLocalDate(endDate);
+          return generateDateRange(startDateObj, endDateObj);
+        })()
+      : [];
 
   return (
-    <AdminLayout role="manager">
+    <AdminLayout role="receptionist">
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold mb-2">Attendance Management</h2>

@@ -6,18 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Calendar, DollarSign, TrendingUp, AlertCircle, Loader2 } from "lucide-react"
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts"
 import { analyticsApi } from "@/lib/api/analytics"
@@ -47,25 +39,6 @@ export default function DoctorDashboard() {
       setLoading(false)
     }
   }
-
-  // Transform monthly trends for chart
-  const appointmentData = stats?.monthlyTrends
-    ? (() => {
-        const monthMap: Record<string, { general: number; priority: number }> = {}
-        stats.monthlyTrends.forEach((trend: any) => {
-          const month = new Date().toLocaleDateString("en-US", { month: "short" })
-          if (!monthMap[month]) {
-            monthMap[month] = { general: 0, priority: 0 }
-          }
-          if (trend.appointmentType === "GENERAL") {
-            monthMap[month].general = trend._count
-          } else if (trend.appointmentType === "PRIORITY") {
-            monthMap[month].priority = trend._count
-          }
-        })
-        return Object.entries(monthMap).map(([month, data]) => ({ month, ...data }))
-      })()
-    : []
 
   const dailyAppointmentData = stats?.today
     ? [
@@ -150,91 +123,39 @@ export default function DoctorDashboard() {
               </div>
             </section>
 
-          {/* Charts Section */}
-          <Tabs defaultValue="revenue" className="space-y-4">
-            <TabsList className="w-full sm:w-auto flex-wrap">
-              <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue Trends</TabsTrigger>
-              <TabsTrigger value="appointments" className="text-xs sm:text-sm">Monthly Appointments</TabsTrigger>
-              <TabsTrigger value="status" className="text-xs sm:text-sm">Daily Distribution</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="revenue">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Revenue Trend</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center py-8 text-muted-foreground">
-                    Revenue tracking will be available after payment integration
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="appointments">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Monthly Appointments Trend</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {appointmentData.length > 0 ? (
-                    <div className="w-full overflow-x-auto">
-                      <ResponsiveContainer width="100%" minHeight={250} height={300}>
-                        <BarChart data={appointmentData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                          <YAxis tick={{ fontSize: 12 }} />
-                          <Tooltip />
-                          <Legend wrapperStyle={{ fontSize: '12px' }} />
-                          <Bar dataKey="general" fill="#0ea5e9" name="General" />
-                          <Bar dataKey="priority" fill="#ef4444" name="Priority" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No appointment data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="status">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Daily Appointment Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {dailyAppointmentData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <PieChart>
-                        <Pie
-                          data={dailyAppointmentData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ name, value }) => `${name}: ${value}`}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {dailyAppointmentData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No appointment data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+          {/* Chart Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Today's Appointment Distribution</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {dailyAppointmentData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={dailyAppointmentData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: ${value}`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {dailyAppointmentData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center py-8 text-muted-foreground">
+                  No appointment data available
+                </div>
+              )}
+            </CardContent>
+          </Card>
           </>
         )}
       </div>

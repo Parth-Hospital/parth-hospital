@@ -63,7 +63,6 @@ export default function ReceptionistDashboard() {
 
   const patientFlowData = stats?.patientFlow || []
   const collectionData = stats?.collectionData || []
-  const paymentMethodData = stats?.paymentMethods || []
 
   return (
     <AdminLayout role="receptionist">
@@ -139,90 +138,55 @@ export default function ReceptionistDashboard() {
             </section>
 
           {/* Charts */}
-          <Tabs defaultValue="patients" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="patients">Patient Flow</TabsTrigger>
-              <TabsTrigger value="collections">Collections Trend</TabsTrigger>
-              <TabsTrigger value="methods">Payment Methods</TabsTrigger>
-            </TabsList>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Hourly Patient Flow & Completion Rate</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {patientFlowData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={patientFlowData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="hour" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="patients" fill="#0ea5e9" name="Total Patients" />
+                      <Bar dataKey="completed" fill="#10b981" name="Completed" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center py-8 text-muted-foreground">
+                    No patient flow data available
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            <TabsContent value="patients">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Hourly Patient Flow & Completion Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {patientFlowData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={patientFlowData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="hour" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="patients" fill="#0ea5e9" name="Total Patients" />
-                        <Bar dataKey="completed" fill="#10b981" name="Completed" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No patient flow data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="collections">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Weekly Collections Trend</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {collectionData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={collectionData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Tooltip formatter={(value) => `₹${Number(value).toLocaleString()}`} />
-                        <Area type="monotone" dataKey="collections" fill="#0ea5e9" stroke="#0ea5e9" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No collection data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="methods">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Payment Methods Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {paymentMethodData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={paymentMethodData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="method" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="count" fill="#0ea5e9" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="flex items-center justify-center py-8 text-muted-foreground">
-                      No payment method data available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            <Card>
+              <CardHeader>
+                <CardTitle>Weekly Collections Trend</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {collectionData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={collectionData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => `₹${Number(value).toLocaleString()}`} />
+                      <Area type="monotone" dataKey="collections" fill="#0ea5e9" stroke="#0ea5e9" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center py-8 text-muted-foreground">
+                    No collection data available
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
           </>
         )}
       </div>

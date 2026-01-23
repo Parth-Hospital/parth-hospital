@@ -64,11 +64,12 @@ export const ADMIN_NAVIGATION: Record<UserRole, NavigationItem[]> = {
     { label: "NexRoutine", href: "/dashboard/admin/accountant/nexroutine", icon: CheckSquare },
   ],
   receptionist: [
-    { label: "Patient Queue", href: "/dashboard/admin/receptionist", icon: List },
+    { label: "Overview", href: "/dashboard/admin/receptionist", icon: List },
     { label: "Current Bookings", href: "/dashboard/admin/receptionist/current-bookings", icon: CalendarCheck },
     { label: "Bookings", href: "/dashboard/admin/receptionist/bookings", icon: BookOpen },
     { label: "Payments", href: "/dashboard/admin/receptionist/payments", icon: CreditCard },
     { label: "Tokens", href: "/dashboard/admin/receptionist/tokens", icon: Ticket },
+    { label: "Attendance", href: "/dashboard/admin/receptionist/attendance", icon: Clock },
     { label: "Inquiry", href: "/dashboard/admin/receptionist/inquiry", icon: MessageSquare },
     { label: "NexRoutine", href: "/dashboard/admin/receptionist/nexroutine", icon: CheckSquare },
   ],

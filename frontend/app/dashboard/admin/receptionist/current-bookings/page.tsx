@@ -121,6 +121,7 @@ export default function CurrentBookingsPage() {
     online: bookings.filter((b) => b.bookingType === "ONLINE").length,
     offline: bookings.filter((b) => b.bookingType === "OFFLINE").length,
     priority: bookings.filter((b) => b.appointmentType === "PRIORITY").length,
+    general: bookings.filter((b) => b.appointmentType === "GENERAL").length,
   }
 
   return (
@@ -336,14 +337,14 @@ export default function CurrentBookingsPage() {
                   <Hash className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Next Serial Number:</span>
                   <span className="font-semibold">
-                    #{calculateSerialNumberAndTime(summary.total).serialNumber}
+                    #{calculateSerialNumberAndTime(summary.general).serialNumber}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Clock className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Arrival Time:</span>
                   <span className="font-semibold">
-                    {calculateSerialNumberAndTime(summary.total).arrivalTime}
+                    {calculateSerialNumberAndTime(summary.general).arrivalTime}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">

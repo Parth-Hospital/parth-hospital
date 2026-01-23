@@ -81,6 +81,8 @@ class ApiClient {
 
         // Create error with details
         const error = new Error(errorMessage) as any
+        error.status = response.status
+        error.statusText = response.statusText
         if (errorDetails) {
           error.details = errorDetails
         }
@@ -110,8 +112,14 @@ class ApiClient {
       if (process.env.NODE_ENV === "development") {
         console.error("API Error:", {
           endpoint,
-          message: error.message,
+          message: error.message || "Unknown error",
           status: error.status || "N/A",
+          statusText: error.statusText || "N/A",
+          error: error,
+          stack: error.stack,
+          details: error.details,
+          // Try to stringify the error to see all properties
+          errorString: JSON.stringify(error, Object.getOwnPropertyNames(error)),
         })
       }
       throw error

@@ -5,35 +5,57 @@ import { EmployeeLayout } from "@/components/layouts/employee-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, CheckCircle2, XCircle, Loader2 } from "lucide-react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
-import { attendanceApi, WeeklyAttendance } from "@/lib/api/attendance"
-import { analyticsApi } from "@/lib/api/analytics"
+import { attendanceApi, DailyAttendance } from "@/lib/api/attendance"
 import { useToast } from "@/hooks/use-toast"
 import { Input } from "@/components/ui/input"
 
+// Helper function to generate date range
+const generateDateRange = (startDate: Date, endDate: Date): Date[] => {
+  const dates: Date[] = []
+  const current = new Date(startDate)
+  current.setHours(0, 0, 0, 0)
+  const end = new Date(endDate)
+  end.setHours(0, 0, 0, 0)
+
+  while (current <= end) {
+    dates.push(new Date(current))
+    current.setDate(current.getDate() + 1)
+  }
+  return dates
+}
+
+// Format date as DD-MM-YYYY for display
+const formatDateDisplay = (date: Date): string => {
+  return date.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" })
+}
+
 export default function EmployeeAttendance() {
-  const [attendanceRecords, setAttendanceRecords] = useState<WeeklyAttendance[]>([])
+  const [attendanceRecords, setAttendanceRecords] = useState<DailyAttendance[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedWeek, setSelectedWeek] = useState<string>("")
-  const [weeklyTrends, setWeeklyTrends] = useState<any[]>([])
+  const [startDate, setStartDate] = useState<string>("")
+  const [endDate, setEndDate] = useState<string>("")
   const { toast } = useToast()
 
-  const getWeekStart = (date: Date = new Date()): Date => {
-    const d = new Date(date)
-    const day = d.getDay()
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-    return new Date(d.setDate(diff))
-  }
-
+  // Initialize with current date range (today to 7 days ahead)
   useEffect(() => {
-    const weekStart = getWeekStart()
-    const weekStartStr = weekStart.toISOString()
-    setSelectedWeek(weekStartStr)
-    loadAttendance(weekStartStr)
-    loadAnalytics()
+    const today = new Date()
+    const nextWeek = new Date(today)
+    nextWeek.setDate(nextWeek.getDate() + 7)
+
+    setStartDate(today.toISOString().split("T")[0])
+    setEndDate(nextWeek.toISOString().split("T")[0])
   }, [])
 
-  const loadAttendance = async (weekStartDate: string) => {
+  // Load attendance when date range changes
+  useEffect(() => {
+    if (startDate && endDate) {
+      loadAttendance()
+    }
+  }, [startDate, endDate])
+
+  const loadAttendance = async () => {
+    if (!startDate || !endDate) return
+
     try {
       setLoading(true)
       // Get current user ID from localStorage
@@ -45,8 +67,8 @@ export default function EmployeeAttendance() {
         throw new Error("User not authenticated")
       }
 
-      // Use employee-specific attendance endpoint
-      const data = await attendanceApi.getEmployeeAttendance(userId, weekStartDate)
+      // Use employee-specific attendance endpoint with date range
+      const data = await attendanceApi.getEmployeeAttendance(userId, startDate, endDate)
       setAttendanceRecords(data)
     } catch (error: any) {
       toast({
@@ -59,24 +81,8 @@ export default function EmployeeAttendance() {
     }
   }
 
-  const loadAnalytics = async () => {
-    try {
-      const stats = await analyticsApi.getEmployeeDashboardStats()
-      setWeeklyTrends(stats.weeklyAttendance || [])
-    } catch (error: any) {
-      // Only log in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to load analytics:", error)
-      }
-    }
-  }
 
-  const handleWeekChange = (weekStartDate: string) => {
-    setSelectedWeek(weekStartDate)
-    loadAttendance(weekStartDate)
-  }
-
-  const getStatusBadge = (status: string | null) => {
+  const getStatusBadge = (status: string | null | undefined) => {
     if (status === "PRESENT") {
       return <Badge className="bg-green-600">Present</Badge>
     } else if (status === "ABSENT") {
@@ -88,37 +94,24 @@ export default function EmployeeAttendance() {
     }
   }
 
-  // Get current week's attendance for the employee
-  const currentWeekAttendance = attendanceRecords.length > 0 ? attendanceRecords[0] : null
-  const presentCount = currentWeekAttendance
-    ? [
-        currentWeekAttendance.monday,
-        currentWeekAttendance.tuesday,
-        currentWeekAttendance.wednesday,
-        currentWeekAttendance.thursday,
-        currentWeekAttendance.friday,
-        currentWeekAttendance.saturday,
-        currentWeekAttendance.sunday,
-      ].filter((s) => s === "PRESENT").length
-    : 0
-  const absentCount = currentWeekAttendance
-    ? [
-        currentWeekAttendance.monday,
-        currentWeekAttendance.tuesday,
-        currentWeekAttendance.wednesday,
-        currentWeekAttendance.thursday,
-        currentWeekAttendance.friday,
-        currentWeekAttendance.saturday,
-        currentWeekAttendance.sunday,
-      ].filter((s) => s === "ABSENT").length
-    : 0
+  // Calculate summary statistics
+  const dateRange = startDate && endDate ? generateDateRange(new Date(startDate), new Date(endDate)) : []
+  const attendanceMap = new Map<string, DailyAttendance>()
+  attendanceRecords.forEach((record) => {
+    attendanceMap.set(record.date, record)
+  })
+
+  const presentCount = attendanceRecords.filter((r) => r.status === "PRESENT").length
+  const absentCount = attendanceRecords.filter((r) => r.status === "ABSENT").length
+  const totalDays = dateRange.length
+  const attendanceRate = totalDays > 0 ? Math.round((presentCount / totalDays) * 100) : 0
 
   return (
     <EmployeeLayout>
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Weekly Attendance Report</h2>
-          <p className="text-muted-foreground">View your attendance for the current week</p>
+          <h2 className="text-2xl font-bold mb-2">Attendance Report</h2>
+          <p className="text-muted-foreground">View your attendance for the selected date range</p>
         </div>
 
         {/* Summary Cards */}
@@ -131,7 +124,7 @@ export default function EmployeeAttendance() {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold text-primary">{presentCount}</p>
-              <p className="text-xs text-muted-foreground mt-1">This week</p>
+              <p className="text-xs text-muted-foreground mt-1">Selected range</p>
             </CardContent>
           </Card>
 
@@ -143,7 +136,7 @@ export default function EmployeeAttendance() {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold text-destructive">{absentCount}</p>
-              <p className="text-xs text-muted-foreground mt-1">This week</p>
+              <p className="text-xs text-muted-foreground mt-1">Selected range</p>
             </CardContent>
           </Card>
 
@@ -154,31 +147,30 @@ export default function EmployeeAttendance() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-accent">
-                {Math.round((presentCount / (presentCount + absentCount)) * 100)}%
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">This week</p>
+              <p className="text-3xl font-bold text-accent">{attendanceRate}%</p>
+              <p className="text-xs text-muted-foreground mt-1">Selected range</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Weekly Attendance Table */}
+        {/* Attendance Table */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>This Week's Attendance</CardTitle>
+              <CardTitle>Attendance Details</CardTitle>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <Input
                   type="date"
-                  value={selectedWeek ? new Date(selectedWeek).toISOString().split("T")[0] : ""}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      const date = new Date(e.target.value)
-                      const weekStart = getWeekStart(date)
-                      handleWeekChange(weekStart.toISOString())
-                    }
-                  }}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-40"
+                />
+                <span className="text-muted-foreground">to</span>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
                   className="w-40"
                 />
               </div>
@@ -194,30 +186,26 @@ export default function EmployeeAttendance() {
                 <table className="w-full text-sm">
                   <thead className="border-b border-border bg-muted/50">
                     <tr>
-                      <th className="p-4 text-left font-semibold">Day</th>
+                      <th className="p-4 text-left font-semibold">Date</th>
                       <th className="p-4 text-left font-semibold">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {currentWeekAttendance ? (
-                      [
-                        { day: "Monday", status: currentWeekAttendance.monday },
-                        { day: "Tuesday", status: currentWeekAttendance.tuesday },
-                        { day: "Wednesday", status: currentWeekAttendance.wednesday },
-                        { day: "Thursday", status: currentWeekAttendance.thursday },
-                        { day: "Friday", status: currentWeekAttendance.friday },
-                        { day: "Saturday", status: currentWeekAttendance.saturday },
-                        { day: "Sunday", status: currentWeekAttendance.sunday },
-                      ].map((dayData, index) => (
-                        <tr key={index} className="border-b border-border hover:bg-muted/30">
-                          <td className="p-4 font-medium">{dayData.day}</td>
-                          <td className="p-4">{getStatusBadge(dayData.status)}</td>
-                        </tr>
-                      ))
+                    {dateRange.length > 0 ? (
+                      dateRange.map((date) => {
+                        const dateStr = date.toISOString().split("T")[0]
+                        const record = attendanceMap.get(dateStr)
+                        return (
+                          <tr key={dateStr} className="border-b border-border hover:bg-muted/30">
+                            <td className="p-4 font-medium">{formatDateDisplay(date)}</td>
+                            <td className="p-4">{getStatusBadge(record?.status)}</td>
+                          </tr>
+                        )
+                      })
                     ) : (
                       <tr>
                         <td colSpan={2} className="p-8 text-center text-muted-foreground">
-                          No attendance data available for this week
+                          No attendance data available for this date range
                         </td>
                       </tr>
                     )}
@@ -228,32 +216,7 @@ export default function EmployeeAttendance() {
           </CardContent>
         </Card>
 
-        {/* Monthly Trend Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Monthly Attendance Trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {weeklyTrends.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={weeklyTrends}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="week" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="present" fill="#10b981" name="Present" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="absent" fill="#ef4444" name="Absent" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex items-center justify-center py-8 text-muted-foreground">
-                No trend data available
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </EmployeeLayout>
   )
 }
-

@@ -137,19 +137,12 @@ export class AuthService {
   async getCurrentUser(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        phone: true,
-        role: true,
-        department: true,
-        position: true,
-        status: true,
-        adminEmail: true,
-        hasAdminCreds: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
+        employee: {
+          select: {
+            employeeId: true,
+          },
+        },
       },
     })
 
@@ -157,6 +150,12 @@ export class AuthService {
       throw new Error("User not found")
     }
 
-    return user
+    // Return user data with employeeId
+    const { passwordHash, employeePasswordHash, employee, ...userData } = user
+
+    return {
+      ...userData,
+      employeeId: employee?.employeeId || null,
+    }
   }
 }

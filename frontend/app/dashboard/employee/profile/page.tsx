@@ -20,6 +20,7 @@ interface UserProfile {
   department: string | null
   position: string | null
   status: string
+  employeeId: string | null
   createdAt: string
   updatedAt: string
 }
@@ -145,7 +146,7 @@ export default function EmployeeProfile() {
 
               <div className="space-y-2">
                 <Label htmlFor="employeeId">Employee ID</Label>
-                <p className="font-semibold text-lg">{profile.id.substring(0, 8)}</p>
+                <p className="font-semibold text-lg">{profile.employeeId || "N/A"}</p>
                 <p className="text-xs text-muted-foreground">Cannot be changed</p>
               </div>
 

@@ -11,6 +11,60 @@ function generateAdminEmail(name: string): string {
   return `${emailName}@parthhospital.co.in`
 }
 
+// Generate sequential employee ID (EMP01, EMP02, etc.)
+// Doctor always gets EMP01
+async function generateEmployeeId(role?: string): Promise<string> {
+  // If creating a doctor, check if EMP01 is already taken
+  if (role === "DOCTOR") {
+    const existingEmp01 = await prisma.employee.findUnique({
+      where: { employeeId: "EMP01" },
+      include: { user: { select: { role: true } } },
+    })
+    
+    if (!existingEmp01) {
+      return "EMP01"
+    }
+    
+    // If EMP01 exists and belongs to another doctor, that's fine (only one doctor allowed)
+    // If EMP01 exists and belongs to a non-doctor, we need to reassign it
+    if (existingEmp01.user.role !== "DOCTOR") {
+      throw new Error("Employee ID EMP01 is reserved for the doctor. Please reassign the current EMP01 holder first.")
+    }
+    
+    // EMP01 already belongs to a doctor
+    throw new Error("Employee ID EMP01 is already assigned to a doctor. Only one doctor can have EMP01.")
+  }
+
+  // Get all existing employee IDs
+  const employees = await prisma.employee.findMany({
+    select: { employeeId: true },
+    orderBy: { employeeId: "asc" },
+  })
+
+  // Extract numbers from existing IDs (EMP01 -> 1, EMP02 -> 2, etc.)
+  const existingNumbers = employees
+    .map((emp) => {
+      const match = emp.employeeId.match(/^EMP(\d+)$/i)
+      return match ? parseInt(match[1], 10) : 0
+    })
+    .filter((num) => num > 0)
+    .sort((a, b) => a - b)
+
+  // Find the next available number
+  let nextNumber = 2 // Start from 2 since EMP01 is reserved for doctor
+  
+  // Find the first gap or use the next number after the highest
+  for (let i = 2; i <= (existingNumbers[existingNumbers.length - 1] || 1) + 1; i++) {
+    if (!existingNumbers.includes(i)) {
+      nextNumber = i
+      break
+    }
+  }
+
+  // Format as EMP01, EMP02, etc. (zero-padded to 2 digits)
+  return `EMP${String(nextNumber).padStart(2, "0")}`
+}
+
 export class EmployeeService {
   async createEmployee(data: CreateEmployeeInput) {
     // Check if user already exists
@@ -52,8 +106,8 @@ export class EmployeeService {
       },
     })
 
-    // Generate employee ID
-    const employeeId = `EMP${String(user.id).slice(-6).toUpperCase()}`
+    // Generate sequential employee ID
+    const employeeId = await generateEmployeeId(data.role)
 
     // Create employee record
     await prisma.employee.create({
@@ -109,7 +163,7 @@ export class EmployeeService {
       status: user.status,
       adminEmail: user.adminEmail,
       hasAdminCreds: user.hasAdminCreds || !!user.employeePasswordHash,
-      employeeId: user.employee?.employeeId || `EMP${String(user.id).slice(-6).toUpperCase()}`,
+      employeeId: user.employee?.employeeId || "N/A",
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }))
@@ -138,7 +192,7 @@ export class EmployeeService {
       status: user.status,
       adminEmail: user.adminEmail,
       hasAdminCreds: user.hasAdminCreds || !!user.employeePasswordHash,
-      employeeId: user.employee?.employeeId || `EMP${String(user.id).slice(-6).toUpperCase()}`,
+      employeeId: user.employee?.employeeId || "N/A",
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }

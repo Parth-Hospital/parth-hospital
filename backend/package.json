@@ -14,6 +14,7 @@
     "prisma:push": "npx prisma db push",
     "prisma:seed": "tsx prisma/seed.ts",
     "cleanup": "tsx scripts/cleanup.ts",
+    "update-employee-ids": "tsx scripts/update-employee-ids.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
