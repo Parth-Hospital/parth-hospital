@@ -1,60 +1,60 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { clearAuthSession } from "@/lib/auth"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { clearAuthSession } from "@/lib/auth";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { NavigationItem } from "@/lib/config/navigation"
-import { useToast } from "@/hooks/use-toast"
+} from "@/components/ui/tooltip";
+import { NavigationItem } from "@/lib/config/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardSidebarProps {
-  role: "employee" | "doctor" | "manager" | "accountant" | "receptionist"
-  navItems: (NavigationItem & { active?: boolean })[]
+  role: "employee" | "doctor" | "manager" | "accountant" | "receptionist";
+  navItems: (NavigationItem & { active?: boolean })[];
 }
 
 export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
-  const [open, setOpen] = useState(false) // Mobile menu state
-  const [collapsed, setCollapsed] = useState(false) // Desktop collapse state
-  const router = useRouter()
-  const { toast } = useToast()
+  const [open, setOpen] = useState(false); // Mobile menu state
+  const [collapsed, setCollapsed] = useState(false); // Desktop collapse state
+  const router = useRouter();
+  const { toast } = useToast();
 
   // Load collapsed state from localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("sidebar_collapsed")
+      const saved = localStorage.getItem("sidebar_collapsed");
       if (saved !== null) {
-        setCollapsed(saved === "true")
+        setCollapsed(saved === "true");
       }
     }
-  }, [])
+  }, []);
 
   // Save collapsed state to localStorage
   const toggleCollapse = () => {
-    const newCollapsed = !collapsed
-    setCollapsed(newCollapsed)
+    const newCollapsed = !collapsed;
+    setCollapsed(newCollapsed);
     if (typeof window !== "undefined") {
-      localStorage.setItem("sidebar_collapsed", String(newCollapsed))
+      localStorage.setItem("sidebar_collapsed", String(newCollapsed));
       // Dispatch custom event to notify layout components
-      window.dispatchEvent(new Event("sidebar-toggle"))
+      window.dispatchEvent(new Event("sidebar-toggle"));
     }
-  }
+  };
 
   const handleLogout = () => {
-    clearAuthSession()
+    clearAuthSession();
     toast({
       title: "Success",
       description: "You have been logged out successfully",
-    })
-    router.push("/login")
-  }
+    });
+    router.push("/login");
+  };
 
   return (
     <>
@@ -73,19 +73,25 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen ${
-          open ? "w-64" : "w-0"
-        } ${collapsed ? "lg:w-16" : "lg:w-64"} bg-sidebar border-r border-sidebar-border z-40 transition-all duration-300 ${
+        className={`fixed left-0 top-0 h-screen w-64 ${
+          collapsed ? "lg:w-16" : "lg:w-64"
+        } bg-sidebar border-r border-sidebar-border z-40 transition-all duration-300 ${
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         } flex flex-col`}
       >
         {/* Header - Fixed at top */}
-        <div className={`p-4 lg:p-6 border-b border-sidebar-border flex-shrink-0 ${collapsed && !open ? "px-2" : ""}`}>
+        <div
+          className={`p-4 lg:p-6 border-b border-sidebar-border flex-shrink-0 ${collapsed && !open ? "px-2" : ""}`}
+        >
           <div className="flex items-center justify-between gap-3">
             {(!collapsed || open) && (
               <div className="flex-1 min-w-0 pr-4 lg:pr-2">
-                <h1 className="text-lg lg:text-xl font-bold text-sidebar-primary truncate">Parth Hospital</h1>
-                <p className="text-xs text-sidebar-foreground/60 mt-1 capitalize truncate">{role} Portal</p>
+                <h1 className="text-lg lg:text-xl font-bold text-sidebar-primary truncate">
+                  Parth Hospital
+                </h1>
+                <p className="text-xs text-sidebar-foreground/60 mt-1 capitalize truncate">
+                  {role} Portal
+                </p>
               </div>
             )}
             {/* Only show PH when collapsed on desktop (hidden on mobile when closed) */}
@@ -111,22 +117,28 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
                 className="hidden lg:flex p-1.5 rounded-md hover:bg-sidebar-accent/10 text-sidebar-foreground transition-colors flex-shrink-0"
                 aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               >
-                {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+                {collapsed ? (
+                  <ChevronRight size={18} />
+                ) : (
+                  <ChevronLeft size={18} />
+                )}
               </button>
             )}
           </div>
         </div>
 
         {/* Scrollable navigation area */}
-        <nav className={`flex-1 overflow-y-auto p-4 space-y-2 ${collapsed && !open ? "px-2" : ""}`}>
+        <nav
+          className={`flex-1 overflow-y-auto p-4 space-y-2 ${collapsed && !open ? "px-2" : ""}`}
+        >
           <TooltipProvider>
             {navItems.map((item) => {
-              const IconComponent = item.icon
+              const IconComponent = item.icon;
               // On mobile (lg breakpoint), when sidebar is open, always show full width with labels
               // On desktop, respect collapsed state - show icons even when collapsed
-              const isMobileOpen = open
-              const showLabel = !collapsed || isMobileOpen
-              
+              const isMobileOpen = open;
+              const showLabel = !collapsed || isMobileOpen;
+
               const content = (
                 <Link
                   key={item.href}
@@ -142,32 +154,34 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
                   onClick={() => setOpen(false)}
                 >
                   <IconComponent size={20} className="flex-shrink-0" />
-                  {showLabel && <span className="whitespace-nowrap">{item.label}</span>}
+                  {showLabel && (
+                    <span className="whitespace-nowrap">{item.label}</span>
+                  )}
                 </Link>
-              )
+              );
 
               // Show tooltip on desktop when collapsed (icons only)
               // On mobile when open, show full content without tooltip
               if (collapsed && !isMobileOpen) {
                 return (
                   <Tooltip key={item.href}>
-                    <TooltipTrigger asChild>
-                      {content}
-                    </TooltipTrigger>
+                    <TooltipTrigger asChild>{content}</TooltipTrigger>
                     <TooltipContent side="right">
                       <p>{item.label}</p>
                     </TooltipContent>
                   </Tooltip>
-                )
+                );
               }
 
-              return content
+              return content;
             })}
           </TooltipProvider>
         </nav>
 
         {/* Logout button - Fixed at bottom */}
-        <div className={`p-4 border-t border-sidebar-border flex-shrink-0 ${collapsed && !open ? "px-2" : ""}`}>
+        <div
+          className={`p-4 border-t border-sidebar-border flex-shrink-0 ${collapsed && !open ? "px-2" : ""}`}
+        >
           <Button
             variant="outline"
             size="sm"
@@ -189,5 +203,5 @@ export function DashboardSidebar({ role, navItems }: DashboardSidebarProps) {
         />
       )}
     </>
-  )
+  );
 }

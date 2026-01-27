@@ -153,12 +153,12 @@ export function PrescriptionTemplate({
 
             {/* Medicines List */}
             <div className="relative z-10 flex-1">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200 flex items-center gap-2">
+              {/* <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200 flex items-center gap-2">
                 <span></span>
                 <span className="text-sm font-normal text-gray-500 ml-auto">
                   Page {pageIndex + 1} of {totalPages}
                 </span>
-              </h2>
+              </h2> */}
 
               <div className="space-y-0">
                 {currentMedicines.length === 0 ? (
