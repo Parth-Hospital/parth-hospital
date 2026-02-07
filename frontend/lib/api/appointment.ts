@@ -48,10 +48,10 @@ export interface CurrentBookingsResponse {
 export const appointmentApi = {
   createAppointment: async (data: CreateAppointmentData): Promise<Appointment> => {
     // Check if QA mode is enabled
-    const isQAMode = 
+    const isQAMode =
       (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("qa") === "true") ||
       (typeof process !== "undefined" && process.env.NEXT_PUBLIC_QA_MODE === "true")
-    
+
     // Pass QA mode as query parameter
     const endpoint = isQAMode ? "/appointments?qa=true" : "/appointments"
     const response = await apiClient.post<Appointment>(endpoint, data)
@@ -109,5 +109,13 @@ export const appointmentApi = {
       return response.data
     }
     throw new Error(response.message || "Failed to update appointment status")
+  },
+
+  markDailyAppointmentsAsCompleted: async (date: string): Promise<{ count: number }> => {
+    const response = await apiClient.patch<{ count: number }>("/appointments/current/bookings/complete", { date })
+    if (response.success && response.data) {
+      return response.data
+    }
+    throw new Error(response.message || "Failed to complete appointments")
   },
 }

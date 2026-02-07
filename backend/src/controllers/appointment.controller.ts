@@ -13,10 +13,10 @@ export class AppointmentController {
     try {
       const body = createAppointmentSchema.parse(request.body)
       const userId = request.user?.id
-      
+
       // Check for QA mode from query parameter or header
-      const qaMode = 
-        (request.query as any)?.qa === "true" || 
+      const qaMode =
+        (request.query as any)?.qa === "true" ||
         request.headers["x-qa-mode"] === "true"
 
       const appointment = await appointmentService.createAppointment(body, userId, qaMode)
@@ -160,6 +160,26 @@ export class AppointmentController {
       return reply.status(500).send({
         success: false,
         message: error.message || "Failed to update appointment status",
+      })
+    }
+  }
+
+  async markDailyAppointmentsAsCompleted(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { date } = request.body as { date: string }
+      const targetDate = date ? new Date(date) : new Date()
+
+      const result = await appointmentService.markDailyAppointmentsAsCompleted(targetDate)
+
+      return reply.send({
+        success: true,
+        data: result,
+        message: `Successfully marked ${result.count} appointments as completed`,
+      })
+    } catch (error: any) {
+      return reply.status(500).send({
+        success: false,
+        message: error.message || "Failed to update appointments",
       })
     }
   }

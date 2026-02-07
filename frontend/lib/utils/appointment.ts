@@ -44,12 +44,12 @@ export function calculateSerialNumberAndTime(totalBookings: number): {
   const slotIndex = Math.floor((serialNumber - 1) / 30)
   const slotHour = 11 + Math.floor(slotIndex * 0.5) // 11 AM + (slotIndex * 30 min)
   const slotMinute = (slotIndex % 2) * 30 // 0 or 30 minutes
-  
+
   // Ensure we don't go beyond 5 PM (17:00)
   const maxHour = 17
   const finalHour = Math.min(slotHour, maxHour)
   const finalMinute = finalHour === maxHour ? 0 : slotMinute
-  
+
   const slotTime = `${String(finalHour).padStart(2, "0")}:${String(finalMinute).padStart(2, "0")}`
   const arrivalTime = slotTime // For general appointments, arrival time = slot time
 
@@ -71,19 +71,19 @@ export function generateTimeSlots(date: Date, existingBookings: number = 0): Tim
   const slotDuration = 30 // minutes
   const patientsPerSlot = 30
 
-  const dateString = date.toISOString().split("T")[0]
+  const dateString = formatDateToYYYYMMDD(date)
 
   for (let hour = startHour; hour < endHour; hour++) {
     for (let minute = 0; minute < 60; minute += slotDuration) {
       const time = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
       const slotId = `${dateString}-${time}`
-      
+
       // Calculate available slots based on serial numbers
       // Slot 1 (1-30): 11:00 AM, Slot 2 (31-60): 11:30 AM, etc.
       const slotIndex = ((hour - startHour) * 2) + (minute / 30)
       const slotStartNumber = slotIndex * patientsPerSlot + 1
       const slotEndNumber = (slotIndex + 1) * patientsPerSlot
-      
+
       // Calculate booked slots in this range (mock - in real app, check database)
       const bookedInSlot = Math.max(0, Math.min(existingBookings - slotStartNumber + 1, patientsPerSlot))
       const availableSlots = Math.max(0, patientsPerSlot - bookedInSlot)
@@ -109,10 +109,10 @@ export function getArrivalTime(slotTime: string): string {
   const [hours, minutes] = slotTime.split(":").map(Number)
   const slotDate = new Date()
   slotDate.setHours(hours, minutes, 0, 0)
-  
+
   // Subtract 30 minutes
   slotDate.setMinutes(slotDate.getMinutes() - 30)
-  
+
   return `${String(slotDate.getHours()).padStart(2, "0")}:${String(slotDate.getMinutes()).padStart(2, "0")}`
 }
 
@@ -129,6 +129,17 @@ export function formatDate(date: Date): string {
 }
 
 /**
+ * Format date to YYYY-MM-DD string (preserving local time)
+ * Fixes timezone issues where toISOString() might return previous day
+ */
+export function formatDateToYYYYMMDD(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
+/**
  * Get next available appointment date (tomorrow)
  * Booking window: 5 PM previous day to 8:15 AM same day
  * Example: To book for 11th Jan, window opens at 5 PM on 10th Jan and closes at 8:15 AM on 11th Jan
@@ -137,37 +148,37 @@ export function getNextAppointmentDate(): Date | null {
   const now = new Date()
   const today = new Date(now)
   today.setHours(0, 0, 0, 0)
-  
+
   const tomorrow = new Date(today)
   tomorrow.setDate(tomorrow.getDate() + 1)
-  
+
   // Check if booking window is open
   // Window opens at 5 PM previous day (17:00)
   // Window closes at 8:15 AM same day (08:15)
   const currentHour = now.getHours()
   const currentMinute = now.getMinutes()
   const currentTime = currentHour * 60 + currentMinute // minutes since midnight
-  
+
   const windowOpenTime = 17 * 60 // 5 PM = 1020 minutes
   const windowCloseTime = 8 * 60 + 15 // 8:15 AM = 495 minutes
-  
+
   // If current time is after 5 PM today, booking window is open for tomorrow
   // If current time is before 8:15 AM today, booking window is open for today
   const isWindowOpen = currentTime >= windowOpenTime || currentTime < windowCloseTime
-  
+
   if (!isWindowOpen) {
     return null // Booking window is closed (between 8:15 AM and 5 PM)
   }
-  
+
   // If it's after 5 PM, book for tomorrow
   // If it's before 8:15 AM, book for today
   const appointmentDate = currentTime >= windowOpenTime ? tomorrow : today
-  
+
   // Skip Sundays
   if (appointmentDate.getDay() === 0) {
     appointmentDate.setDate(appointmentDate.getDate() + 1)
   }
-  
+
   return appointmentDate
 }
 
@@ -201,12 +212,12 @@ function isQAModeEnabled(): boolean {
       return true
     }
   }
-  
+
   // Check environment variable (server-side)
   if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_QA_MODE === "true") {
     return true
   }
-  
+
   return false
 }
 
@@ -227,18 +238,18 @@ export async function isBookingWindowOpen(): Promise<{
 }> {
   // QA Mode: Bypass time restrictions
   const qaMode = isQAModeEnabled()
-  
+
   if (qaMode) {
     // In QA mode, always return tomorrow as available date
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     tomorrow.setHours(0, 0, 0, 0)
-    
+
     // Skip Sundays
     if (tomorrow.getDay() === 0) {
       tomorrow.setDate(tomorrow.getDate() + 1)
     }
-    
+
     // Check doctor availability even in QA mode
     let doctorAvailable = false
     try {
@@ -251,7 +262,7 @@ export async function isBookingWindowOpen(): Promise<{
       // In QA mode, default to available if check fails
       doctorAvailable = true
     }
-    
+
     return {
       isOpen: true,
       message: `[QA MODE] Booking window is open for ${formatDate(tomorrow)}`,
@@ -261,29 +272,29 @@ export async function isBookingWindowOpen(): Promise<{
       isBefore5PM: false,
     }
   }
-  
+
   const now = new Date()
   const currentHour = now.getHours()
   const currentMinute = now.getMinutes()
   const currentTime = currentHour * 60 + currentMinute // minutes since midnight
-  
+
   const windowOpenTime = 17 * 60 // 5 PM = 1020 minutes
   const windowCloseTime = 8 * 60 + 15 // 8:15 AM = 495 minutes
-  
+
   const isBefore5PM = currentTime < windowOpenTime
   const isAfter8_15AM = currentTime >= windowCloseTime
-  
+
   // Before 5 PM: Booking window not opened yet
   if (isBefore5PM && isAfter8_15AM) {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     tomorrow.setHours(0, 0, 0, 0)
-    
+
     // Skip Sundays
     if (tomorrow.getDay() === 0) {
       tomorrow.setDate(tomorrow.getDate() + 1)
     }
-    
+
     return {
       isOpen: false,
       message: "Booking window will open at 5 PM today. Doctor availability will be updated before then.",
@@ -293,10 +304,10 @@ export async function isBookingWindowOpen(): Promise<{
       isBefore5PM: true,
     }
   }
-  
+
   // After 5 PM or before 8:15 AM: Check if booking window should be open
   const nextDate = getNextAppointmentDate()
-  
+
   if (!nextDate) {
     return {
       isOpen: false,
@@ -307,7 +318,7 @@ export async function isBookingWindowOpen(): Promise<{
       isBefore5PM: false,
     }
   }
-  
+
   // After 5 PM: Check doctor availability
   let doctorAvailable = false
   try {
@@ -319,7 +330,7 @@ export async function isBookingWindowOpen(): Promise<{
     }
     doctorAvailable = false
   }
-  
+
   if (!doctorAvailable) {
     return {
       isOpen: false,
@@ -330,7 +341,7 @@ export async function isBookingWindowOpen(): Promise<{
       isBefore5PM: false,
     }
   }
-  
+
   return {
     isOpen: true,
     message: `Booking window is open for ${formatDate(nextDate)}`,

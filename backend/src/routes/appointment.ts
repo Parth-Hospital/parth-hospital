@@ -32,4 +32,10 @@ export default async function appointmentRoutes(fastify: FastifyInstance) {
     { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "DOCTOR")] },
     (request, reply) => appointmentController.updateAppointmentStatus(request, reply)
   )
+
+  fastify.patch(
+    "/current/bookings/complete",
+    { preHandler: [verifyToken, requireRole("RECEPTIONIST", "MANAGER", "DOCTOR")] },
+    (request, reply) => appointmentController.markDailyAppointmentsAsCompleted(request, reply)
+  )
 }
