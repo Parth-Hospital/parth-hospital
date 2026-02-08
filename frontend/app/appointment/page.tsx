@@ -23,6 +23,7 @@ import { PaymentModal } from "@/components/payment-modal"
 import {
   calculateSerialNumberAndTime,
   formatDate,
+  formatDateToYYYYMMDD,
   isBookingWindowOpen,
   getNextAppointmentDate,
   validateAppointmentForm,
@@ -98,7 +99,7 @@ export default function AppointmentPage() {
 
     const completeFormData = {
       ...formData,
-      date: bookingWindow.nextDate.toISOString().split("T")[0],
+      date: formatDateToYYYYMMDD(bookingWindow.nextDate),
       appointmentType: appointmentType!,
     } as AppointmentFormData
 
@@ -124,10 +125,8 @@ export default function AppointmentPage() {
     setIsSubmitting(true)
 
     try {
-      // Format date as datetime string at start of day (00:00:00)
-      const appointmentDate = new Date(bookingWindow.nextDate!)
-      appointmentDate.setHours(0, 0, 0, 0)
-      const dateString = appointmentDate.toISOString()
+      // Format date as YYYY-MM-DD string to ensure correct date is stored regardless of timezone
+      const dateString = formatDateToYYYYMMDD(bookingWindow.nextDate!)
 
       // Call real API
       const appointment = await appointmentApi.createAppointment({
@@ -195,32 +194,32 @@ export default function AppointmentPage() {
     // Calculate serial info from serial number if available
     const serialInfo = isGeneral && serialNumber
       ? {
-          serialNumber,
-          arrivalTime: serialNumber <= 30 ? "11:00" : 
-                      serialNumber <= 60 ? "11:30" :
-                      serialNumber <= 90 ? "12:00" :
-                      serialNumber <= 120 ? "12:30" :
-                      serialNumber <= 150 ? "13:00" :
-                      serialNumber <= 180 ? "13:30" :
-                      serialNumber <= 210 ? "14:00" :
-                      serialNumber <= 240 ? "14:30" :
-                      serialNumber <= 270 ? "15:00" :
-                      serialNumber <= 300 ? "15:30" :
-                      serialNumber <= 330 ? "16:00" :
-                      serialNumber <= 360 ? "16:30" : "17:00",
-          slotTime: serialNumber <= 30 ? "11:00" : 
-                    serialNumber <= 60 ? "11:30" :
-                    serialNumber <= 90 ? "12:00" :
-                    serialNumber <= 120 ? "12:30" :
-                    serialNumber <= 150 ? "13:00" :
-                    serialNumber <= 180 ? "13:30" :
+        serialNumber,
+        arrivalTime: serialNumber <= 30 ? "11:00" :
+          serialNumber <= 60 ? "11:30" :
+            serialNumber <= 90 ? "12:00" :
+              serialNumber <= 120 ? "12:30" :
+                serialNumber <= 150 ? "13:00" :
+                  serialNumber <= 180 ? "13:30" :
                     serialNumber <= 210 ? "14:00" :
-                    serialNumber <= 240 ? "14:30" :
-                    serialNumber <= 270 ? "15:00" :
-                    serialNumber <= 300 ? "15:30" :
-                    serialNumber <= 330 ? "16:00" :
-                    serialNumber <= 360 ? "16:30" : "17:00",
-        }
+                      serialNumber <= 240 ? "14:30" :
+                        serialNumber <= 270 ? "15:00" :
+                          serialNumber <= 300 ? "15:30" :
+                            serialNumber <= 330 ? "16:00" :
+                              serialNumber <= 360 ? "16:30" : "17:00",
+        slotTime: serialNumber <= 30 ? "11:00" :
+          serialNumber <= 60 ? "11:30" :
+            serialNumber <= 90 ? "12:00" :
+              serialNumber <= 120 ? "12:30" :
+                serialNumber <= 150 ? "13:00" :
+                  serialNumber <= 180 ? "13:30" :
+                    serialNumber <= 210 ? "14:00" :
+                      serialNumber <= 240 ? "14:30" :
+                        serialNumber <= 270 ? "15:00" :
+                          serialNumber <= 300 ? "15:30" :
+                            serialNumber <= 330 ? "16:00" :
+                              serialNumber <= 360 ? "16:30" : "17:00",
+      }
       : null
 
     return (
@@ -300,7 +299,7 @@ export default function AppointmentPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Download Ticket */}
                 {appointmentType && (
                   <div className="mb-6">
@@ -446,11 +445,10 @@ export default function AppointmentPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* General Appointment Card */}
               <Card
-                className={`transition-all duration-300 ${
-                  bookingWindow.isOpen && bookingWindow.doctorAvailable && !bookingWindow.isBefore5PM
-                    ? "cursor-pointer hover:shadow-lg"
-                    : "opacity-60 cursor-not-allowed"
-                } ${appointmentType === "general" ? "border-primary border-2" : ""}`}
+                className={`transition-all duration-300 ${bookingWindow.isOpen && bookingWindow.doctorAvailable && !bookingWindow.isBefore5PM
+                  ? "cursor-pointer hover:shadow-lg"
+                  : "opacity-60 cursor-not-allowed"
+                  } ${appointmentType === "general" ? "border-primary border-2" : ""}`}
                 onClick={() =>
                   bookingWindow.isOpen &&
                   bookingWindow.doctorAvailable &&
@@ -500,11 +498,10 @@ export default function AppointmentPage() {
 
               {/* Priority Appointment Card */}
               <Card
-                className={`transition-all duration-300 ${
-                  bookingWindow.isOpen && bookingWindow.doctorAvailable && !bookingWindow.isBefore5PM
-                    ? "cursor-pointer hover:shadow-lg"
-                    : "opacity-60 cursor-not-allowed"
-                } ${appointmentType === "priority" ? "border-primary border-2" : ""}`}
+                className={`transition-all duration-300 ${bookingWindow.isOpen && bookingWindow.doctorAvailable && !bookingWindow.isBefore5PM
+                  ? "cursor-pointer hover:shadow-lg"
+                  : "opacity-60 cursor-not-allowed"
+                  } ${appointmentType === "priority" ? "border-primary border-2" : ""}`}
                 onClick={() =>
                   bookingWindow.isOpen &&
                   bookingWindow.doctorAvailable &&
@@ -754,9 +751,8 @@ export default function AppointmentPage() {
                 ) : (
                   <div className="space-y-3">
                     <div
-                      className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer ${
-                        formData.paymentMethod === "online" ? "border-primary bg-primary/5" : ""
-                      }`}
+                      className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer ${formData.paymentMethod === "online" ? "border-primary bg-primary/5" : ""
+                        }`}
                       onClick={() => handleInputChange("paymentMethod", "online")}
                     >
                       <input
@@ -775,9 +771,8 @@ export default function AppointmentPage() {
                       <div className="text-xl font-bold text-primary">₹500</div>
                     </div>
                     <div
-                      className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer ${
-                        formData.paymentMethod === "pay-at-counter" ? "border-primary bg-primary/5" : ""
-                      }`}
+                      className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer ${formData.paymentMethod === "pay-at-counter" ? "border-primary bg-primary/5" : ""
+                        }`}
                       onClick={() => handleInputChange("paymentMethod", "pay-at-counter")}
                     >
                       <input
@@ -823,7 +818,7 @@ export default function AppointmentPage() {
         </div>
       </div>
       <Footer />
-      
+
       {/* Payment Modal */}
       {appointmentType && (
         <PaymentModal

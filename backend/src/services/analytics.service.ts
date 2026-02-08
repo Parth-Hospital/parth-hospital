@@ -73,7 +73,9 @@ export class AnalyticsService {
     // Total employees
     const totalEmployees = await prisma.user.count({
       where: {
-        role: "EMPLOYEE",
+        role: {
+          not: "DOCTOR",
+        },
         status: "ACTIVE",
       },
     })
@@ -82,6 +84,11 @@ export class AnalyticsService {
     const todayAttendance = await prisma.attendance.findMany({
       where: {
         date: today,
+        user: {
+          role: {
+            not: "DOCTOR",
+          },
+        },
       },
     })
 
@@ -108,7 +115,9 @@ export class AnalyticsService {
     const departmentDistribution = await prisma.user.groupBy({
       by: ["department"],
       where: {
-        role: "EMPLOYEE",
+        role: {
+          not: "DOCTOR",
+        },
         status: "ACTIVE",
       },
       _count: true,
@@ -341,6 +350,11 @@ export class AnalyticsService {
           gte: weekStart,
           lte: weekEnd,
         },
+        user: {
+          role: {
+            not: "DOCTOR",
+          },
+        },
       },
     })
 
@@ -367,7 +381,7 @@ export class AnalyticsService {
       }
       const dayKey = dayMap[dayOfWeek] || "monday"
       const data = trends[dayKey]
-      
+
       if (record.status === "PRESENT") data.present++
       if (record.status === "ABSENT") data.absent++
       if (record.status === "ON_LEAVE") data.onLeave++

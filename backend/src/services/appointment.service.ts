@@ -44,20 +44,20 @@ export class AppointmentService {
 
     // Check if booking window is open (skip in QA mode)
     const enableQAMode = qaMode || this.isQAModeEnabled()
-    
+
     if (!enableQAMode) {
-    const now = new Date()
-    const currentHour = now.getHours()
-    const currentMinute = now.getMinutes()
-    const currentTime = currentHour * 60 + currentMinute
+      const now = new Date()
+      const currentHour = now.getHours()
+      const currentMinute = now.getMinutes()
+      const currentTime = currentHour * 60 + currentMinute
 
-    const windowOpenTime = 17 * 60 // 5 PM
-    const windowCloseTime = 8 * 60 + 15 // 8:15 AM
+      const windowOpenTime = 17 * 60 // 5 PM
+      const windowCloseTime = 8 * 60 + 15 // 8:15 AM
 
-    const isBefore5PM = currentTime < windowOpenTime && currentTime >= windowCloseTime
+      const isBefore5PM = currentTime < windowOpenTime && currentTime >= windowCloseTime
 
-    if (isBefore5PM) {
-      throw new Error("Booking window is not open yet. It opens at 5 PM.")
+      if (isBefore5PM) {
+        throw new Error("Booking window is not open yet. It opens at 5 PM.")
       }
     }
 
@@ -85,7 +85,7 @@ export class AppointmentService {
       // Use date range to ensure we count all appointments for the day
       const nextDay = new Date(appointmentDate)
       nextDay.setDate(nextDay.getDate() + 1)
-      
+
       const totalBookings = await prisma.appointment.count({
         where: {
           date: {
@@ -105,19 +105,19 @@ export class AppointmentService {
     // Sanitize user inputs
     const sanitizedData = {
       patientName: sanitizeInput(data.patientName, 100),
-        patientAge: data.patientAge,
+      patientAge: data.patientAge,
       patientPhone: sanitizePhone(data.patientPhone),
       patientCity: sanitizeInput(data.patientCity, 100),
-        date: appointmentDate,
-        appointmentType: data.appointmentType,
+      date: appointmentDate,
+      appointmentType: data.appointmentType,
       preferredTime: data.preferredTime ? sanitizeInput(data.preferredTime, 10) : null,
-        paymentMethod: data.paymentMethod,
+      paymentMethod: data.paymentMethod,
       bookingType: "ONLINE" as const,
       reason: data.reason ? sanitizeText(data.reason) : null,
-        serialNumber,
-        arrivalTime,
-        slotTime,
-        createdBy: userId,
+      serialNumber,
+      arrivalTime,
+      slotTime,
+      createdBy: userId,
     }
 
     // Create appointment
@@ -141,7 +141,7 @@ export class AppointmentService {
     // Use date range to ensure we count all appointments for the day
     const nextDay = new Date(appointmentDate)
     nextDay.setDate(nextDay.getDate() + 1)
-    
+
     const totalBookings = await prisma.appointment.count({
       where: {
         date: {
@@ -257,6 +257,27 @@ export class AppointmentService {
     return prisma.appointment.update({
       where: { id },
       data: { status },
+    })
+  }
+
+  async markDailyAppointmentsAsCompleted(date: Date) {
+    const targetDate = new Date(date)
+    targetDate.setHours(0, 0, 0, 0)
+
+    // Update all non-cancelled appointments for the day to COMPLETED
+    return prisma.appointment.updateMany({
+      where: {
+        date: {
+          gte: targetDate,
+          lt: new Date(targetDate.getTime() + 24 * 60 * 60 * 1000),
+        },
+        status: {
+          not: "CANCELLED",
+        },
+      },
+      data: {
+        status: "COMPLETED",
+      },
     })
   }
 }
