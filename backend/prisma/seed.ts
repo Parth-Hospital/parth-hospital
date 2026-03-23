@@ -18,7 +18,7 @@ async function main() {
 
     // For other roles, find the next available number
     let nextNumber = 2 // Start from 2 since EMP01 is for doctor
-    
+
     // Find the first available number
     while (assignedIds.has(`EMP${String(nextNumber).padStart(2, "0")}`)) {
       nextNumber++
@@ -98,9 +98,9 @@ async function main() {
 
   // Create Doctor (always gets EMP01)
   await createUserWithEmployee(
-    "Dr. Subash Singh",
+    "Dr. Ashish Bharadwaj",
     "doctor@parthhospital.co.in",
-    "doctor123",
+    "doctor@111",
     "9876543210",
     "DOCTOR",
     "Orthopedics",
@@ -112,7 +112,7 @@ async function main() {
   await createUserWithEmployee(
     "Rajesh Kumar",
     "manager@parthhospital.co.in",
-    "manager123",
+    "manager@111",
     "9876543211",
     "MANAGER",
     "Administration",
@@ -124,7 +124,7 @@ async function main() {
   await createUserWithEmployee(
     "Priya Sharma",
     "accountant@parthhospital.co.in",
-    "accountant123",
+    "accountant@111",
     "9876543212",
     "ACCOUNTANT",
     "Finance",
@@ -136,7 +136,7 @@ async function main() {
   await createUserWithEmployee(
     "Anjali Verma",
     "receptionist@parthhospital.co.in",
-    "receptionist123",
+    "receptionist@111",
     "9876543213",
     "RECEPTIONIST",
     "Reception",
@@ -146,11 +146,13 @@ async function main() {
 
   console.log("\n🎉 Seeding completed!")
   console.log("\n📝 Admin Credentials (for Admin Dashboard Login):")
-  console.log("   Doctor: doctor@parthhospital.co.in / doctor123")
-  console.log("   Manager: manager@parthhospital.co.in / manager123")
-  console.log("   Accountant: accountant@parthhospital.co.in / accountant123")
-  console.log("   Receptionist: receptionist@parthhospital.co.in / receptionist123")
-  console.log("\n💡 Note: Generate employee credentials from Manager/Doctor dashboard to enable Employee Dashboard login.")
+  console.log("   Doctor: doctor@parthhospital.co.in / doctor@111")
+  console.log("   Manager: manager@parthhospital.co.in / manager@111")
+  console.log("   Accountant: accountant@parthhospital.co.in / accountant@111")
+  console.log("   Receptionist: receptionist@parthhospital.co.in / receptionist@111")
+  console.log(
+    "\n💡 Note: Generate employee credentials from Manager/Doctor dashboard to enable Employee Dashboard login."
+  )
 }
 
 main()
