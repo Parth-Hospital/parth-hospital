@@ -40,12 +40,12 @@ export default function AccountantDashboard() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
-                    <AlertCircle size={16} /> Pending Payment
+                    <AlertCircle size={16} /> Total Online Payment
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-bold text-accent">₹0</p>
-                  <p className="text-xs text-muted-foreground mt-2">All cleared</p>
+                  <p className="text-3xl font-bold text-accent">₹50,000</p>
+                  <p className="text-xs text-muted-foreground mt-2"> online payment</p>
                 </CardContent>
               </Card>
             </div>

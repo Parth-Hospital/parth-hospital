@@ -74,7 +74,7 @@ export function generateTimeSlots(
   const slotDuration = 30; // minutes
   const patientsPerSlot = 30;
 
-  const dateString = date.toISOString().split("T")[0];
+  const dateString = formatDateToYYYYMMDD(date);
 
   for (let hour = startHour; hour < endHour; hour++) {
     for (let minute = 0; minute < 60; minute += slotDuration) {
@@ -132,6 +132,17 @@ export function formatDate(date: Date): string {
     month: "long",
     day: "numeric",
   });
+}
+
+/**
+ * Format date to YYYY-MM-DD string (preserving local time)
+ * Fixes timezone issues where toISOString() might return previous day
+ */
+export function formatDateToYYYYMMDD(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /**

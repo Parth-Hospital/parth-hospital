@@ -159,7 +159,7 @@ export function Footer() {
           </div>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-3 text-white/60"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -181,7 +181,7 @@ export function Footer() {
               className="h-10 w-auto"
             />
           </Link>
-        </motion.div>
+        </motion.div> */}
       </div>
     </footer>
   );

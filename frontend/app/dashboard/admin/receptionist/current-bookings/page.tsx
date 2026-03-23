@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Search, Plus, Calendar, Clock, Hash, Loader2 } from "lucide-react"
+import { Search, Plus, Calendar, Clock, Hash, Loader2, RefreshCw, CheckCircle } from "lucide-react"
 import { calculateSerialNumberAndTime } from "@/lib/utils/appointment"
 import { appointmentApi, Appointment } from "@/lib/api/appointment"
 import { useToast } from "@/hooks/use-toast"
@@ -26,6 +26,7 @@ export default function CurrentBookingsPage() {
   const [loading, setLoading] = useState(true)
   const [addingOffline, setAddingOffline] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null)
+  const [completingAll, setCompletingAll] = useState(false)
   const { toast } = useToast()
 
   const today = new Date().toISOString().split("T")[0]
@@ -91,6 +92,26 @@ export default function CurrentBookingsPage() {
     }
   }
 
+  const handleCompleteAll = async () => {
+    try {
+      setCompletingAll(true)
+      const response = await appointmentApi.markDailyAppointmentsAsCompleted(today)
+      toast({
+        title: "Success",
+        description: `Successfully marked ${response.count} appointments as completed`,
+      })
+      await loadBookings()
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to complete all appointments",
+        variant: "destructive",
+      })
+    } finally {
+      setCompletingAll(false)
+    }
+  }
+
   const filteredBookings = bookings.filter((booking) => {
     if (!searchQuery) return true
     const query = searchQuery.toLowerCase()
@@ -134,10 +155,23 @@ export default function CurrentBookingsPage() {
               Manage today's appointments - Online and Offline bookings
             </p>
           </div>
-          <Button onClick={() => setShowOfflineModal(true)}>
-            <Plus className="w-4 h-4 " />
-            Add Offline Booking
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" onClick={loadBookings} disabled={loading}>
+              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleCompleteAll}
+              disabled={completingAll || loading || bookings.length === 0}
+            >
+              {completingAll ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+              Complete All
+            </Button>
+            <Button onClick={() => setShowOfflineModal(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Offline Booking
+            </Button>
+          </div>
         </div>
 
         {/* Summary Cards */}

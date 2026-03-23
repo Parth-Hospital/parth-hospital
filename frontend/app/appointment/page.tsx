@@ -33,6 +33,7 @@ import { PaymentModal } from "@/components/payment-modal";
 import {
   calculateSerialNumberAndTime,
   formatDate,
+  formatDateToYYYYMMDD,
   isBookingWindowOpen,
   getNextAppointmentDate,
   validateAppointmentForm,
@@ -115,7 +116,7 @@ export default function AppointmentPage() {
 
     const completeFormData = {
       ...formData,
-      date: bookingWindow.nextDate.toISOString().split("T")[0],
+      date: formatDateToYYYYMMDD(bookingWindow.nextDate),
       appointmentType: appointmentType!,
     } as AppointmentFormData;
 
@@ -141,10 +142,8 @@ export default function AppointmentPage() {
     setIsSubmitting(true);
 
     try {
-      // Format date as datetime string at start of day (00:00:00)
-      const appointmentDate = new Date(bookingWindow.nextDate!);
-      appointmentDate.setHours(0, 0, 0, 0);
-      const dateString = appointmentDate.toISOString();
+      // Format date as YYYY-MM-DD string to ensure correct date is stored regardless of timezone
+      const dateString = formatDateToYYYYMMDD(bookingWindow.nextDate!);
 
       // Call real API
       const appointment = await appointmentApi.createAppointment({
