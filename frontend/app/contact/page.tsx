@@ -392,7 +392,7 @@ export default function ContactPage() {
                 asChild
               >
                 <a
-                  href="https://maps.app.goo.gl/xFDXQcP3EpSSo6io8"
+                  href="https://www.google.com/maps/search/polytechnic+gurugram"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -409,7 +409,7 @@ export default function ContactPage() {
               className="lg:col-span-8 h-[500px] rounded-[40px] overflow-hidden relative soft-depth border border-border/50"
             >
               <iframe
-                src="https://www.google.com/maps?q=Parth+Hospital,Gurugram&output=embed"
+                src="https://www.google.com/maps/embed?pb=!1m12!1m8!1m3!1d320857.76592777076!2d76.64946616757425!3d28.63860576374856!3m2!1i1024!2i768!4f13.1!2m1!1spolytechnic%20gurugram!5e0!3m2!1sen!2sin!4v1774267332597!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

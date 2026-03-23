@@ -80,7 +80,7 @@ export function GoogleReviews() {
             Hospital
           </p>
           <a
-            href="https://www.google.com/maps/place/Parth+Hospital/@25.7366524,82.6735418,17z/data=!4m16!1m9!3m8!1s0x39903bb8da5fca85:0xfdd6dc1b711b1787!2sParth+Hospital!8m2!3d25.7366524!4d82.6761167!9m1!1b1!16s%2Fg%2F11gd4hx_7_!3m5!1s0x39903bb8da5fca85:0xfdd6dc1b711b1787!8m2!3d25.7366524!4d82.6761167!16s%2Fg%2F11gd4hx_7_?entry=ttu&g_ep=EgoyMDI2MDEwNi4wIKXMDSoASAFQAw%3D%3D"
+            href="https://www.google.com/maps/search/polytechnic+gurugram"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-primary hover:text-secondary transition-colors mt-4"
