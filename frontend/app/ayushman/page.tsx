@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { FloatingActions } from "@/components/floating-actions"
-import { Shield, CheckCircle2, FileText, Phone } from "lucide-react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { FloatingActions } from "@/components/floating-actions";
+import { Shield, CheckCircle2, FileText, Phone } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function AyushmanPage() {
   return (
@@ -32,8 +32,9 @@ export default function AyushmanPage() {
               <span className="text-blue-600">PM-JAY Scheme</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Parth Hospital proudly accepts Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY) cards. 
-              Get quality healthcare services covered under the government health insurance scheme.
+              Parth Hospital proudly accepts Ayushman Bharat Pradhan Mantri Jan
+              Arogya Yojana (AB-PMJAY) cards. Get quality healthcare services
+              covered under the government health insurance scheme.
             </p>
           </motion.div>
         </div>
@@ -52,16 +53,21 @@ export default function AyushmanPage() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <Shield className="w-12 h-12 text-blue-600" />
-                <h2 className="text-4xl font-bold text-foreground">What is Ayushman Bharat?</h2>
+                <h2 className="text-4xl font-bold text-foreground">
+                  What is Ayushman Bharat?
+                </h2>
               </div>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY) is the world's largest health insurance scheme 
-                launched by the Government of India. It provides health coverage of up to ₹5 lakh per family per year for 
-                secondary and tertiary care hospitalization.
+                Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY) is
+                the world's largest health insurance scheme launched by the
+                Government of India. It provides health coverage of up to ₹5
+                lakh per family per year for secondary and tertiary care
+                hospitalization.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                The scheme covers over 10 crore poor and vulnerable families (approximately 50 crore beneficiaries) 
-                providing them access to quality healthcare services at empaneled hospitals across India.
+                The scheme covers over 10 crore poor and vulnerable families
+                (approximately 50 crore beneficiaries) providing them access to
+                quality healthcare services at empaneled hospitals across India.
               </p>
             </div>
             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 text-white">
@@ -99,9 +105,12 @@ export default function AyushmanPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-foreground mb-4">Services Covered at Parth Hospital</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Services Covered at Parth Hospital
+            </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              We provide comprehensive healthcare services under the Ayushman Bharat scheme
+              We provide comprehensive healthcare services under the Ayushman
+              Bharat scheme
             </p>
           </motion.div>
 
@@ -140,7 +149,9 @@ export default function AyushmanPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-foreground mb-4">How to Use Your Ayushman Card</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              How to Use Your Ayushman Card
+            </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Simple steps to avail cashless treatment at Parth Hospital
             </p>
@@ -156,12 +167,14 @@ export default function AyushmanPage() {
               {
                 step: "02",
                 title: "Get Your Card",
-                description: "Obtain your Ayushman Bharat card from authorized centers",
+                description:
+                  "Obtain your Ayushman Bharat card from authorized centers",
               },
               {
                 step: "03",
                 title: "Visit Hospital",
-                description: "Come to Parth Hospital with your card and valid ID",
+                description:
+                  "Come to Parth Hospital with your card and valid ID",
               },
               {
                 step: "04",
@@ -177,9 +190,13 @@ export default function AyushmanPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="text-4xl font-bold text-blue-600 mb-3">{item.step}</div>
+                <div className="text-4xl font-bold text-blue-600 mb-3">
+                  {item.step}
+                </div>
                 <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {item.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -195,20 +212,30 @@ export default function AyushmanPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold mb-4">Need Help with Ayushman Card?</h2>
+            <h2 className="text-4xl font-bold mb-4">
+              Need Help with Ayushman Card?
+            </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Our team is here to assist you with the Ayushman Bharat scheme and answer any questions you may have.
+              Our team is here to assist you with the Ayushman Bharat scheme and
+              answer any questions you may have.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="bg-white text-blue-600 hover:bg-gray-100 border-white">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white text-blue-600 hover:bg-gray-100 border-white"
+                >
                   <Phone className="w-4 h-4 mr-2" />
                   Contact Us
                 </Button>
               </Link>
-              <a href="tel:+917860115757">
-                <Button size="lg" className="bg-white/10 text-white hover:bg-white/20 border border-white/30">
-                  Call: +91 78601 15757
+              <a href="tel:+919940615757">
+                <Button
+                  size="lg"
+                  className="bg-white/10 text-white hover:bg-white/20 border border-white/30"
+                >
+                  Call: +91 99406 15757
                 </Button>
               </a>
             </div>
@@ -218,5 +245,5 @@ export default function AyushmanPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

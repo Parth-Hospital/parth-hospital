@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { FloatingActions } from "@/components/floating-actions"
-import Image from "next/image"
-import { CheckCircle2, Award, History, Heart } from "lucide-react"
-import { motion } from "framer-motion"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { FloatingActions } from "@/components/floating-actions";
+import Image from "next/image";
+import { CheckCircle2, Award, History, Heart } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
@@ -28,7 +28,9 @@ export default function AboutPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85] mb-6 sm:mb-8">
               HEALING
               <br />
-              <span className="text-foreground italic font-light opacity-80">LEGACY.</span>
+              <span className="text-foreground italic font-light opacity-80">
+                LEGACY.
+              </span>
             </h1>
           </motion.div>
 
@@ -40,12 +42,13 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <p className="text-xl sm:text-2xl md:text-3xl font-light leading-relaxed text-muted-foreground">
-                Parth Hospital was founded with a singular vision: to bring world-class healthcare to the doorstep of
-                Jaunpur.
+                Parth Hospital was founded with a singular vision: to bring
+                world-class healthcare to the doorstep of Gurugram.
               </p>
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                For over two decades, we have been more than just a medical facility. We have been a pillar of trust,
-                combining advanced surgical expertise with the empathy that every patient deserves.
+                For over two decades, we have been more than just a medical
+                facility. We have been a pillar of trust, combining advanced
+                surgical expertise with the empathy that every patient deserves.
               </p>
             </motion.div>
             <motion.div
@@ -55,13 +58,15 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                Our commitment to excellence extends beyond medical procedures. We believe in building lasting
-                relationships with our patients, understanding their unique needs, and providing personalized care that
-                makes a difference.
+                Our commitment to excellence extends beyond medical procedures.
+                We believe in building lasting relationships with our patients,
+                understanding their unique needs, and providing personalized
+                care that makes a difference.
               </p>
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                With state-of-the-art facilities and a team of dedicated professionals, we continue to set new
-                standards in orthopedic care and patient satisfaction.
+                With state-of-the-art facilities and a team of dedicated
+                professionals, we continue to set new standards in orthopedic
+                care and patient satisfaction.
               </p>
             </motion.div>
           </div>
@@ -79,7 +84,12 @@ export default function AboutPage() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <Image src="/modern-hospital-interior-lobby.jpg" alt="Hospital Interior" fill className="object-cover" />
+              <Image
+                src="/modern-hospital-interior-lobby.jpg"
+                alt="Hospital Interior"
+                fill
+                className="object-cover"
+              />
             </motion.div>
             <div className="md:col-span-4 grid grid-cols-1 md:grid-rows-2 gap-6 h-auto md:h-full">
               <motion.div
@@ -89,7 +99,12 @@ export default function AboutPage() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
               >
-                <Image src="/hospital-corridor-modern.jpg" alt="Operating Theater" fill className="object-cover" />
+                <Image
+                  src="/hospital-corridor-modern.jpg"
+                  alt="Operating Theater"
+                  fill
+                  className="object-cover"
+                />
               </motion.div>
               <motion.div
                 className="relative rounded-3xl overflow-hidden soft-depth bg-primary flex flex-col justify-center p-6 md:p-8 text-white min-h-[200px] md:min-h-0"
@@ -99,8 +114,12 @@ export default function AboutPage() {
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
               >
                 <Award className="w-10 h-10 md:w-12 md:h-12 text-accent mb-4 md:mb-6" />
-                <h3 className="text-xl md:text-2xl font-bold mb-2">20+ Years</h3>
-                <p className="text-white/60 text-sm">Of continuous medical excellence and community service.</p>
+                <h3 className="text-xl md:text-2xl font-bold mb-2">
+                  20+ Years
+                </h3>
+                <p className="text-white/60 text-sm">
+                  Of continuous medical excellence and community service.
+                </p>
               </motion.div>
             </div>
           </div>
@@ -130,7 +149,7 @@ export default function AboutPage() {
                 icon: History,
                 title: "Our Mission",
                 content:
-                  "To provide accessible, high-quality, and compassionate healthcare services that exceed patient expectations and foster a healthier community in Jaunpur.",
+                  "To provide accessible, high-quality, and compassionate healthcare services that exceed patient expectations and foster a healthier community in Gurugram.",
               },
               {
                 icon: Heart,
@@ -147,10 +166,10 @@ export default function AboutPage() {
                 icon: Award,
                 title: "Our Vision",
                 content:
-                  "To be the most trusted and sought-after healthcare destination in Uttar Pradesh, recognized for medical precision and humanitarian service.",
+                  "To be the most trusted and sought-after healthcare destination in Haryana, recognized for medical precision and humanitarian service.",
               },
             ].map((section, i) => {
-              const Icon = section.icon
+              const Icon = section.icon;
               return (
                 <motion.div
                   key={i}
@@ -160,22 +179,31 @@ export default function AboutPage() {
                   }}
                   className="space-y-6"
                 >
-                  <Icon className={`w-10 h-10 ${i === 1 ? "text-accent" : "text-primary"}`} />
-                  <h2 className="text-4xl font-medium tracking-tight">{section.title}</h2>
+                  <Icon
+                    className={`w-10 h-10 ${i === 1 ? "text-accent" : "text-primary"}`}
+                  />
+                  <h2 className="text-4xl font-medium tracking-tight">
+                    {section.title}
+                  </h2>
                   {section.isList ? (
                     <ul className="space-y-4">
                       {section.items?.map((value, j) => (
-                        <li key={j} className="flex gap-3 items-center text-muted-foreground font-medium">
+                        <li
+                          key={j}
+                          className="flex gap-3 items-center text-muted-foreground font-medium"
+                        >
                           <CheckCircle2 className="w-5 h-5 text-accent" />
                           {value}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-lg text-muted-foreground leading-relaxed">{section.content}</p>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {section.content}
+                    </p>
                   )}
                 </motion.div>
-              )
+              );
             })}
           </div>
         </div>
@@ -183,5 +211,5 @@ export default function AboutPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

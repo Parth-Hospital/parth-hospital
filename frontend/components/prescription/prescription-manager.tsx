@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import { searchMedicines, MedicineSalt } from "@/lib/data/medicines";
 import { PrescriptionTemplate } from "./prescription-template";
 
@@ -25,8 +26,9 @@ export function PrescriptionManager() {
   const [medicines, setMedicines] = useState<PrescriptionItem[]>([]);
   const [patientName, setPatientName] = useState("");
   const [patientAge, setPatientAge] = useState("");
-  const [doctorName, setDoctorName] = useState("Dr. Subash Singh");
+  const [doctorName, setDoctorName] = useState("Dr. Ashish Bharadwaj");
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
   const printAreaRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -168,6 +170,19 @@ export function PrescriptionManager() {
 
   // Add medicine to prescription
   const handleAddMedicine = (medicine: MedicineSalt) => {
+    // Check for duplicates
+    if (medicines.some((m) => m.id === medicine.id)) {
+      toast({
+        title: "Medicine already added",
+        description: `${medicine.saltName} is already in the prescription.`,
+        variant: "destructive",
+      });
+      setSearchQuery("");
+      setSearchResults([]);
+      setSelectedIndex(-1);
+      return;
+    }
+
     const newMedicine: PrescriptionItem = {
       id: medicine.id,
       saltName: medicine.saltName,

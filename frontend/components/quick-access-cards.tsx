@@ -1,14 +1,24 @@
-"use client"
+"use client";
 
-import { Stethoscope, AlertCircle, Scale as Scalpel, Zap, Heart, Droplets, Scan, Microscope } from "lucide-react"
-import { motion } from "framer-motion"
+import {
+  Stethoscope,
+  AlertCircle,
+  Scale as Scalpel,
+  Zap,
+  Heart,
+  Droplets,
+  Scan,
+  Microscope,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 export function QuickAccessCards() {
   const services = [
     {
       icon: Stethoscope,
       title: "OPD Consultation",
-      description: "Schedule with Dr. Subash Singh for orthopedic evaluation",
+      description:
+        "Schedule with Dr. Ashish Bharadwaj for orthopedic evaluation",
       color: "bg-primary",
     },
     {
@@ -53,7 +63,7 @@ export function QuickAccessCards() {
       description: "Post-surgery rehabilitation and recovery care",
       color: "bg-orange-500",
     },
-  ]
+  ];
 
   return (
     <section className="py-16 bg-supporting-light/50">
@@ -65,13 +75,17 @@ export function QuickAccessCards() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Our Services</h2>
-          <p className="text-muted-foreground text-lg">Quick access to hospital services and facilities</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Our Services
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            Quick access to hospital services and facilities
+          </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {services.map((service, index) => {
-            const Icon = service.icon
+            const Icon = service.icon;
             return (
               <motion.div
                 key={`service-${service.title}-${index}`}
@@ -95,10 +109,10 @@ export function QuickAccessCards() {
                   </p>
                 </div>
               </motion.div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }

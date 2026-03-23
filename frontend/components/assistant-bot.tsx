@@ -1,31 +1,43 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ChevronRight, ChevronLeft, Phone, MapPin, Clock, Mail, Calendar, Stethoscope, User, MessageCircle, X } from "lucide-react"
-import botMenuData from "@/lib/data/bot-menu.json"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronRight,
+  ChevronLeft,
+  Phone,
+  MapPin,
+  Clock,
+  Mail,
+  Calendar,
+  Stethoscope,
+  User,
+  MessageCircle,
+  X,
+} from "lucide-react";
+import botMenuData from "@/lib/data/bot-menu.json";
+import { useRouter } from "next/navigation";
 
 interface AssistantBotProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 interface MenuItem {
-  id: string
-  label: string
-  icon?: string
-  action?: string
-  href?: string
-  phone?: string
-  email?: string
-  message?: string
-  submenu?: MenuItem[]
+  id: string;
+  label: string;
+  icon?: string;
+  action?: string;
+  href?: string;
+  phone?: string;
+  email?: string;
+  message?: string;
+  submenu?: MenuItem[];
 }
 
 interface ChatMessage {
-  type: "user" | "bot"
-  content: string
-  timestamp: Date
+  type: "user" | "bot";
+  content: string;
+  timestamp: Date;
 }
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -36,55 +48,57 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   clock: Clock,
   "map-pin": MapPin,
   mail: Mail,
-}
+};
 
 export function AssistantBot({ onClose }: AssistantBotProps) {
-  const [currentMenu, setCurrentMenu] = useState<MenuItem[]>(botMenuData.mainMenu)
-  const [menuStack, setMenuStack] = useState<MenuItem[][]>([])
-  const [showChat, setShowChat] = useState(false)
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
-  const router = useRouter()
+  const [currentMenu, setCurrentMenu] = useState<MenuItem[]>(
+    botMenuData.mainMenu,
+  );
+  const [menuStack, setMenuStack] = useState<MenuItem[][]>([]);
+  const [showChat, setShowChat] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const router = useRouter();
 
   const handleItemClick = (item: MenuItem) => {
     if (item.submenu && item.submenu.length > 0) {
       // Navigate to submenu
-      setMenuStack([...menuStack, currentMenu])
-      setCurrentMenu(item.submenu)
+      setMenuStack([...menuStack, currentMenu]);
+      setCurrentMenu(item.submenu);
     } else if (item.action === "navigate" && item.href) {
-      router.push(item.href)
-      onClose()
+      router.push(item.href);
+      onClose();
     } else if (item.action === "call" && item.phone) {
-      window.location.href = `tel:${item.phone}`
+      window.location.href = `tel:${item.phone}`;
     } else if (item.action === "email" && item.email) {
-      window.location.href = `mailto:${item.email}`
+      window.location.href = `mailto:${item.email}`;
     } else if (item.action === "info" && item.message) {
       // Show message in chat instead of alert
       setChatMessages([
         { type: "user", content: item.label, timestamp: new Date() },
         { type: "bot", content: item.message, timestamp: new Date() },
-      ])
-      setShowChat(true)
+      ]);
+      setShowChat(true);
     }
-  }
+  };
 
   const handleBack = () => {
     if (showChat) {
-      setShowChat(false)
-      setChatMessages([])
+      setShowChat(false);
+      setChatMessages([]);
     } else if (menuStack.length > 0) {
-      const previousMenu = menuStack[menuStack.length - 1]
-      setMenuStack(menuStack.slice(0, -1))
-      setCurrentMenu(previousMenu)
+      const previousMenu = menuStack[menuStack.length - 1];
+      setMenuStack(menuStack.slice(0, -1));
+      setCurrentMenu(previousMenu);
     } else {
-      onClose()
+      onClose();
     }
-  }
+  };
 
   const Icon = ({ name }: { name?: string }) => {
-    if (!name) return null
-    const IconComponent = iconMap[name] || ChevronRight
-    return <IconComponent className="w-4 h-4" />
-  }
+    if (!name) return null;
+    const IconComponent = iconMap[name] || ChevronRight;
+    return <IconComponent className="w-4 h-4" />;
+  };
 
   return (
     <motion.div
@@ -142,7 +156,9 @@ export function AssistantBot({ onClose }: AssistantBotProps) {
                     : "bg-muted text-foreground"
                 }`}
               >
-                <p className="text-sm leading-relaxed whitespace-pre-line">{message.content}</p>
+                <p className="text-sm leading-relaxed whitespace-pre-line">
+                  {message.content}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -159,7 +175,9 @@ export function AssistantBot({ onClose }: AssistantBotProps) {
               >
                 <div className="flex items-center gap-3">
                   <Icon name={item.icon} />
-                  <span className="text-sm font-medium text-foreground">{item.label}</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {item.label}
+                  </span>
                 </div>
                 {item.submenu && item.submenu.length > 0 && (
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -174,12 +192,14 @@ export function AssistantBot({ onClose }: AssistantBotProps) {
       <div className="border-t border-border/50 p-3 bg-muted/30">
         <p className="text-xs text-center text-muted-foreground">
           Need immediate help? Call{" "}
-          <a href="tel:+917860115757" className="text-primary font-semibold hover:underline">
-            +91 78601 15757
+          <a
+            href="tel:+919940615757"
+            className="text-primary font-semibold hover:underline"
+          >
+            +91 99406 15757
           </a>
         </p>
       </div>
     </motion.div>
-  )
+  );
 }
-

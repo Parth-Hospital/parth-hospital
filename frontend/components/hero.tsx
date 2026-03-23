@@ -1,47 +1,50 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Check, MapPin, ArrowRight, Loader2 } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { doctorAvailabilityApi } from "@/lib/api/doctorAvailability"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Check, MapPin, ArrowRight, Loader2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { doctorAvailabilityApi } from "@/lib/api/doctorAvailability";
 
 export function Hero() {
-  const [availabilityMessage, setAvailabilityMessage] = useState<string>("Available Today - 11 AM to 5 PM")
-  const [loadingAvailability, setLoadingAvailability] = useState(true)
-  const [isNavigating, setIsNavigating] = useState(false)
-  const router = useRouter()
+  const [availabilityMessage, setAvailabilityMessage] = useState<string>(
+    "Available Today - 11 AM to 5 PM",
+  );
+  const [loadingAvailability, setLoadingAvailability] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const checkTodayAvailability = async () => {
       try {
-        setLoadingAvailability(true)
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
-        const todayStr = today.toISOString().split("T")[0]
+        setLoadingAvailability(true);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayStr = today.toISOString().split("T")[0];
 
-        const availability = await doctorAvailabilityApi.getAvailability(todayStr)
+        const availability =
+          await doctorAvailabilityApi.getAvailability(todayStr);
         // Default to available if no record exists
-        const isAvailable = availability?.available !== false
+        const isAvailable = availability?.available !== false;
 
         if (isAvailable) {
-          setAvailabilityMessage("Available Today - 11 AM to 5 PM")
+          setAvailabilityMessage("Available Today - 11 AM to 5 PM");
         } else {
-          setAvailabilityMessage("Not Available Today")
+          setAvailabilityMessage("Not Available Today");
         }
       } catch (error) {
         // Default to available on error
-        setAvailabilityMessage("Available Today - 11 AM to 5 PM")
+        setAvailabilityMessage("Available Today - 11 AM to 5 PM");
       } finally {
-        setLoadingAvailability(false)
+        setLoadingAvailability(false);
       }
-    }
+    };
 
-    checkTodayAvailability()
-  }, [])
+    checkTodayAvailability();
+  }, []);
 
   return (
     <section className="relative pt-28 pb-24 sm:pb-12 overflow-hidden bg-white">
@@ -69,7 +72,9 @@ export function Hero() {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
                 </span>
               )}
-              <span className="text-sm font-medium text-secondary">{availabilityMessage}</span>
+              <span className="text-sm font-medium text-secondary">
+                {availabilityMessage}
+              </span>
             </motion.div>
 
             {/* Headline - answers: what treatment is provided? */}
@@ -84,8 +89,9 @@ export function Hero() {
                 <span className="block text-secondary">You Can Trust</span>
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground font-light leading-relaxed">
-                Advanced bone and joint care by Dr. Subash Singh with 20+ years of specialized experience. Fracture
-                management, joint replacement, and orthopedic surgery all in one place.
+                Advanced bone and joint care by Dr. Ashish Bharadwaj with 20+
+                years of specialized experience. Fracture management, joint
+                replacement, and orthopedic surgery all in one place.
               </p>
             </motion.div>
 
@@ -98,11 +104,15 @@ export function Hero() {
             >
               <div className="flex items-center gap-3 group">
                 <Check className="w-5 h-5 text-secondary shrink-0 group-hover:scale-110 transition-transform" />
-                <span className="text-sm font-medium">20+ Years Experience</span>
+                <span className="text-sm font-medium">
+                  20+ Years Experience
+                </span>
               </div>
               <div className="flex items-center gap-3 group">
                 <Check className="w-5 h-5 text-secondary shrink-0 group-hover:scale-110 transition-transform" />
-                <span className="text-sm font-medium">10,000+ Successful Cases</span>
+                <span className="text-sm font-medium">
+                  10,000+ Successful Cases
+                </span>
               </div>
             </motion.div>
 
@@ -117,11 +127,11 @@ export function Hero() {
                 size="lg"
                 className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-lg px-8 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group relative overflow-hidden"
                 onClick={() => {
-                  setIsNavigating(true)
+                  setIsNavigating(true);
                   // Add a small delay to show loading state before navigation
                   setTimeout(() => {
-                    router.push("/appointment")
-                  }, 150)
+                    router.push("/appointment");
+                  }, 150);
                 }}
                 disabled={isNavigating}
               >
@@ -142,8 +152,13 @@ export function Hero() {
                 variant="outline"
                 className="w-full sm:w-auto border-2 border-foreground/20 rounded-lg text-foreground hover:bg-foreground/5 hover:text-foreground bg-transparent hover:border-primary/40 transition-all"
                 onClick={() => {
-                  const address = encodeURIComponent("Parth Hospital, Polytechnic chauraha, Jaunpur, Uttar Pradesh 222002")
-                  window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, "_blank")
+                  const address = encodeURIComponent(
+                    "Parth Hospital, Polytechnic chauraha, Gurugram, Haryana 122001",
+                  );
+                  window.open(
+                    `https://www.google.com/maps/search/?api=1&query=${address}`,
+                    "_blank",
+                  );
                 }}
               >
                 <MapPin className="w-4 h-4" />
@@ -158,13 +173,15 @@ export function Hero() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              <p className="text-sm text-muted-foreground mb-2">Need immediate help?</p>
-              <a href="tel:+917860115757">
+              <p className="text-sm text-muted-foreground mb-2">
+                Need immediate help?
+              </p>
+              <a href="tel:+919940615757">
                 <Button
                   variant="ghost"
                   className="text-primary font-semibold p-0 h-auto hover:bg-transparent hover:text-secondary transition-colors"
                 >
-                  Call Hospital: +91 78601 15757
+                  Call Hospital: +91 99406 15757
                 </Button>
               </a>
             </motion.div>
@@ -189,5 +206,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }

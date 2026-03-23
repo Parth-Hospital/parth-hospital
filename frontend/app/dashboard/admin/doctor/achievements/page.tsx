@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { AdminLayout } from "@/components/layouts/admin-layout"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Plus, Trophy, Loader2, Trash2 } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react";
+import { AdminLayout } from "@/components/layouts/admin-layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Plus, Trophy, Loader2, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { achievementApi, Achievement } from "@/lib/api/achievement"
-import { useToast } from "@/hooks/use-toast"
+} from "@/components/ui/select";
+import { achievementApi, Achievement } from "@/lib/api/achievement";
+import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,46 +28,46 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
-type AchievementType = "DOCTOR" | "HOSPITAL"
+type AchievementType = "DOCTOR" | "HOSPITAL";
 
 export default function AchievementsPage() {
-  const [activeTab, setActiveTab] = useState<AchievementType>("DOCTOR")
-  const [achievements, setAchievements] = useState<Achievement[]>([])
-  const [loading, setLoading] = useState(true)
-  const [isAdding, setIsAdding] = useState(false)
+  const [activeTab, setActiveTab] = useState<AchievementType>("DOCTOR");
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   const [newAchievement, setNewAchievement] = useState({
     title: "",
     description: "",
     date: new Date().toISOString().split("T")[0],
     type: "DOCTOR" as AchievementType,
-  })
-  const [submitting, setSubmitting] = useState(false)
-  const [deleting, setDeleting] = useState<string | null>(null)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [itemToDelete, setItemToDelete] = useState<string | null>(null)
-  const { toast } = useToast()
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
-    loadAchievements(activeTab)
-  }, [activeTab])
+    loadAchievements(activeTab);
+  }, [activeTab]);
 
   const loadAchievements = async (type: AchievementType) => {
     try {
-      setLoading(true)
-      const data = await achievementApi.getAchievements(type)
-      setAchievements(data)
+      setLoading(true);
+      const data = await achievementApi.getAchievements(type);
+      setAchievements(data);
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message || "Failed to load achievements",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleAdd = async () => {
     if (!newAchievement.title || !newAchievement.description) {
@@ -75,81 +75,87 @@ export default function AchievementsPage() {
         title: "Error",
         description: "Title and description are required",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     try {
-      setSubmitting(true)
+      setSubmitting(true);
       await achievementApi.createAchievement({
         title: newAchievement.title,
         description: newAchievement.description,
         date: new Date(newAchievement.date).toISOString(),
         type: newAchievement.type,
-      })
+      });
       toast({
         title: "Success",
         description: "Achievement added successfully",
-      })
+      });
       setNewAchievement({
         title: "",
         description: "",
         date: new Date().toISOString().split("T")[0],
         type: activeTab,
-      })
-      setIsAdding(false)
-      await loadAchievements(activeTab)
+      });
+      setIsAdding(false);
+      await loadAchievements(activeTab);
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message || "Failed to add achievement",
         variant: "destructive",
-      })
+      });
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   const handleRemoveClick = (id: string) => {
-    setItemToDelete(id)
-    setDeleteDialogOpen(true)
-  }
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  };
 
   const handleRemoveConfirm = async () => {
-    if (!itemToDelete) return
+    if (!itemToDelete) return;
 
     try {
-      setDeleting(itemToDelete)
-      setDeleteDialogOpen(false)
-      await achievementApi.deleteAchievement(itemToDelete)
+      setDeleting(itemToDelete);
+      setDeleteDialogOpen(false);
+      await achievementApi.deleteAchievement(itemToDelete);
       toast({
         title: "Success",
         description: "Achievement deleted successfully",
-      })
-      await loadAchievements(activeTab)
+      });
+      await loadAchievements(activeTab);
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message || "Failed to delete achievement",
         variant: "destructive",
-      })
+      });
     } finally {
-      setDeleting(null)
-      setItemToDelete(null)
+      setDeleting(null);
+      setItemToDelete(null);
     }
-  }
+  };
 
   return (
     <AdminLayout role="doctor">
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold mb-2">Achievements Management</h2>
-          <p className="text-muted-foreground">Manage Dr. Subash's achievements and hospital achievements displayed on the main website</p>
+          <p className="text-muted-foreground">
+            Manage Dr. Ashish's achievements and hospital achievements displayed
+            on the main website
+          </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as AchievementType)}>
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as AchievementType)}
+        >
           <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="DOCTOR">Dr. Subash's Achievements</TabsTrigger>
+            <TabsTrigger value="DOCTOR">Dr. Ashish's Achievements</TabsTrigger>
             <TabsTrigger value="HOSPITAL">Hospital Achievements</TabsTrigger>
           </TabsList>
 
@@ -158,7 +164,9 @@ export default function AchievementsPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>
-                    {activeTab === "DOCTOR" ? "Dr. Subash's Achievements" : "Hospital Achievements"}
+                    {activeTab === "DOCTOR"
+                      ? "Dr. Ashish's Achievements"
+                      : "Hospital Achievements"}
                   </CardTitle>
                   <Button
                     onClick={() => {
@@ -167,8 +175,8 @@ export default function AchievementsPage() {
                         description: "",
                         date: new Date().toISOString().split("T")[0],
                         type: activeTab,
-                      })
-                      setIsAdding(true)
+                      });
+                      setIsAdding(true);
                     }}
                     size="sm"
                   >
@@ -185,7 +193,12 @@ export default function AchievementsPage() {
                         <Label>Title *</Label>
                         <Input
                           value={newAchievement.title || ""}
-                          onChange={(e) => setNewAchievement({ ...newAchievement, title: e.target.value })}
+                          onChange={(e) =>
+                            setNewAchievement({
+                              ...newAchievement,
+                              title: e.target.value,
+                            })
+                          }
                           placeholder="Achievement title"
                         />
                       </div>
@@ -193,7 +206,12 @@ export default function AchievementsPage() {
                         <Label>Description *</Label>
                         <Textarea
                           value={newAchievement.description || ""}
-                          onChange={(e) => setNewAchievement({ ...newAchievement, description: e.target.value })}
+                          onChange={(e) =>
+                            setNewAchievement({
+                              ...newAchievement,
+                              description: e.target.value,
+                            })
+                          }
                           placeholder="Achievement description"
                           rows={3}
                         />
@@ -203,12 +221,21 @@ export default function AchievementsPage() {
                         <Input
                           type="date"
                           value={newAchievement.date}
-                          onChange={(e) => setNewAchievement({ ...newAchievement, date: e.target.value })}
+                          onChange={(e) =>
+                            setNewAchievement({
+                              ...newAchievement,
+                              date: e.target.value,
+                            })
+                          }
                           required
                         />
                       </div>
                       <div className="flex gap-2">
-                        <Button onClick={handleAdd} size="sm" disabled={submitting}>
+                        <Button
+                          onClick={handleAdd}
+                          size="sm"
+                          disabled={submitting}
+                        >
                           {submitting ? (
                             <>
                               <Loader2 className="w-4 h-4  animate-spin" />
@@ -222,13 +249,13 @@ export default function AchievementsPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => {
-                            setIsAdding(false)
+                            setIsAdding(false);
                             setNewAchievement({
                               title: "",
                               description: "",
                               date: new Date().toISOString().split("T")[0],
                               type: activeTab,
-                            })
+                            });
                           }}
                           disabled={submitting}
                         >
@@ -247,8 +274,13 @@ export default function AchievementsPage() {
                   <div className="space-y-3">
                     {achievements.length === 0 ? (
                       <div className="text-center py-8">
-                        <Trophy size={48} className="mx-auto text-muted-foreground mb-4" />
-                        <p className="text-muted-foreground">No achievements added yet</p>
+                        <Trophy
+                          size={48}
+                          className="mx-auto text-muted-foreground mb-4"
+                        />
+                        <p className="text-muted-foreground">
+                          No achievements added yet
+                        </p>
                       </div>
                     ) : (
                       achievements.map((achievement) => (
@@ -259,14 +291,20 @@ export default function AchievementsPage() {
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <Trophy size={18} className="text-primary" />
-                              <h4 className="font-semibold">{achievement.title}</h4>
+                              <h4 className="font-semibold">
+                                {achievement.title}
+                              </h4>
                               <Badge variant="outline" className="text-xs">
                                 {new Date(achievement.date).getFullYear()}
                               </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {achievement.description}
+                            </p>
                             <p className="text-xs text-muted-foreground mt-1">
-                              {new Date(achievement.date).toLocaleDateString("en-IN")}
+                              {new Date(achievement.date).toLocaleDateString(
+                                "en-IN",
+                              )}
                             </p>
                           </div>
                           <Button
@@ -297,11 +335,14 @@ export default function AchievementsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Achievement</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete this achievement? This action cannot be undone.
+                Are you sure you want to delete this achievement? This action
+                cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={deleting !== null}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={deleting !== null}>
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleRemoveConfirm}
                 disabled={deleting !== null}
@@ -321,6 +362,5 @@ export default function AchievementsPage() {
         </AlertDialog>
       </div>
     </AdminLayout>
-  )
+  );
 }
-

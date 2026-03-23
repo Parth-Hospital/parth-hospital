@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function DoctorHighlight() {
   return (
@@ -12,7 +12,7 @@ export function DoctorHighlight() {
             <div className="aspect-[3/4] relative rounded-2xl overflow-hidden soft-depth group">
               <Image
                 src="/experienced-indian-doctor-portrait.jpg"
-                alt="Dr. Subash Singh"
+                alt="Dr. Ashish Bharadwaj"
                 fill
                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
               />
@@ -29,44 +29,63 @@ export function DoctorHighlight() {
           <div className="lg:col-span-7 space-y-12">
             <div className="space-y-6">
               <h2 className="text-5xl md:text-7xl font-medium leading-[0.9] tracking-tight">
-                Trust the <br /> <span className="italic text-accent">Experience.</span>
+                Trust the <br />{" "}
+                <span className="italic text-accent">Experience.</span>
               </h2>
               <p className="text-2xl font-light leading-relaxed text-muted-foreground max-w-2xl">
-                "Healthcare is not just about clinical excellence; it's about the trust between a doctor and their
-                community. At Parth, we've spent decades building that trust."
+                "Healthcare is not just about clinical excellence; it's about
+                the trust between a doctor and their community. At Parth, we've
+                spent decades building that trust."
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-10 border-y border-border py-12">
               <div className="space-y-2">
-                <p className="text-xs uppercase tracking-widest text-accent font-bold">Foundation</p>
-                <p className="text-lg font-medium">MBBS, MS (General Surgery)</p>
-                <p className="text-sm text-muted-foreground">King George Medical College</p>
+                <p className="text-xs uppercase tracking-widest text-accent font-bold">
+                  Foundation
+                </p>
+                <p className="text-lg font-medium">
+                  MBBS, MS (General Surgery)
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  King George Medical College
+                </p>
               </div>
               <div className="space-y-2">
-                <p className="text-xs uppercase tracking-widest text-accent font-bold">Achievement</p>
-                <p className="text-lg font-medium">10,000+ Successful Procedures</p>
-                <p className="text-sm text-muted-foreground">Pioneer in Advanced Surgery in Jaunpur</p>
+                <p className="text-xs uppercase tracking-widest text-accent font-bold">
+                  Achievement
+                </p>
+                <p className="text-lg font-medium">
+                  10,000+ Successful Procedures
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Pioneer in Advanced Surgery in Gurugram
+                </p>
               </div>
             </div>
 
             <div className="flex items-center gap-8">
               <Link href="/doctor">
-              <Button size="lg" className="rounded-full px-10 h-16 bg-primary group text-lg">
-                View Full Profile{" "}
-                <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </Button>
+                <Button
+                  size="lg"
+                  className="rounded-full px-10 h-16 bg-primary group text-lg"
+                >
+                  View Full Profile{" "}
+                  <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                </Button>
               </Link>
               <div className="hidden sm:flex flex-col">
                 <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
                   Chief Director
                 </span>
-                <span className="text-sm font-bold text-primary">Dr. Subash Singh</span>
+                <span className="text-sm font-bold text-primary">
+                  Dr. Ashish Bharadwaj
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

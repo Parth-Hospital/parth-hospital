@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { FloatingActions } from "@/components/floating-actions"
-import { XCircle, Clock, CreditCard, AlertCircle } from "lucide-react"
-import { motion } from "framer-motion"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { FloatingActions } from "@/components/floating-actions";
+import { XCircle, Clock, CreditCard, AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function CancellationPage() {
   const sections = [
@@ -15,7 +15,7 @@ export default function CancellationPage() {
         "Appointments can be cancelled up to 24 hours before the scheduled time without any charges",
         "Cancellations made less than 24 hours before the appointment may be subject to a cancellation fee",
         "Same-day cancellations or no-shows may incur the full consultation fee",
-        "To cancel an appointment, please call us at +91 78601 15757 or use our online portal",
+        "To cancel an appointment, please call us at +91 99406 15757 or use our online portal",
       ],
     },
     {
@@ -49,7 +49,7 @@ export default function CancellationPage() {
         "For any disputes or special cases, please contact our patient relations department",
       ],
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen">
@@ -72,7 +72,12 @@ export default function CancellationPage() {
               Cancellation & Refund Policy
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Last updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              Last updated:{" "}
+              {new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </p>
           </motion.div>
         </div>
@@ -89,9 +94,11 @@ export default function CancellationPage() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              At Parth Hospital, we understand that circumstances may change, and you may need to cancel or 
-              reschedule appointments or procedures. This policy outlines our cancellation and refund procedures 
-              to ensure transparency and fairness for all our patients.
+              At Parth Hospital, we understand that circumstances may change,
+              and you may need to cancel or reschedule appointments or
+              procedures. This policy outlines our cancellation and refund
+              procedures to ensure transparency and fairness for all our
+              patients.
             </p>
           </motion.div>
         </div>
@@ -102,7 +109,7 @@ export default function CancellationPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="space-y-12">
             {sections.map((section, index) => {
-              const Icon = section.icon
+              const Icon = section.icon;
               return (
                 <motion.div
                   key={index}
@@ -116,18 +123,23 @@ export default function CancellationPage() {
                     <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Icon className="w-6 h-6 text-primary" />
                     </div>
-                    <h2 className="text-3xl font-bold text-foreground">{section.title}</h2>
+                    <h2 className="text-3xl font-bold text-foreground">
+                      {section.title}
+                    </h2>
                   </div>
                   <ul className="space-y-3">
                     {section.content.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-muted-foreground">
+                      <li
+                        key={idx}
+                        className="flex items-start gap-3 text-muted-foreground"
+                      >
                         <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </motion.div>
-              )
+              );
             })}
           </div>
         </div>
@@ -142,7 +154,9 @@ export default function CancellationPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-foreground mb-4">Need Assistance?</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Need Assistance?
+            </h2>
             <p className="text-lg text-muted-foreground mb-8">
               For questions about cancellations or refunds, please contact us:
             </p>
@@ -150,17 +164,23 @@ export default function CancellationPage() {
               <p>
                 <strong className="text-foreground">Parth Hospital</strong>
               </p>
-              <p>Polytechnic chauraha, Jaunpur, Uttar Pradesh 222002</p>
+              <p>Polytechnic chauraha, Gurugram, Haryana 122001</p>
               <p>
                 Email:{" "}
-                <a href="mailto:parthhospitaljnp@gmail.com" className="text-primary hover:underline">
-                  parthhospitaljnp@gmail.com
+                <a
+                  href="mailto:parthhospitalgurugram@gmail.com"
+                  className="text-primary hover:underline"
+                >
+                  parthhospitalgurugram@gmail.com
                 </a>
               </p>
               <p>
                 Phone:{" "}
-                <a href="tel:+917860115757" className="text-primary hover:underline">
-                  +91 78601 15757
+                <a
+                  href="tel:+919940615757"
+                  className="text-primary hover:underline"
+                >
+                  +91 99406 15757
                 </a>
               </p>
             </div>
@@ -170,5 +190,5 @@ export default function CancellationPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

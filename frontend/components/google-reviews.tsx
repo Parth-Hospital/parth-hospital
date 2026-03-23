@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Star } from "lucide-react"
+import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 
 interface Review {
-  id: string
-  author: string
-  rating: number
-  text: string
-  date: string
+  id: string;
+  author: string;
+  rating: number;
+  text: string;
+  date: string;
 }
 
 // Sample 5-star reviews - In production, these would be fetched from Google Places API
@@ -17,14 +17,14 @@ const reviews: Review[] = [
     id: "1",
     author: "Rajesh Kumar",
     rating: 5,
-    text: "Excellent orthopedic care! Dr. Subash Singh is very experienced and caring. The hospital has modern facilities and the staff is very helpful.",
+    text: "Excellent orthopedic care! Dr. Ashish Bharadwaj is very experienced and caring. The hospital has modern facilities and the staff is very helpful.",
     date: "2 weeks ago",
   },
   {
     id: "2",
     author: "Priya Sharma",
     rating: 5,
-    text: "Best hospital in Jaunpur for orthopedic treatment. Got my fracture treated here and the recovery was smooth. Highly recommended!",
+    text: "Best hospital in Gurugram for orthopedic treatment. Got my fracture treated here and the recovery was smooth. Highly recommended!",
     date: "1 month ago",
   },
   {
@@ -48,7 +48,7 @@ const reviews: Review[] = [
     text: "Outstanding orthopedic services. The operation theatre is well-equipped and the post-surgery care was excellent. Thank you Parth Hospital!",
     date: "2 months ago",
   },
-]
+];
 
 export function GoogleReviews() {
   return (
@@ -64,14 +64,20 @@ export function GoogleReviews() {
           <div className="inline-flex items-center gap-2 mb-4">
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                <Star
+                  key={i}
+                  className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                />
               ))}
             </div>
             <span className="text-2xl font-bold text-foreground">5.0</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-3">What Our Patients Say</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
+            What Our Patients Say
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Read what our patients have to say about their experience at Parth Hospital
+            Read what our patients have to say about their experience at Parth
+            Hospital
           </p>
           <a
             href="https://www.google.com/maps/place/Parth+Hospital/@25.7366524,82.6735418,17z/data=!4m16!1m9!3m8!1s0x39903bb8da5fca85:0xfdd6dc1b711b1787!2sParth+Hospital!8m2!3d25.7366524!4d82.6761167!9m1!1b1!16s%2Fg%2F11gd4hx_7_!3m5!1s0x39903bb8da5fca85:0xfdd6dc1b711b1787!8m2!3d25.7366524!4d82.6761167!16s%2Fg%2F11gd4hx_7_?entry=ttu&g_ep=EgoyMDI2MDEwNi4wIKXMDSoASAFQAw%3D%3D"
@@ -102,10 +108,14 @@ export function GoogleReviews() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-primary font-bold text-lg">{review.author.charAt(0)}</span>
+                  <span className="text-primary font-bold text-lg">
+                    {review.author.charAt(0)}
+                  </span>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-foreground">{review.author}</h4>
+                  <h4 className="font-semibold text-foreground">
+                    {review.author}
+                  </h4>
                   <div className="flex items-center gap-1 mt-1">
                     {[1, 2, 3, 4, 5].map((i) => (
                       <Star
@@ -116,13 +126,14 @@ export function GoogleReviews() {
                   </div>
                 </div>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-4">{review.text}</p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                {review.text}
+              </p>
               <p className="text-xs text-muted-foreground">{review.date}</p>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
-

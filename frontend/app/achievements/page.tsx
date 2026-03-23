@@ -1,39 +1,43 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Award, Users, Zap, Heart, Loader2 } from "lucide-react"
-import Link from "next/link"
-import { achievementApi, Achievement } from "@/lib/api/achievement"
-import { logger } from "@/lib/utils/logger"
+import { useState, useEffect } from "react";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Award, Users, Zap, Heart, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { achievementApi, Achievement } from "@/lib/api/achievement";
+import { logger } from "@/lib/utils/logger";
 
 export default function AchievementsPage() {
-  const [doctorAchievements, setDoctorAchievements] = useState<Achievement[]>([])
-  const [hospitalAchievements, setHospitalAchievements] = useState<Achievement[]>([])
-  const [loading, setLoading] = useState(true)
+  const [doctorAchievements, setDoctorAchievements] = useState<Achievement[]>(
+    [],
+  );
+  const [hospitalAchievements, setHospitalAchievements] = useState<
+    Achievement[]
+  >([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadAchievements()
-  }, [])
+    loadAchievements();
+  }, []);
 
   const loadAchievements = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const [doctorData, hospitalData] = await Promise.all([
         achievementApi.getAchievements("DOCTOR"),
         achievementApi.getAchievements("HOSPITAL"),
-      ])
-      setDoctorAchievements(doctorData)
-      setHospitalAchievements(hospitalData)
+      ]);
+      setDoctorAchievements(doctorData);
+      setHospitalAchievements(hospitalData);
     } catch (error) {
       // Only log in development
-      logger.error("Failed to load achievements:", error)
+      logger.error("Failed to load achievements:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const metrics = [
     {
@@ -56,7 +60,7 @@ export default function AchievementsPage() {
       value: "100%",
       label: "NABH Certified",
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen">
@@ -72,11 +76,13 @@ export default function AchievementsPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85] mb-6 sm:mb-8 break-words">
               BUILDING
               <br />
-              <span className="text-foreground italic font-light opacity-80">TRUST THROUGH RESULTS</span>
+              <span className="text-foreground italic font-light opacity-80">
+                TRUST THROUGH RESULTS
+              </span>
             </h1>
             <p className="text-2xl font-light text-muted-foreground leading-relaxed max-w-2xl pt-8">
-              Parth Hospital's commitment to advancing healthcare in Jaunpur through evidence-based, compassionate
-              orthopedic care.
+              Parth Hospital's commitment to advancing healthcare in Gurugram
+              through evidence-based, compassionate orthopedic care.
             </p>
           </div>
         </div>
@@ -92,8 +98,12 @@ export default function AchievementsPage() {
                   {metric.icon}
                 </div>
                 <div>
-                  <p className="text-4xl sm:text-5xl md:text-6xl font-bold">{metric.value}</p>
-                  <p className="text-white/70 text-base sm:text-lg font-medium mt-2">{metric.label}</p>
+                  <p className="text-4xl sm:text-5xl md:text-6xl font-bold">
+                    {metric.value}
+                  </p>
+                  <p className="text-white/70 text-base sm:text-lg font-medium mt-2">
+                    {metric.label}
+                  </p>
                 </div>
               </div>
             ))}
@@ -101,12 +111,12 @@ export default function AchievementsPage() {
         </div>
       </section>
 
-      {/* Dr. Subash's Milestones */}
+      {/* Dr. Ashish's Milestones */}
       <section className="py-32 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-20 space-y-4">
             <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">
-              Dr. Subash Singh's Milestones
+              Dr. Ashish Bharadwaj's Milestones
             </h2>
           </div>
 
@@ -116,12 +126,14 @@ export default function AchievementsPage() {
             </div>
           ) : doctorAchievements.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-lg text-muted-foreground">No milestones available at the moment.</p>
+              <p className="text-lg text-muted-foreground">
+                No milestones available at the moment.
+              </p>
             </div>
           ) : (
             <div className="space-y-1">
               {doctorAchievements.map((achievement) => {
-                const year = new Date(achievement.date).getFullYear()
+                const year = new Date(achievement.date).getFullYear();
                 return (
                   <div
                     key={achievement.id}
@@ -145,7 +157,7 @@ export default function AchievementsPage() {
                       </div>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           )}
@@ -156,7 +168,9 @@ export default function AchievementsPage() {
       <section className="py-24 bg-secondary/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 space-y-4">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">Hospital Milestones</h2>
+            <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">
+              Hospital Milestones
+            </h2>
           </div>
 
           {loading ? (
@@ -165,12 +179,14 @@ export default function AchievementsPage() {
             </div>
           ) : hospitalAchievements.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-lg text-muted-foreground">No milestones available at the moment.</p>
+              <p className="text-lg text-muted-foreground">
+                No milestones available at the moment.
+              </p>
             </div>
           ) : (
             <div className="space-y-1">
               {hospitalAchievements.map((achievement) => {
-                const year = new Date(achievement.date).getFullYear()
+                const year = new Date(achievement.date).getFullYear();
                 return (
                   <div
                     key={achievement.id}
@@ -194,7 +210,7 @@ export default function AchievementsPage() {
                       </div>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           )}
@@ -208,14 +224,18 @@ export default function AchievementsPage() {
             Be Part of Our Success Story
           </h2>
           <p className="text-xl font-light text-muted-foreground leading-relaxed">
-            Join thousands of patients who have experienced Parth Hospital's commitment to orthopedic excellence and
-            patient care. Your health journey matters to us.
+            Join thousands of patients who have experienced Parth Hospital's
+            commitment to orthopedic excellence and patient care. Your health
+            journey matters to us.
           </p>
           <div className="pt-8 flex flex-wrap justify-center gap-4">
             <Link href="/appointment">
-            <Button size="lg" className="rounded-full px-12 h-16 text-lg bg-primary hover:bg-primary/90">
-              Schedule Consultation
-            </Button>
+              <Button
+                size="lg"
+                className="rounded-full px-12 h-16 text-lg bg-primary hover:bg-primary/90"
+              >
+                Schedule Consultation
+              </Button>
             </Link>
             <Link href="/contact">
               <Button
@@ -232,5 +252,5 @@ export default function AchievementsPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

@@ -82,7 +82,7 @@
     },
     {
       "id": "doctor",
-      "label": "About Dr. Subash Singh",
+      "label": "About Dr. Ashish Bharadwaj",
       "icon": "user-md",
       "action": "navigate",
       "href": "/doctor"
@@ -96,13 +96,13 @@
           "id": "call",
           "label": "Call Hospital",
           "action": "call",
-          "phone": "+917860115757"
+          "phone": "+919940615757"
         },
         {
           "id": "emergency",
           "label": "Emergency Number",
           "action": "call",
-          "phone": "+917860115757"
+          "phone": "+919940615757"
         },
         {
           "id": "location",
@@ -114,7 +114,7 @@
           "id": "email",
           "label": "Send Email",
           "action": "email",
-          "email": "contact@parthhospital.com"
+          "email": "contact@parthhospital.co.in"
         }
       ]
     },
@@ -130,8 +130,7 @@
       "label": "Hospital Location",
       "icon": "map-pin",
       "action": "info",
-      "message": "Parth Hospital is located at Opposite Railway Station, Civil Lines, Jaunpur, Uttar Pradesh 222001"
+      "message": "Parth Hospital is located at Opposite Railway Station, Civil Lines, Gurugram, Haryana 222001"
     }
   ]
 }
-

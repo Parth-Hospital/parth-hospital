@@ -1,9 +1,19 @@
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { FloatingActions } from "@/components/floating-actions"
-import { Button } from "@/components/ui/button"
-import { Stethoscope, Scale as Scalpel, Zap, Droplets, Activity, AlertCircle, ArrowRight, Scan, Microscope } from "lucide-react"
-import Link from "next/link"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { FloatingActions } from "@/components/floating-actions";
+import { Button } from "@/components/ui/button";
+import {
+  Stethoscope,
+  Scale as Scalpel,
+  Zap,
+  Droplets,
+  Activity,
+  AlertCircle,
+  ArrowRight,
+  Scan,
+  Microscope,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function ServicesPage() {
   const services = [
@@ -11,22 +21,37 @@ export default function ServicesPage() {
       id: "01",
       title: "OPD Consultation",
       icon: <Stethoscope className="w-8 h-8" />,
-      desc: "Expert outpatient consultations with Dr. Subash Singh and specialists. Comprehensive diagnosis and treatment planning for bone, joint, and general health concerns.",
-      details: ["Orthopedic Assessment", "General Medical Check-up", "Follow-up Care", "Health Counseling"],
+      desc: "Expert outpatient consultations with Dr. Ashish Bharadwaj and specialists. Comprehensive diagnosis and treatment planning for bone, joint, and general health concerns.",
+      details: [
+        "Orthopedic Assessment",
+        "General Medical Check-up",
+        "Follow-up Care",
+        "Health Counseling",
+      ],
     },
     {
       id: "02",
       title: "Operation Theatre",
       icon: <Scalpel className="w-8 h-8" />,
       desc: "State-of-the-art surgical facilities equipped for orthopedic, trauma, and general surgeries with advanced anesthesia monitoring.",
-      details: ["Fracture Surgery", "Joint Procedures", "Trauma Management", "Emergency Operations"],
+      details: [
+        "Fracture Surgery",
+        "Joint Procedures",
+        "Trauma Management",
+        "Emergency Operations",
+      ],
     },
     {
       id: "03",
       title: "X-Ray Services",
       icon: <Zap className="w-8 h-8" />,
       desc: "Advanced digital radiography for rapid bone and joint imaging. High-quality X-ray services for accurate diagnosis and treatment planning.",
-      details: ["Digital X-Ray", "Bone Imaging", "Orthopedic X-Ray", "Quick Results"],
+      details: [
+        "Digital X-Ray",
+        "Bone Imaging",
+        "Orthopedic X-Ray",
+        "Quick Results",
+      ],
     },
     {
       id: "04",
@@ -40,30 +65,50 @@ export default function ServicesPage() {
       title: "Blood Tests",
       icon: <Droplets className="w-8 h-8" />,
       desc: "Complete blood work and hematology services with automated analysis. Fast and accurate results for health assessment and monitoring.",
-      details: ["Complete Blood Count", "Blood Chemistry", "Hematology Tests", "Quick Turnaround"],
+      details: [
+        "Complete Blood Count",
+        "Blood Chemistry",
+        "Hematology Tests",
+        "Quick Turnaround",
+      ],
     },
     {
       id: "06",
       title: "Pathology Services",
       icon: <Microscope className="w-8 h-8" />,
       desc: "Comprehensive pathology and laboratory testing services. Expert analysis for pre-operative assessment and disease diagnosis.",
-      details: ["Tissue Analysis", "Cytology", "Histopathology", "Laboratory Testing"],
+      details: [
+        "Tissue Analysis",
+        "Cytology",
+        "Histopathology",
+        "Laboratory Testing",
+      ],
     },
     {
       id: "07",
       title: "Physiotherapy",
       icon: <Activity className="w-8 h-8" />,
       desc: "Specialized rehabilitation and post-operative recovery programs. Evidence-based therapy to restore mobility and strength.",
-      details: ["Post-Surgery Rehabilitation", "Joint Mobility", "Strength Training", "Pain Management"],
+      details: [
+        "Post-Surgery Rehabilitation",
+        "Joint Mobility",
+        "Strength Training",
+        "Pain Management",
+      ],
     },
     {
       id: "08",
       title: "Emergency & First Aid",
       icon: <AlertCircle className="w-8 h-8" />,
       desc: "24/7 emergency response for acute injuries and medical emergencies. Immediate stabilization and expert trauma care.",
-      details: ["24/7 Availability", "Trauma Assessment", "Emergency Stabilization", "ICU Support"],
+      details: [
+        "24/7 Availability",
+        "Trauma Assessment",
+        "Emergency Stabilization",
+        "ICU Support",
+      ],
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen">
@@ -80,11 +125,13 @@ export default function ServicesPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85]">
               OUR
               <br />
-              <span className="text-foreground italic font-light opacity-80">SERVICES.</span>
+              <span className="text-foreground italic font-light opacity-80">
+                SERVICES.
+              </span>
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl font-light text-muted-foreground leading-relaxed max-w-2xl pt-4 md:pt-8">
-              Parth Hospital provides complete healthcare services focused on orthopedic excellence, emergency care, and
-              patient recovery.
+              Parth Hospital provides complete healthcare services focused on
+              orthopedic excellence, emergency care, and patient recovery.
             </p>
           </div>
         </div>
@@ -153,16 +200,22 @@ export default function ServicesPage() {
       {/* CTA Section */}
       <section className="py-16 sm:py-24 md:py-32 bg-background text-center">
         <div className="max-w-3xl mx-auto px-6 space-y-6 sm:space-y-8">
-          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight">Ready for expert care?</h3>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight">
+            Ready for expert care?
+          </h3>
           <p className="text-base sm:text-lg md:text-xl font-light text-muted-foreground leading-relaxed">
-            Contact Parth Hospital today to access any of our comprehensive healthcare services. Dr. Subash Singh and
-            his team are ready to assist you.
+            Contact Parth Hospital today to access any of our comprehensive
+            healthcare services. Dr. Ashish Bharadwaj and his team are ready to
+            assist you.
           </p>
           <div className="pt-4 sm:pt-8">
             <Link href="/appointment">
-            <Button size="lg" className="rounded-full px-8 sm:px-12 h-14 sm:h-18 text-base sm:text-lg bg-primary hover:bg-primary/90 transition-all w-full sm:w-auto">
-              Schedule a Service
-            </Button>
+              <Button
+                size="lg"
+                className="rounded-full px-8 sm:px-12 h-14 sm:h-18 text-base sm:text-lg bg-primary hover:bg-primary/90 transition-all w-full sm:w-auto"
+              >
+                Schedule a Service
+              </Button>
             </Link>
           </div>
         </div>
@@ -170,5 +223,5 @@ export default function ServicesPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

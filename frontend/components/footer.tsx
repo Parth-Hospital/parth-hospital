@@ -1,9 +1,16 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { MapPin, Mail, Instagram, Facebook, Twitter, ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
+import Link from "next/link";
+import Image from "next/image";
+import {
+  MapPin,
+  Mail,
+  Instagram,
+  Facebook,
+  Twitter,
+  ArrowRight,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Footer() {
   return (
@@ -27,13 +34,18 @@ export function Footer() {
                 className="w-12 h-12 object-contain"
               />
               <div className="flex flex-col">
-                <span className="text-2xl font-bold tracking-tighter uppercase">Parth Hospital</span>
-                <span className="text-xs uppercase tracking-widest text-white/60">Legacy of Care • Jaunpur</span>
+                <span className="text-2xl font-bold tracking-tighter uppercase">
+                  Parth Hospital
+                </span>
+                <span className="text-xs uppercase tracking-widest text-white/60">
+                  Legacy of Care • Gurugram
+                </span>
               </div>
             </div>
             <p className="text-white/60 leading-relaxed max-w-xs">
-              Providing world-class healthcare with a human touch. Led by Dr. Subash Singh, we are committed to medical
-              excellence and patient well-being.
+              Providing world-class healthcare with a human touch. Led by Dr.
+              Ashish Singh, we are committed to medical excellence and patient
+              well-being.
             </p>
             <div className="flex gap-4">
               {[Instagram, Facebook, Twitter].map((Icon, idx) => (
@@ -62,7 +74,7 @@ export function Footer() {
               {[
                 { label: "Our Story", href: "/about" },
                 { label: "Medical Services", href: "/services" },
-                { label: "Dr. Subash Singh", href: "/doctor" },
+                { label: "Dr. Ashish Bharadwaj", href: "/doctor" },
                 { label: "Contact Us", href: "/contact" },
                 { label: "Staff Login", href: "/login" },
               ].map((link) => (
@@ -89,23 +101,28 @@ export function Footer() {
                   <p className="text-white/60 leading-relaxed text-sm">
                     Polytechnic chauraha,
                     <br />
-                    Jaunpur, Uttar Pradesh 222002
+                    Gurugram, Haryana 122001
                   </p>
                 </div>
                 <div className="flex gap-4">
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
                     <Mail className="w-5 h-5 text-accent" />
                   </div>
-                  <p className="text-white/60 text-sm">parthhospitaljnp@gmail.com</p>
+                  <p className="text-white/60 text-sm">
+                    parthhospitalgurugram@gmail.com
+                  </p>
                 </div>
               </div>
               <div className="bg-white/5 p-6 rounded-3xl border border-white/10 soft-depth">
                 <p className="text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold">
                   Emergency Response 24/7
                 </p>
-                <p className="text-2xl font-bold text-accent">+91 78601 15757</p>
+                <p className="text-2xl font-bold text-accent">
+                  +91 99406 15757
+                </p>
                 <p className="text-xs text-white/40 mt-3 italic leading-relaxed">
-                  Dedicated trauma unit and ambulance services available round the clock.
+                  Dedicated trauma unit and ambulance services available round
+                  the clock.
                 </p>
               </div>
             </div>
@@ -119,15 +136,24 @@ export function Footer() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
         >
-          <p>© 2026 Parth Hospital Jaunpur. All rights reserved.</p>
+          <p>© 2026 Parth Hospital Gurugram. All rights reserved.</p>
           <div className="flex flex-wrap gap-8 justify-center">
-            <Link href="/privacy" className="hover:text-white transition-colors duration-200">
+            <Link
+              href="/privacy"
+              className="hover:text-white transition-colors duration-200"
+            >
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-white transition-colors duration-200">
+            <Link
+              href="/terms"
+              className="hover:text-white transition-colors duration-200"
+            >
               Terms of Service
             </Link>
-            <Link href="/cancellation" className="hover:text-white transition-colors duration-200">
+            <Link
+              href="/cancellation"
+              className="hover:text-white transition-colors duration-200"
+            >
               Cancellation & Refund Policy
             </Link>
           </div>
@@ -158,5 +184,5 @@ export function Footer() {
         </motion.div>
       </div>
     </footer>
-  )
+  );
 }

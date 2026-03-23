@@ -1,47 +1,50 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Menu, X, Phone, Search, LogIn, ChevronDown } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { motion, AnimatePresence } from "framer-motion"
+} from "@/components/ui/dropdown-menu";
+import { Menu, X, Phone, Search, LogIn, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
-    setMobileMenuOpen(false)
-  }, [])
+    setMobileMenuOpen(false);
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white">
       <div className="bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between text-xs sm:text-sm">
           <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-            <span className="truncate">Emergency: +91 78601 15757</span>
+            <span className="truncate">Emergency: +91 99406 15757</span>
             <span className="text-white/60 hidden sm:inline">|</span>
             <span className="hidden sm:inline">Available 24/7</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <a href="tel:+917860115757" className="hover:text-white/80 transition-colors flex items-center gap-1">
+            <a
+              href="tel:+919940615757"
+              className="hover:text-white/80 transition-colors flex items-center gap-1"
+            >
               <Phone className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Call Us</span>
             </a>
@@ -108,10 +111,10 @@ export function Navbar() {
               About
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-3/4" />
             </Link>
-            
+
             {/* Services Dropdown */}
-            <DropdownMenu 
-              open={servicesDropdownOpen} 
+            <DropdownMenu
+              open={servicesDropdownOpen}
               onOpenChange={setServicesDropdownOpen}
               modal={false}
             >
@@ -123,44 +126,74 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <button className="text-sm font-medium px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200 relative group flex items-center gap-1">
                     Services
-                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${servicesDropdownOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown
+                      className={`w-3 h-3 transition-transform duration-200 ${servicesDropdownOpen ? "rotate-180" : ""}`}
+                    />
                     <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-200 group-hover:w-3/4" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="start" 
+                <DropdownMenuContent
+                  align="start"
                   className="w-80 p-4"
                   onMouseEnter={() => setServicesDropdownOpen(true)}
                   onMouseLeave={() => setServicesDropdownOpen(false)}
                   onCloseAutoFocus={(e) => e.preventDefault()}
                   onEscapeKeyDown={(e) => {
-                    e.preventDefault()
-                    setServicesDropdownOpen(false)
+                    e.preventDefault();
+                    setServicesDropdownOpen(false);
                   }}
                 >
                   <div className="grid grid-cols-2 gap-3">
                     <DropdownMenuItem asChild className="p-0 h-auto">
-                      <Link href="/services" className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30">
-                        <span className="font-semibold text-sm mb-1.5">Our Services</span>
-                        <span className="text-xs text-muted-foreground leading-relaxed">Medical services & treatments</span>
+                      <Link
+                        href="/services"
+                        className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30"
+                      >
+                        <span className="font-semibold text-sm mb-1.5">
+                          Our Services
+                        </span>
+                        <span className="text-xs text-muted-foreground leading-relaxed">
+                          Medical services & treatments
+                        </span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="p-0 h-auto">
-                      <Link href="/ayushman" className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30">
-                        <span className="font-semibold text-sm mb-1.5">Ayushman Scheme</span>
-                        <span className="text-xs text-muted-foreground leading-relaxed">Government health scheme</span>
+                      <Link
+                        href="/ayushman"
+                        className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30"
+                      >
+                        <span className="font-semibold text-sm mb-1.5">
+                          Ayushman Scheme
+                        </span>
+                        <span className="text-xs text-muted-foreground leading-relaxed">
+                          Government health scheme
+                        </span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="p-0 h-auto">
-                      <Link href="/wards" className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30">
-                        <span className="font-semibold text-sm mb-1.5">Wards</span>
-                        <span className="text-xs text-muted-foreground leading-relaxed">Patient accommodation</span>
+                      <Link
+                        href="/wards"
+                        className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30"
+                      >
+                        <span className="font-semibold text-sm mb-1.5">
+                          Wards
+                        </span>
+                        <span className="text-xs text-muted-foreground leading-relaxed">
+                          Patient accommodation
+                        </span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="p-0 h-auto">
-                      <Link href="/amenities" className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30">
-                        <span className="font-semibold text-sm mb-1.5">Amenities</span>
-                        <span className="text-xs text-muted-foreground leading-relaxed">Hospital facilities</span>
+                      <Link
+                        href="/amenities"
+                        className="flex flex-col items-start justify-start p-4 rounded-lg hover:bg-primary/5 transition-colors w-full h-[100px] border border-border/50 hover:border-primary/30"
+                      >
+                        <span className="font-semibold text-sm mb-1.5">
+                          Amenities
+                        </span>
+                        <span className="text-xs text-muted-foreground leading-relaxed">
+                          Hospital facilities
+                        </span>
                       </Link>
                     </DropdownMenuItem>
                   </div>
@@ -213,7 +246,11 @@ export function Navbar() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
@@ -254,7 +291,9 @@ export function Navbar() {
                 About
               </Link>
               <div className="space-y-1">
-                <div className="text-sm font-semibold px-2 py-1 text-muted-foreground">Services</div>
+                <div className="text-sm font-semibold px-2 py-1 text-muted-foreground">
+                  Services
+                </div>
                 <Link
                   href="/services"
                   className="text-sm font-medium py-2 px-4 rounded-lg hover:bg-primary/5 hover:text-primary transition-colors block"
@@ -299,13 +338,21 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+              <Link
+                href="/login"
+                className="w-full"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 <Button className="w-full gap-2 bg-primary text-white hover:bg-primary/90">
                   <LogIn className="w-4 h-4" />
                   Login
                 </Button>
               </Link>
-              <Link href="/appointment" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+              <Link
+                href="/appointment"
+                className="w-full"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 <Button className="w-full bg-secondary text-white hover:bg-secondary/90">
                   Book Appointment
                 </Button>
@@ -315,5 +362,5 @@ export function Navbar() {
         )}
       </AnimatePresence>
     </nav>
-  )
+  );
 }

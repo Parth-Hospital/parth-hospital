@@ -1,10 +1,17 @@
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { FloatingActions } from "@/components/floating-actions"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import { GraduationCap, Award, Bone, Clock, CheckCircle2, Star } from "lucide-react"
-import Link from "next/link"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { FloatingActions } from "@/components/floating-actions";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import {
+  GraduationCap,
+  Award,
+  Bone,
+  Clock,
+  CheckCircle2,
+  Star,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function DoctorPage() {
   return (
@@ -20,7 +27,7 @@ export default function DoctorPage() {
               <div className="relative aspect-[3/4] rounded-3xl overflow-hidden soft-depth group">
                 <Image
                   src="/experienced-indian-doctor-portrait.jpg"
-                  alt="Dr. Subash Singh - Chief Orthopedic Surgeon"
+                  alt="Dr. Ashish Bharadwaj - Chief Orthopedic Surgeon"
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   priority
@@ -39,18 +46,25 @@ export default function DoctorPage() {
                   </span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter text-primary">
-                  Dr. Subash Singh <br />
-                  <span className="text-foreground italic font-light opacity-60">MBBS, MS</span>
+                  Dr. Ashish Bharadwaj <br />
+                  <span className="text-foreground italic font-light opacity-60">
+                    MBBS, MS
+                  </span>
                 </h1>
                 <p className="text-base sm:text-lg lg:text-xl font-light leading-relaxed text-muted-foreground">
-                  Chief Medical Director and Senior Orthopedic Surgeon at Parth Hospital, specializing in bone and joint
-                  care, fracture management, and trauma surgery with over 20 years of clinical excellence.
+                  Chief Medical Director and Senior Orthopedic Surgeon at Parth
+                  Hospital, specializing in bone and joint care, fracture
+                  management, and trauma surgery with over 20 years of clinical
+                  excellence.
                 </p>
               </div>
 
               <div className="pt-6">
                 <Link href="/appointment">
-                  <Button size="lg" className="rounded-full px-12 h-16 text-lg bg-primary w-full sm:w-auto soft-depth">
+                  <Button
+                    size="lg"
+                    className="rounded-full px-12 h-16 text-lg bg-primary w-full sm:w-auto soft-depth"
+                  >
                     Book OPD Appointment
                   </Button>
                 </Link>
@@ -62,18 +76,41 @@ export default function DoctorPage() {
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                 {[
-                  { label: "Orthopedic Experience", value: "20+ Years", icon: <Award className="text-secondary" /> },
-                  { label: "Successful Surgeries", value: "10,000+", icon: <Bone className="text-secondary" /> },
-                  { label: "Patient Satisfaction", value: "99%", icon: <CheckCircle2 className="text-secondary" /> },
-                  { label: "Medical Lectures", value: "100+", icon: <GraduationCap className="text-secondary" /> },
+                  {
+                    label: "Orthopedic Experience",
+                    value: "20+ Years",
+                    icon: <Award className="text-secondary" />,
+                  },
+                  {
+                    label: "Successful Surgeries",
+                    value: "10,000+",
+                    icon: <Bone className="text-secondary" />,
+                  },
+                  {
+                    label: "Patient Satisfaction",
+                    value: "99%",
+                    icon: <CheckCircle2 className="text-secondary" />,
+                  },
+                  {
+                    label: "Medical Lectures",
+                    value: "100+",
+                    icon: <GraduationCap className="text-secondary" />,
+                  },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-secondary/10 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-border/50 space-y-3 sm:space-y-4">
+                  <div
+                    key={i}
+                    className="bg-secondary/10 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-border/50 space-y-3 sm:space-y-4"
+                  >
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-background flex items-center justify-center border border-border">
                       {stat.icon}
                     </div>
                     <div className="space-y-1">
-                      <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">{stat.value}</p>
-                      <p className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-muted-foreground">{stat.label}</p>
+                      <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">
+                        {stat.value}
+                      </p>
+                      <p className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-muted-foreground">
+                        {stat.label}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -81,7 +118,9 @@ export default function DoctorPage() {
 
               <div className="space-y-10">
                 <div className="flex items-center gap-4">
-                  <h2 className="text-4xl font-medium tracking-tight">Professional Journey</h2>
+                  <h2 className="text-4xl font-medium tracking-tight">
+                    Professional Journey
+                  </h2>
                   <div className="h-px bg-border flex-1" />
                 </div>
                 <div className="space-y-12">
@@ -101,8 +140,8 @@ export default function DoctorPage() {
                     {
                       year: "2009",
                       title: "Established Parth Hospital",
-                      institution: "Jaunpur, Uttar Pradesh",
-                      desc: "Founded Parth Hospital with a vision to bring international-standard orthopedic care and trauma management to Jaunpur.",
+                      institution: "Gurugram, Haryana",
+                      desc: "Founded Parth Hospital with a vision to bring international-standard orthopedic care and trauma management to Gurugram.",
                     },
                     {
                       year: "2015",
@@ -117,9 +156,14 @@ export default function DoctorPage() {
                       desc: "Surpassed 10,000 successful surgical procedures, establishing Parth Hospital as a trusted orthopedic institution.",
                     },
                   ].map((item, i) => (
-                    <div key={i} className="flex flex-col sm:flex-row gap-4 sm:gap-8 group">
+                    <div
+                      key={i}
+                      className="flex flex-col sm:flex-row gap-4 sm:gap-8 group"
+                    >
                       <div className="w-full sm:w-24 shrink-0">
-                        <span className="text-lg sm:text-xl font-bold text-secondary italic">{item.year}</span>
+                        <span className="text-lg sm:text-xl font-bold text-secondary italic">
+                          {item.year}
+                        </span>
                       </div>
                       <div className="space-y-2 flex-1">
                         <h4 className="text-xl sm:text-2xl font-bold text-primary group-hover:text-secondary transition-colors">
@@ -128,7 +172,9 @@ export default function DoctorPage() {
                         <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted-foreground">
                           {item.institution}
                         </p>
-                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{item.desc}</p>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                          {item.desc}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -145,15 +191,21 @@ export default function DoctorPage() {
                   <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <div className="flex justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/70 font-medium">Monday - Friday</span>
+                        <span className="text-white/70 font-medium">
+                          Monday - Friday
+                        </span>
                         <span className="font-bold">11:00 AM - 05:00 PM</span>
                       </div>
                       <div className="flex justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/70 font-medium">Saturday</span>
+                        <span className="text-white/70 font-medium">
+                          Saturday
+                        </span>
                         <span className="font-bold">11:00 AM - 05:00 PM</span>
                       </div>
                       <div className="flex justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/70 font-medium">Sunday</span>
+                        <span className="text-white/70 font-medium">
+                          Sunday
+                        </span>
                         <span className="text-secondary font-bold">Closed</span>
                       </div>
                     </div>
@@ -162,8 +214,9 @@ export default function DoctorPage() {
                         Emergency Contact
                       </p>
                       <p className="text-sm leading-relaxed text-white/90">
-                        Dr. Singh is available for emergency orthopedic and trauma consultations 24/7. Call the hospital
-                        directly for immediate assistance.
+                        Dr. Singh is available for emergency orthopedic and
+                        trauma consultations 24/7. Call the hospital directly
+                        for immediate assistance.
                       </p>
                     </div>
                   </div>
@@ -173,7 +226,9 @@ export default function DoctorPage() {
               {/* Specializations Section */}
               <div className="space-y-8">
                 <div className="flex items-center gap-4">
-                  <h2 className="text-4xl font-medium tracking-tight">Areas of Specialization</h2>
+                  <h2 className="text-4xl font-medium tracking-tight">
+                    Areas of Specialization
+                  </h2>
                   <div className="h-px bg-border flex-1" />
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
@@ -202,5 +257,5 @@ export default function DoctorPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

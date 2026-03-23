@@ -1,25 +1,27 @@
-"use client"
+"use client";
 
-import { AdminLayout } from "@/components/layouts/admin-layout"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Building2, MapPin, Phone, Mail, Globe } from "lucide-react"
+import { AdminLayout } from "@/components/layouts/admin-layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building2, MapPin, Phone, Mail, Globe } from "lucide-react";
 
 export default function HospitalDetailsPage() {
   // Hardcoded hospital details - not editable
   const hospitalDetails = {
     hospitalName: "Parth Hospital",
-    address: "Polytechnic chauraha, Jaunpur, Uttar Pradesh 222002",
-    phone: "+91 78601 15757",
-    email: "parthhospitaljnp@gmail.com",
-    website: "https://parthhospital.com",
-  }
+    address: "Polytechnic chauraha, Gurugram, Haryana 122001",
+    phone: "+91 99406 15757",
+    email: "parthhospitalgurugram@gmail.com",
+    website: "https://parthhospital.co.in",
+  };
 
   return (
     <AdminLayout role="doctor">
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold mb-2">Hospital Details</h2>
-          <p className="text-muted-foreground">View hospital information and contact details</p>
+          <p className="text-muted-foreground">
+            View hospital information and contact details
+          </p>
         </div>
 
         <Card>
@@ -32,8 +34,12 @@ export default function HospitalDetailsPage() {
                 <Building2 className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground mb-1">Hospital Name</p>
-                <p className="text-lg font-semibold">{hospitalDetails.hospitalName}</p>
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  Hospital Name
+                </p>
+                <p className="text-lg font-semibold">
+                  {hospitalDetails.hospitalName}
+                </p>
               </div>
             </div>
 
@@ -42,7 +48,9 @@ export default function HospitalDetailsPage() {
                 <MapPin className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground mb-1">Address</p>
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  Address
+                </p>
                 <p className="text-lg">{hospitalDetails.address}</p>
               </div>
             </div>
@@ -52,8 +60,13 @@ export default function HospitalDetailsPage() {
                 <Phone className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground mb-1">Phone</p>
-                <a href={`tel:${hospitalDetails.phone}`} className="text-lg hover:text-primary transition-colors">
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  Phone
+                </p>
+                <a
+                  href={`tel:${hospitalDetails.phone}`}
+                  className="text-lg hover:text-primary transition-colors"
+                >
                   {hospitalDetails.phone}
                 </a>
               </div>
@@ -64,8 +77,13 @@ export default function HospitalDetailsPage() {
                 <Mail className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground mb-1">Email</p>
-                <a href={`mailto:${hospitalDetails.email}`} className="text-lg hover:text-primary transition-colors">
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  Email
+                </p>
+                <a
+                  href={`mailto:${hospitalDetails.email}`}
+                  className="text-lg hover:text-primary transition-colors"
+                >
                   {hospitalDetails.email}
                 </a>
               </div>
@@ -76,7 +94,9 @@ export default function HospitalDetailsPage() {
                 <Globe className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground mb-1">Website</p>
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  Website
+                </p>
                 <a
                   href={hospitalDetails.website}
                   target="_blank"
@@ -91,5 +111,5 @@ export default function HospitalDetailsPage() {
         </Card>
       </div>
     </AdminLayout>
-  )
+  );
 }

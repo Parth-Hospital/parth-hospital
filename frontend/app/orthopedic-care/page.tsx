@@ -1,9 +1,9 @@
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Bone, Zap, BarChart3, Heart } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Bone, Zap, BarChart3, Heart } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function OrthopedicCarePage() {
   const treatments = [
@@ -27,7 +27,7 @@ export default function OrthopedicCarePage() {
       desc: "Evidence-based physiotherapy and rehabilitation programs to restore mobility and strength after orthopedic procedures.",
       image: "/orthopedic-rehabilitation.jpg",
     },
-  ]
+  ];
 
   const approaches = [
     {
@@ -50,7 +50,7 @@ export default function OrthopedicCarePage() {
       title: "Patient-Centered Care",
       desc: "Holistic approach focusing on functional recovery and quality of life.",
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen">
@@ -65,12 +65,15 @@ export default function OrthopedicCarePage() {
             </div>
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-huge text-primary leading-[0.85] mb-6 sm:mb-8 break-words">
               BONE &<br />
-              <span className="text-foreground italic font-light opacity-80">JOINT CARE</span>
+              <span className="text-foreground italic font-light opacity-80">
+                JOINT CARE
+              </span>
             </h1>
             <p className="text-2xl font-light text-muted-foreground leading-relaxed max-w-2xl pt-8">
-              At Parth Hospital, orthopedic excellence is our core specialization. Dr. Subash Singh brings over 20 years
-              of experience in diagnosing, treating, and managing bone and joint conditions with precision and
-              compassion.
+              At Parth Hospital, orthopedic excellence is our core
+              specialization. Dr. Ashish Bharadwaj brings over 20 years of
+              experience in diagnosing, treating, and managing bone and joint
+              conditions with precision and compassion.
             </p>
           </div>
         </div>
@@ -105,8 +108,13 @@ export default function OrthopedicCarePage() {
                       0{idx + 1}
                     </span>
                   </div>
-                  <p className="text-lg font-light text-muted-foreground leading-relaxed">{treatment.desc}</p>
-                  <Button variant="link" className="text-primary p-0 h-auto font-semibold group/btn">
+                  <p className="text-lg font-light text-muted-foreground leading-relaxed">
+                    {treatment.desc}
+                  </p>
+                  <Button
+                    variant="link"
+                    className="text-primary p-0 h-auto font-semibold group/btn"
+                  >
                     Learn more
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
@@ -121,7 +129,9 @@ export default function OrthopedicCarePage() {
       <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 space-y-4">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">Our Approach</h2>
+            <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">
+              Our Approach
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -133,7 +143,9 @@ export default function OrthopedicCarePage() {
                 <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center text-primary mb-6 group-hover:bg-white group-hover:text-primary transition-all">
                   {item.icon}
                 </div>
-                <h3 className="text-2xl font-medium mb-4 group-hover:text-white transition-colors">{item.title}</h3>
+                <h3 className="text-2xl font-medium mb-4 group-hover:text-white transition-colors">
+                  {item.title}
+                </h3>
                 <p className="text-muted-foreground group-hover:text-white/70 font-light leading-relaxed transition-colors">
                   {item.desc}
                 </p>
@@ -147,7 +159,9 @@ export default function OrthopedicCarePage() {
       <section className="py-24 bg-secondary/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 space-y-4">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">Conditions We Treat</h2>
+            <h2 className="text-5xl md:text-7xl font-medium tracking-tight leading-tight">
+              Conditions We Treat
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -167,7 +181,9 @@ export default function OrthopedicCarePage() {
                 className="flex items-start gap-4 p-6 bg-background rounded-xl border border-border/50 hover:border-primary transition-colors"
               >
                 <div className="w-3 h-3 rounded-full bg-secondary flex-shrink-0 mt-2" />
-                <p className="text-lg font-medium text-foreground">{condition}</p>
+                <p className="text-lg font-medium text-foreground">
+                  {condition}
+                </p>
               </div>
             ))}
           </div>
@@ -181,17 +197,18 @@ export default function OrthopedicCarePage() {
             Expert Orthopedic Care Awaits
           </h2>
           <p className="text-xl font-light text-white/80 leading-relaxed">
-            Schedule a consultation with Dr. Subash Singh to discuss your bone and joint health. Our team is committed
-            to restoring your mobility and quality of life.
+            Schedule a consultation with Dr. Ashish Bharadwaj to discuss your
+            bone and joint health. Our team is committed to restoring your
+            mobility and quality of life.
           </p>
           <div className="pt-8">
             <Link href="/appointment">
-            <Button
-              size="lg"
-              className="rounded-full px-12 h-16 text-lg bg-white text-primary hover:bg-gray-100 hover:text-primary font-semibold"
-            >
-              Book Consultation
-            </Button>
+              <Button
+                size="lg"
+                className="rounded-full px-12 h-16 text-lg bg-white text-primary hover:bg-gray-100 hover:text-primary font-semibold"
+              >
+                Book Consultation
+              </Button>
             </Link>
           </div>
         </div>
@@ -199,5 +216,5 @@ export default function OrthopedicCarePage() {
 
       <Footer />
     </main>
-  )
+  );
 }

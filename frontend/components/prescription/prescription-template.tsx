@@ -22,11 +22,11 @@ interface PrescriptionTemplateProps {
 export function PrescriptionTemplate({
   date = new Date().toLocaleDateString("en-IN"),
   medicines,
-  doctorName = "Dr. Subash Singh",
+  doctorName = "Dr. Ashish Bharadwaj",
   patientName,
   patientAge,
   hospitalName = "Parth Hospital",
-  hospitalAddress = "Jaunpur, Uttar Pradesh",
+  hospitalAddress = "Gurugram, Haryana",
 }: PrescriptionTemplateProps) {
   // medicines per page
   const ITEMS_PER_PAGE = 10;

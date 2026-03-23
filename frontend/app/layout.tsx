@@ -10,9 +10,9 @@ import "./globals.css";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "Parth Hospital | Advanced Healthcare in Jaunpur",
+  title: "Parth Hospital | Advanced Healthcare in Gurugram",
   description:
-    "Expert medical care led by Dr. Subash Singh. Experience modern healthcare with a human touch at Parth Hospital, Jaunpur.",
+    "Expert medical care led by Dr. Ashish Bharadwaj. Experience modern healthcare with a human touch at Parth Hospital, Gurugram.",
 };
 
 export default function RootLayout({

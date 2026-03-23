@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { FloatingActions } from "@/components/floating-actions"
-import { Shield, Lock, Eye, FileText } from "lucide-react"
-import { motion } from "framer-motion"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { FloatingActions } from "@/components/floating-actions";
+import { Shield, Lock, Eye, FileText } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function PrivacyPage() {
   const sections = [
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
         "Right to data portability",
       ],
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen">
@@ -73,7 +73,12 @@ export default function PrivacyPage() {
               Privacy Policy
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Last updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              Last updated:{" "}
+              {new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </p>
           </motion.div>
         </div>
@@ -90,9 +95,11 @@ export default function PrivacyPage() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              At Parth Hospital, we are committed to protecting your privacy and ensuring the confidentiality 
-              of your personal and medical information. This Privacy Policy explains how we collect, use, 
-              disclose, and safeguard your information when you visit our hospital or use our services.
+              At Parth Hospital, we are committed to protecting your privacy and
+              ensuring the confidentiality of your personal and medical
+              information. This Privacy Policy explains how we collect, use,
+              disclose, and safeguard your information when you visit our
+              hospital or use our services.
             </p>
           </motion.div>
         </div>
@@ -103,7 +110,7 @@ export default function PrivacyPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="space-y-12">
             {sections.map((section, index) => {
-              const Icon = section.icon
+              const Icon = section.icon;
               return (
                 <motion.div
                   key={index}
@@ -117,18 +124,23 @@ export default function PrivacyPage() {
                     <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Icon className="w-6 h-6 text-primary" />
                     </div>
-                    <h2 className="text-3xl font-bold text-foreground">{section.title}</h2>
+                    <h2 className="text-3xl font-bold text-foreground">
+                      {section.title}
+                    </h2>
                   </div>
                   <ul className="space-y-3">
                     {section.content.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-muted-foreground">
+                      <li
+                        key={idx}
+                        className="flex items-start gap-3 text-muted-foreground"
+                      >
                         <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </motion.div>
-              )
+              );
             })}
           </div>
         </div>
@@ -143,26 +155,34 @@ export default function PrivacyPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-foreground mb-4">Contact Us</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Contact Us
+            </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              If you have any questions about this Privacy Policy or wish to exercise your rights, 
-              please contact us:
+              If you have any questions about this Privacy Policy or wish to
+              exercise your rights, please contact us:
             </p>
             <div className="space-y-2 text-muted-foreground">
               <p>
                 <strong className="text-foreground">Parth Hospital</strong>
               </p>
-              <p>Polytechnic chauraha, Jaunpur, Uttar Pradesh 222002</p>
+              <p>Polytechnic chauraha, Gurugram, Haryana 122001</p>
               <p>
                 Email:{" "}
-                <a href="mailto:parthhospitaljnp@gmail.com" className="text-primary hover:underline">
-                  parthhospitaljnp@gmail.com
+                <a
+                  href="mailto:parthhospitalgurugram@gmail.com"
+                  className="text-primary hover:underline"
+                >
+                  parthhospitalgurugram@gmail.com
                 </a>
               </p>
               <p>
                 Phone:{" "}
-                <a href="tel:+917860115757" className="text-primary hover:underline">
-                  +91 78601 15757
+                <a
+                  href="tel:+919940615757"
+                  className="text-primary hover:underline"
+                >
+                  +91 99406 15757
                 </a>
               </p>
             </div>
@@ -172,5 +192,5 @@ export default function PrivacyPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

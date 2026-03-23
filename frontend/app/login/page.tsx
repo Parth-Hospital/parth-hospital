@@ -1,7 +1,7 @@
-import { LoginForm } from "@/components/login-form"
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowLeft, Info } from "lucide-react"
+import { LoginForm } from "@/components/login-form";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft, Info } from "lucide-react";
 
 export default function LoginPage() {
   return (
@@ -31,8 +31,12 @@ export default function LoginPage() {
                 className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
               />
               <div className="space-y-1">
-                <h2 className="text-2xl lg:text-3xl font-bold tracking-tighter uppercase">Parth Hospital</h2>
-                <p className="text-xs uppercase tracking-[0.4em] text-white/40">Secure Management Portal</p>
+                <h2 className="text-2xl lg:text-3xl font-bold tracking-tighter uppercase">
+                  Parth Hospital
+                </h2>
+                <p className="text-xs uppercase tracking-[0.4em] text-white/40">
+                  Secure Management Portal
+                </p>
               </div>
             </div>
 
@@ -42,8 +46,8 @@ export default function LoginPage() {
                 <span className="italic text-accent">CONTROL.</span>
               </h1>
               <p className="text-base lg:text-xl font-light text-white/60 leading-relaxed">
-                Empowering our medical and administrative staff with the tools they need to provide world-class
-                healthcare in Jaunpur.
+                Empowering our medical and administrative staff with the tools
+                they need to provide world-class healthcare in Gurugram.
               </p>
             </div>
 
@@ -62,5 +66,5 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

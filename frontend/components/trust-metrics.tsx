@@ -1,8 +1,12 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { MagicCard, MagicCardTitle, MagicCardDescription } from "@/components/ui/magic-card"
-import { NumberTicker } from "@/components/ui/number-ticker"
+import { motion } from "framer-motion";
+import {
+  MagicCard,
+  MagicCardTitle,
+  MagicCardDescription,
+} from "@/components/ui/magic-card";
+import { NumberTicker } from "@/components/ui/number-ticker";
 
 export function TrustMetrics() {
   const metrics = [
@@ -10,7 +14,7 @@ export function TrustMetrics() {
       value: 20,
       suffix: "+",
       label: "Years of Experience",
-      description: "Dr. Subash Singh's orthopedic expertise",
+      description: "Dr. Ashish Bharadwaj's orthopedic expertise",
       gradient: "from-primary/20 via-primary/10 to-secondary/20",
     },
     {
@@ -35,7 +39,7 @@ export function TrustMetrics() {
       description: "Always available for urgent cases",
       gradient: "from-accent/20 via-primary/20 to-secondary/20",
     },
-  ]
+  ];
 
   return (
     <section className="py-12 sm:py-16 md:py-20 bg-white border-b border-border/30">
@@ -49,7 +53,10 @@ export function TrustMetrics() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
             >
-              <MagicCard gradientColor={metric.gradient} className="h-full text-center p-4 sm:p-6">
+              <MagicCard
+                gradientColor={metric.gradient}
+                className="h-full text-center p-4 sm:p-6"
+              >
                 <div className="min-h-[60px] sm:min-h-[80px] md:min-h-[100px] flex items-center justify-center mb-2 sm:mb-3">
                   {metric.value !== null ? (
                     <span className="inline-flex items-baseline justify-center gap-0.5 sm:gap-1 whitespace-nowrap">
@@ -58,19 +65,27 @@ export function TrustMetrics() {
                         delay={index * 0.2}
                         className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300"
                       />
-                      <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300 leading-none">{metric.suffix}</span>
+                      <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300 leading-none">
+                        {metric.suffix}
+                      </span>
                     </span>
                   ) : (
-                    <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300 whitespace-nowrap leading-none">{metric.staticText}</span>
+                    <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary group-hover:text-secondary transition-colors duration-300 whitespace-nowrap leading-none">
+                      {metric.staticText}
+                    </span>
                   )}
                 </div>
-                <MagicCardTitle className="text-xs sm:text-sm md:text-base mb-1 wrap-break-word">{metric.label}</MagicCardTitle>
-                <MagicCardDescription className="text-[10px] sm:text-xs wrap-break-word leading-tight">{metric.description}</MagicCardDescription>
+                <MagicCardTitle className="text-xs sm:text-sm md:text-base mb-1 wrap-break-word">
+                  {metric.label}
+                </MagicCardTitle>
+                <MagicCardDescription className="text-[10px] sm:text-xs wrap-break-word leading-tight">
+                  {metric.description}
+                </MagicCardDescription>
               </MagicCard>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
