@@ -44,8 +44,8 @@ export function Footer() {
             </div>
             <p className="text-white/60 leading-relaxed max-w-xs">
               Providing world-class healthcare with a human touch. Led by Dr.
-              Ashish Singh, we are committed to medical excellence and patient
-              well-being.
+              Ashish Bharadwaj, we are committed to medical excellence and
+              patient well-being.
             </p>
             <div className="flex gap-4">
               {[Instagram, Facebook, Twitter].map((Icon, idx) => (

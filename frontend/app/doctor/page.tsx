@@ -214,9 +214,9 @@ export default function DoctorPage() {
                         Emergency Contact
                       </p>
                       <p className="text-sm leading-relaxed text-white/90">
-                        Dr. Singh is available for emergency orthopedic and
-                        trauma consultations 24/7. Call the hospital directly
-                        for immediate assistance.
+                        Dr. Ashish Bharadwaj is available for emergency
+                        orthopedic and trauma consultations 24/7. Call the
+                        hospital directly for immediate assistance.
                       </p>
                     </div>
                   </div>
